@@ -8,19 +8,31 @@ namespace PriestOfPlague.Source.Items
         public ItemType (int id)
         {
             _id = id;
+            _opensSpells = new List <int> ();
+            MaxCharge = 0;
+            ChargeRegeneration = 0;
+            
+            BasicForce = 0;
+            ForceAdditionPerLevel = 0;
+            MaxChargeAdditionPerLevel = 0;
+            ChargeRegenerationAdditionPerLevel = 0;
+            
+            _supertypes = new List <int> ();
+            Weight = 0;
+            Icon = null;
         }
 
         public int Id => _id;
-        public List <int> OpensSpells
-        {
-            get { return _opensSpells; }
-            set { _opensSpells = value; }
-        }
+        public List <int> OpensSpells => _opensSpells;
 
         public float MaxCharge
         {
             get { return _maxCharge; }
-            set { _maxCharge = value; }
+            set
+            {
+                Debug.Assert (value >= 0.0f);
+                _maxCharge = value;
+            }
         }
 
         public float ChargeRegeneration
@@ -32,7 +44,11 @@ namespace PriestOfPlague.Source.Items
         public float BasicForce
         {
             get { return _basicForce; }
-            set { _basicForce = value; }
+            set
+            {
+                Debug.Assert (value >= 0.0f);
+                _basicForce = value;
+            }
         }
 
         public float ForceAdditionPerLevel
@@ -53,16 +69,15 @@ namespace PriestOfPlague.Source.Items
             set { _chargeRegenerationAdditionPerLevel = value; }
         }
 
-        public List <int> Supertypes
-        {
-            get { return _supertypes; }
-            set { _supertypes = value; }
-        }
-
+        public List <int> Supertypes => _supertypes;
         public float Weight
         {
             get { return _weight; }
-            set { _weight = value; }
+            set
+            {
+                Debug.Assert (value >= 0);
+                _weight = value;
+            }
         }
 
         public Sprite Icon
