@@ -34,21 +34,25 @@ namespace PriestOfPlague.Source.Unit
             a.SetArr(0, 2, 0, 0, 2);
             cont[(int)LineageEnum.Gunerates] = a;
 
+            a = new Lineage();
             a.Index = (LineageEnum)index++;
             a.InfoAboutLineageInString = "Кантиры";
             a.SetArr(2, 0, 1, 1, 0);
             cont[(int)LineageEnum.Canteers] = a;
 
+            a = new Lineage();
             a.Index = (LineageEnum)index++;
             a.InfoAboutLineageInString = "Торговцы";
             a.SetArr(1, 1, 1, 0, 1);
             cont[(int)LineageEnum.Villagers] = a;
 
+            a = new Lineage();
             a.Index = (LineageEnum)index++;
             a.InfoAboutLineageInString = "Крестьяне";
             a.SetArr(2, 0, 0, 2, 0);
             cont[(int)LineageEnum.Outlaws] = a;
 
+            a = new Lineage();
             a.Index = (LineageEnum)index++;
             a.InfoAboutLineageInString = "Преступники";
             a.SetArr(1, 1, 2, 0, 0);

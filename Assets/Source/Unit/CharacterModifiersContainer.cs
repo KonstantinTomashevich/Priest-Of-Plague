@@ -26,9 +26,6 @@ namespace PriestOfPlague.Source.Unit
         /// </summary>
         public void SetBuffs()
         {
-            //??
-            //может создать enum с именами баффов, раз индексы теперь int?
-            //??
             //Лечение
             CharacterModifier a = new CharacterModifier("Лечение", 5);
             a.SetArr(0, 0, 0, 0, 0);

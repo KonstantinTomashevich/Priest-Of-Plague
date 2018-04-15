@@ -3,56 +3,55 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+public enum typesOfDamageEnum { Chopping, Stitching, Armor_piercing, Pushing, Light, Fiery, Icy, Damage_pure_magic }
+
 namespace PriestOfPlague.Source.Unit
 {
     class DamageTypesList
     {
-        Dictionary<string, DamageTypesList> types = new Dictionary<string, DamageTypesList>();
+        DamageTypesList[] types = new DamageTypesList[8];
         private string nameOfType;
-        string typeOfDamage;
 
-        public DamageTypesList GetDamage(string Index)
+        public DamageTypesList GetDamage(int IndexIn)
         {
-            if (types.ContainsKey(Index))
-                return types[Index];
+            if (types[IndexIn] != null)
+                return types[IndexIn];
             else throw new System.Exception("Неверный индекс!");
         }
 
         public void SetTypeOfDamage()
         {
-            int index = 0;
             DamageTypesList a = new DamageTypesList();
-            a.typeOfDamage = (++index).ToString();
             a.nameOfType = "Рубящий";
-            types.Add(a.nameOfType, a);
+            types[(int)typesOfDamageEnum.Chopping] = a;
 
-            a.typeOfDamage = (++index).ToString();
+            a = new DamageTypesList();
             a.nameOfType = "Колющий";
-            types.Add(a.nameOfType, a);
+            types[(int)typesOfDamageEnum.Stitching] = a;
 
-            a.typeOfDamage = (++index).ToString();
+            a = new DamageTypesList();
             a.nameOfType = "Бронебойный";
-            types.Add(a.nameOfType, a);
+            types[(int)typesOfDamageEnum.Armor_piercing] = a;
 
-            a.typeOfDamage = (++index).ToString();
+            a = new DamageTypesList();
             a.nameOfType = "Толкающий";
-            types.Add(a.nameOfType, a);
+            types[(int)typesOfDamageEnum.Pushing] = a;
 
-            a.typeOfDamage = (++index).ToString();
+            a = new DamageTypesList();
             a.nameOfType = "Светлый";
-            types.Add(a.nameOfType, a);
+            types[(int)typesOfDamageEnum.Light] = a;
 
-            a.typeOfDamage = (++index).ToString();
+            a = new DamageTypesList();
             a.nameOfType = "Огненный";
-            types.Add(a.nameOfType, a);
+            types[(int)typesOfDamageEnum.Fiery] = a;
 
-            a.typeOfDamage = (++index).ToString();
+            a = new DamageTypesList();
             a.nameOfType = "Ледяной";
-            types.Add(a.nameOfType, a);
+            types[(int)typesOfDamageEnum.Icy] = a;
 
-            a.typeOfDamage = (++index).ToString();
+            a = new DamageTypesList();
             a.nameOfType = "Урон чистой магией";
-            types.Add(a.nameOfType, a);
+            types[(int)typesOfDamageEnum.Damage_pure_magic] = a;
         }
     }
 }
