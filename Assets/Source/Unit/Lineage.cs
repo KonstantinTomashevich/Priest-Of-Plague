@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets._scripts
+namespace PriestOfPlague.Source.Unit
 {
     /// <summary>
     /// Класс происхождений
     /// </summary>
     public class Lineage
     {
-        public string Index { get; set; }
+        public LineageEnum Index { get; set; }
         public string InfoAboutLineageInString { get; set; }
         public int[] CharcsChanges = new int[5];
 

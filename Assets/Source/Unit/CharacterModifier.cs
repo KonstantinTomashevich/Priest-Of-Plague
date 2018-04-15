@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets._scripts
+namespace PriestOfPlague.Source.Unit
 {
     public class CharacterModifier
     {
-        public int Index { get; set; }
+        public BuffsAndDebuffs Index { get; set; }
         public string InfoAboutBuffsInString { get; set; }
         public double timeOfBuff;
         public int[] CharcsChanges = new int[5];
@@ -23,7 +23,7 @@ namespace Assets._scripts
         /// <param name="timeIn">Время действия баффа</param>
         public CharacterModifier(string infoIn, int timeIn)
         {
-            this.Index = ++index;
+            this.Index = (BuffsAndDebuffs)index++;
             this.InfoAboutBuffsInString = infoIn;
             this.timeOfBuff = timeIn;           
         }

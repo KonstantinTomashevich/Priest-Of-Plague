@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets._scripts
+namespace PriestOfPlague.Source.Unit
 {
     class DamageTypesList
     {
@@ -13,7 +13,7 @@ namespace Assets._scripts
 
         public DamageTypesList GetDamage(string Index)
         {
-            if (types.ContainsKey(Index)) // нужно ли исключение?
+            if (types.ContainsKey(Index))
                 return types[Index];
             else throw new System.Exception("Неверный индекс!");
         }

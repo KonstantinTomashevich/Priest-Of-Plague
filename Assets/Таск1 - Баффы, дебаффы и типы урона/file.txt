@@ -1,5 +1,0 @@
-﻿{"Lineages":[0,2,0,0,2],"<Index>k__BackingField":1,"<InfoAboutLineageInString>k__BackingField":"Ганераты"}
-{"Lineages":[2,0,1,1,0],"<Index>k__BackingField":2,"<InfoAboutLineageInString>k__BackingField":"Кантиры"}
-{"Lineages":[1,1,1,0,1],"<Index>k__BackingField":3,"<InfoAboutLineageInString>k__BackingField":"Торговцы"}
-{"Lineages":[2,0,0,2,0],"<Index>k__BackingField":4,"<InfoAboutLineageInString>k__BackingField":"Крестьяне"}
-{"Lineages":[1,1,2,0,0],"<Index>k__BackingField":5,"<InfoAboutLineageInString>k__BackingField":"Преступники"}

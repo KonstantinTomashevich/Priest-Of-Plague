@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum Charactiristics { Vitality, Lucky, Agility, Strength, Intelligence }
+enum Charactiristics { Vitality = 0, Lucky, Agility, Strength, Intelligence }
+public enum BuffsAndDebuffs { Лечение = 0, Сытость, Магическая_поддержка, Ослабление, Отравление, Болезнь, Паралич }
 
-namespace Assets._scripts
+namespace PriestOfPlague.Source.Unit
 {
     public class CharacterModifiersContainer : MonoBehaviour
     {
-        Dictionary<int, CharacterModifier> dict = new Dictionary<int, CharacterModifier>(7); //тут что-то не так
+        CharacterModifier[] dict = new CharacterModifier[7];
         /// <summary>
         /// Даёт баффы по индексу
         /// </summary>
-        /// <param name="IndexIn">Унивкальынй индекс баффа</param>
+        /// <param name="IndexIn">Уникальный индекс баффа</param>
         /// <returns>бафф</returns>
-        public CharacterModifier GetBuff(int IndexIn)
+        public CharacterModifier GetBuff(int IndexIn) //Меня терзают смутные сомнения о правильности такой реализации...
         {
-            if (dict.ContainsKey(IndexIn))
+            if (dict[IndexIn] != null)
                 return dict[IndexIn];
             else throw new System.Exception("Неверный индекс!");
         }
@@ -32,40 +33,40 @@ namespace Assets._scripts
             CharacterModifier a = new CharacterModifier("Лечение", 5);
             a.SetArr(0, 0, 0, 0, 0);
             a.PlusRegen = 3;
-            a.BuffsForCancel.Add(5);
-            a.BuffsForCancel.Add(3);
-            dict.Add(a.Index, a);   
+            a.BuffsForCancel.Add((int)BuffsAndDebuffs.Ослабление);
+            a.BuffsForCancel.Add((int)BuffsAndDebuffs.Болезнь);
+            dict[(int)BuffsAndDebuffs.Лечение] = a;
 
             //Сытость
             a = new CharacterModifier("Сытость", 5);
             a.SetArr(1, 0, 1, 1, 0);
-            dict.Add(a.Index, a);
+            dict[(int)BuffsAndDebuffs.Сытость] = a;
 
             //Магическая поддержка
             a = new CharacterModifier("Магическая поддержка", 5);
             a.SetArr(1, 1, 1, 1, 1);
-            dict.Add(a.Index, a);
+            dict[(int)BuffsAndDebuffs.Магическая_поддержка] = a;
 
             //Ослаблен
             a = new CharacterModifier("Ослабление", 5);
             a.SetArr(-1, 0, -1, -1, 0);
-            dict.Add(a.Index, a);
+            dict[(int)BuffsAndDebuffs.Ослабление] = a;
 
             //Отравлен
             a = new CharacterModifier("Отравление", 5);
             a.SetArr(-1, 0, -1, -1, 0);
             a.PlusRegen = -1;
-            dict.Add(a.Index, a);
+            dict[(int)BuffsAndDebuffs.Отравление] = a;
 
             //Болен 
             a = new CharacterModifier("Болезнь", 5);
             a.SetArr(-1, -1, -1, -1, -1);
-            dict.Add(a.Index, a);
+            dict[(int)BuffsAndDebuffs.Болезнь] = a;
 
             //Парализован(Опять же не реализовать, так как нужно понимание действий (класс unit))
-            a = new CharacterModifier("Парализация", 5);
+            a = new CharacterModifier("Паралич", 5);
             a.SetArr(0, 0, 0, 0, 0);
-            dict.Add(a.Index, a);
+            dict[(int)BuffsAndDebuffs.Паралич] = a;
         }
 
         /// <summary>
