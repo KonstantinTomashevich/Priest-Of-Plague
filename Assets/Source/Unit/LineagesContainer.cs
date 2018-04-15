@@ -1,12 +1,7 @@
-﻿
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.IO;
-using System.Runtime.Serialization;
+﻿using UnityEngine;
 
 //enum Chars { Vitality, Lucky, Agility, Strength, Intelligence }
-public enum LineageEnum { Ганераты = 0, Кантиры, Торговцы, Крестьяне, Преступники }
+public enum LineageEnum { Gunerates = 0, Canteers, Traders, Villagers, Outlaws }
 
 namespace PriestOfPlague.Source.Unit
 {
@@ -37,27 +32,27 @@ namespace PriestOfPlague.Source.Unit
             a.Index = (LineageEnum)index++;
             a.InfoAboutLineageInString = "Ганераты";
             a.SetArr(0, 2, 0, 0, 2);
-            cont[(int)LineageEnum.Ганераты] = a;
+            cont[(int)LineageEnum.Gunerates] = a;
 
             a.Index = (LineageEnum)index++;
             a.InfoAboutLineageInString = "Кантиры";
             a.SetArr(2, 0, 1, 1, 0);
-            cont[(int)LineageEnum.Кантиры] = a;
+            cont[(int)LineageEnum.Canteers] = a;
 
             a.Index = (LineageEnum)index++;
             a.InfoAboutLineageInString = "Торговцы";
             a.SetArr(1, 1, 1, 0, 1);
-            cont[(int)LineageEnum.Крестьяне] = a;
+            cont[(int)LineageEnum.Villagers] = a;
 
             a.Index = (LineageEnum)index++;
             a.InfoAboutLineageInString = "Крестьяне";
             a.SetArr(2, 0, 0, 2, 0);
-            cont[(int)LineageEnum.Преступники] = a;
+            cont[(int)LineageEnum.Outlaws] = a;
 
             a.Index = (LineageEnum)index++;
             a.InfoAboutLineageInString = "Преступники";
             a.SetArr(1, 1, 2, 0, 0);
-            cont[(int)LineageEnum.Торговцы] = a;
+            cont[(int)LineageEnum.Traders] = a;
         }
 
         // Use this for initialization
