@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public enum typesOfDamageEnum { Chopping, Stitching, Armor_piercing, Pushing, Light, Fiery, Icy, Damage_pure_magic }
 
 namespace PriestOfPlague.Source.Unit
 {
+    public enum typesOfDamageEnum { Chopping, Stitching, Armor_piercing, Pushing, Light, Fiery, Icy, Damage_pure_magic }
+
     class DamageTypesList
     {
         DamageTypesList[] types = new DamageTypesList[8];

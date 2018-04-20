@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum CharactiristicsEnum { Vitality = 0, Lucky, Agility, Strength, Intelligence }
-public enum BuffsAndDebuffsEnum { Healing = 0, Satiety, Magic_support, Weakening, Poisoning, Disease, Paralysis }
 
 namespace PriestOfPlague.Source.Unit
 {
+    enum CharactiristicsEnum { Vitality = 0, Lucky, Agility, Strength, Intelligence }
+    public enum BuffsAndDebuffsEnum { Healing = 0, Satiety, Magic_support, Weakening, Poisoning, Disease, Paralysis }
+
     public class CharacterModifiersContainer : MonoBehaviour
     {
         CharacterModifier[] dict = new CharacterModifier[7];
