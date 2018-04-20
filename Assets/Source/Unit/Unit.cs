@@ -39,9 +39,8 @@ namespace PriestOfPlague.Source.Unit
         public void SetCharactiristics(CharactiristicsEnum typeOfCharacteristicIn, int valueOfCharacteristicIn)
         {
             _arrayOfCharactiristics[(int)typeOfCharacteristicIn] += valueOfCharacteristicIn;
-        }
-
-        // private float[] _arrayOfResistsAndBuffs = new float[8];
+            UpdateCharacteristics();
+        }       
 
         private void UpdateCharacteristics()
         {
