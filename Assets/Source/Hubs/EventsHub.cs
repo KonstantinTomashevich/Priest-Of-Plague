@@ -12,26 +12,26 @@ namespace PriestOfPlague.Source.Hubs
             var list = _subscribers [eventName.GetHashCode ()];
             if (list != null)
             {
-                foreach (var gameObject in list)
+                foreach (var monoBehaviour in list)
                 {
-                    gameObject.SendMessage (eventName, eventData);
+                    monoBehaviour.SendMessage (eventName, eventData);
                 }
             }
         }
 
-        public void Subscribe (GameObject subscriber, string eventName)
+        public void Subscribe (MonoBehaviour subscriber, string eventName)
         {
             var list = _subscribers [eventName.GetHashCode ()];
             if (list == null)
             {
-                list = new HashSet <GameObject> ();
+                list = new HashSet <MonoBehaviour> ();
                 _subscribers [eventName.GetHashCode ()] = list;
             }
 
             list.Add (subscriber);
         }
 
-        public void Unsubscribe (GameObject subscriber, string eventName)
+        public void Unsubscribe (MonoBehaviour subscriber, string eventName)
         {
             var list = _subscribers [eventName.GetHashCode ()];
             if (list != null)
@@ -42,9 +42,9 @@ namespace PriestOfPlague.Source.Hubs
         
         private EventsHub ()
         {
-            _subscribers = new Dictionary <int, HashSet <GameObject>> ();
+            _subscribers = new Dictionary <int, HashSet <MonoBehaviour>> ();
         }
 
-        private Dictionary <int, HashSet <GameObject>> _subscribers;
+        private Dictionary <int, HashSet <MonoBehaviour>> _subscribers;
     }
 }
