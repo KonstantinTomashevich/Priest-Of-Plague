@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PriestOfPlague.Source.Core;
 
 namespace PriestOfPlague.Source.Unit
 {
     public enum CharactiristicsEnum { Vitality = 0, Luck, Agility, Strength, Intelligence }
     public enum TypesOfDamageEnum { Near = 0, OnDistance, Magic, Critical }
 
-    public class Unit : MonoBehaviour
+    public class Unit : CreationInformer
     {
         public string _nameOfCharacter { get; private set; }
         public bool _isMan { get; private set; }
@@ -82,16 +83,14 @@ namespace PriestOfPlague.Source.Unit
         }
 
 
-        // Use this for initialization
-        void Start()
+        new void Start()
         {
-
+            base.Start ();
         }
 
-        // Update is called once per frame
-        void Update()
+        new void OnDestroy ()
         {
-
+            base.OnDestroy ();
         }
     }
 }

@@ -64,7 +64,7 @@ namespace PriestOfPlague.Source.Unit
         }
         
         public float CurrentWeight => _currentWeight;
-        public ReadOnlyCollection <Item> Items => _items.AsReadOnly ();
+        public IReadOnlyCollection <Item> Items => _items.AsReadOnly ();
 
         private float _maxWeight;
         private float _currentWeight;
