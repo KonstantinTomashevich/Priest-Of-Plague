@@ -7,7 +7,7 @@ namespace PriestOfPlague.Source.Unit
 {
     public class CharacterModifier
     {
-        public BuffsAndDebuffs Index { get; set; }
+        public BuffsAndDebuffsEnum Index { get; set; }
         public string InfoAboutBuffsInString { get; set; }
         public double timeOfBuff;
         public int[] CharcsChanges = new int[5];
@@ -23,7 +23,7 @@ namespace PriestOfPlague.Source.Unit
         /// <param name="timeIn">Время действия баффа</param>
         public CharacterModifier(string infoIn, int timeIn)
         {
-            this.Index = (BuffsAndDebuffs)index++;
+            this.Index = (BuffsAndDebuffsEnum)index++;
             this.InfoAboutBuffsInString = infoIn;
             this.timeOfBuff = timeIn;           
         }
@@ -39,11 +39,11 @@ namespace PriestOfPlague.Source.Unit
         /// 
         public void SetArr(int Vit, int Luc, int Ag, int Str, int Int)
         {
-            CharcsChanges[(int)Charactiristics.Vitality] = Vit;
-            CharcsChanges[(int)Charactiristics.Lucky] = Luc;
-            CharcsChanges[(int)Charactiristics.Agility] = Ag;
-            CharcsChanges[(int)Charactiristics.Strength] = Str;
-            CharcsChanges[(int)Charactiristics.Intelligence] = Int;
+            CharcsChanges[(int)CharactiristicsEnum.Vitality] = Vit;
+            CharcsChanges[(int)CharactiristicsEnum.Luck] = Luc;
+            CharcsChanges[(int)CharactiristicsEnum.Agility] = Ag;
+            CharcsChanges[(int)CharactiristicsEnum.Strength] = Str;
+            CharcsChanges[(int)CharactiristicsEnum.Intelligence] = Int;
         }
     }
 

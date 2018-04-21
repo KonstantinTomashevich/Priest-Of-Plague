@@ -25,11 +25,11 @@ namespace PriestOfPlague.Source.Unit
         /// 
         public void SetArr(int Vit, int Luc, int Ag, int Str, int Int)
         {
-            CharcsChanges[(int)Charactiristics.Vitality] = Vit;
-            CharcsChanges[(int)Charactiristics.Lucky] = Luc;
-            CharcsChanges[(int)Charactiristics.Agility] = Ag;
-            CharcsChanges[(int)Charactiristics.Strength] = Str;
-            CharcsChanges[(int)Charactiristics.Intelligence] = Int;
+            CharcsChanges[(int)CharactiristicsEnum.Vitality] = Vit;
+            CharcsChanges[(int)CharactiristicsEnum.Luck] = Luc;
+            CharcsChanges[(int)CharactiristicsEnum.Agility] = Ag;
+            CharcsChanges[(int)CharactiristicsEnum.Strength] = Str;
+            CharcsChanges[(int)CharactiristicsEnum.Intelligence] = Int;
         }
     }
 

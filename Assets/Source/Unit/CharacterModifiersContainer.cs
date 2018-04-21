@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace PriestOfPlague.Source.Unit
 {
-    enum CharactiristicsEnum { Vitality = 0, Lucky, Agility, Strength, Intelligence }
     public enum BuffsAndDebuffsEnum { Healing = 0, Satiety, Magic_support, Weakening, Poisoning, Disease, Paralysis }
 
     public class CharacterModifiersContainer : MonoBehaviour
