@@ -87,5 +87,10 @@ namespace PriestOfPlague.Source.Unit
         {
             base.Start ();
         }
+
+        new void OnDestroy ()
+        {
+            base.OnDestroy ();
+        }
     }
 }
