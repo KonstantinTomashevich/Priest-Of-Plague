@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace PriestOfPlague.Source.Unit
 {
-    public enum CharactiristicsEnum { Vitality = 0, Luck, Agility, Strength, Intelligence }
     public enum TypesOfDamageEnum { Near = 0, OnDistance, Magic, Critical }
 
     public class Unit : MonoBehaviour
     {
+        const int numberOfBuffsAndDebuffs = 7;
+        private Lineage lineage; // private?
         public string _nameOfCharacter { get; private set; }
         public bool _isMan { get; private set; }
 
@@ -29,8 +30,79 @@ namespace PriestOfPlague.Source.Unit
         public int _experience { get; private set; }
         public int _maxHeightOfInvertory { get; private set; }
 
-
         int[] _arrayOfCharactiristics = new int[5];
+        private float _regenOfHPForPoisoning;
+        //тут конкретно моды, которые в данный момент на юните
+        public List<int> ModifiersOnUnit = new List<int>();
+
+        private void ApplyLineage()
+        {
+            for (int i = 0; i < 5; i++)
+                _arrayOfCharactiristics[i] += lineage.CharcsChanges[i];
+        }
+
+        struct StructOfModifier
+        {
+            public int ID { get; set; }
+            public float timeOfModifier { get; set; }
+            public int levelOfModifier { get; set; }
+        }
+
+        //здесь просто все моды, которые могут быть, с базовой информацией о них
+        StructOfModifier[] arrOfAllBuffs = new StructOfModifier[numberOfBuffsAndDebuffs];
+
+        public void SetArrOfBuffs()
+        {
+            for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
+            {
+                arrOfAllBuffs[i].ID = i;
+                arrOfAllBuffs[i].timeOfModifier = CharacterModifiersContainer.GetBuff(i).timeOfBuff;
+                arrOfAllBuffs[i].levelOfModifier = 1;
+            }
+        }
+
+        private void ApplyModifier(int indexIn)
+        {
+            //характеристики мода к характеристикам юнита
+            for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
+                _arrayOfCharactiristics[i] += CharacterModifiersContainer.GetBuff(indexIn).CharcsChanges[i] * arrOfAllBuffs[i].levelOfModifier;
+            //реген HP для юнита *яд - особая ситуация
+            if (indexIn == (int)BuffsAndDebuffsEnum.Poisoning)
+            {
+                _regenOfHPForPoisoning = _regenOfHP;
+                _regenOfHP = CharacterModifiersContainer.GetBuff(indexIn).PlusRegen * arrOfAllBuffs[(int)BuffsAndDebuffsEnum.Poisoning].levelOfModifier;
+            }
+            else _regenOfHP += CharacterModifiersContainer.GetBuff(indexIn).PlusRegen * arrOfAllBuffs[indexIn].levelOfModifier;
+            //для лечения особая ситуация (если таких навыков, вызывающих другие навыки или отменяющих другие навыки станет больше одного, 
+            //то можно будет выделить в отдельную функцию всё это, если нужно это сделать сейчас - скажи, пожалуйста.
+            if (indexIn == (int)BuffsAndDebuffsEnum.Healing)
+                for (int i = 0; i < ModifiersOnUnit.Count; i++)
+                    for (int j = 0; j < CharacterModifiersContainer.GetBuff(indexIn).BuffsForCancel.Count; j++)
+                        if (ModifiersOnUnit[i] == CharacterModifiersContainer.GetBuff(indexIn).BuffsForCancel[j]) //если в списке баффов, что уже на юните, находит те, что нужно отменить...             
+                        {
+                            ModifiersOnUnit.RemoveAt(i);
+                        }
+            if (CharacterModifiersContainer.GetBuff(indexIn).BuffsForUsing.Count != 0)
+            {
+                int indexOfBuff = IsModInList(indexIn);
+                for (int j = 0; j < CharacterModifiersContainer.GetBuff(indexIn).BuffsForUsing.Count; j++)
+                {
+                    //если накладываемого мода нет на юните, то накладываем, есть - продляем
+                    if (indexOfBuff == -1)
+                        ModifiersOnUnit.Add(CharacterModifiersContainer.GetBuff(indexIn).BuffsForUsing[j]);
+                    else
+                        arrOfAllBuffs[ModifiersOnUnit[indexOfBuff]].timeOfModifier = CharacterModifiersContainer.GetBuff(ModifiersOnUnit[indexOfBuff]).timeOfBuff;
+                }
+            }
+        }
+
+        private int IsModInList(int indexIn)
+        {
+            for (int i = 0; i < ModifiersOnUnit.Count; i++)
+                if (ModifiersOnUnit[i] == indexIn)
+                    return i;
+            return -1;
+        }
 
         public int GetCharacteristics(CharactiristicsEnum characteristicIn)
         {
@@ -40,7 +112,7 @@ namespace PriestOfPlague.Source.Unit
         {
             _arrayOfCharactiristics[(int)typeOfCharacteristicIn] += valueOfCharacteristicIn;
             UpdateCharacteristics();
-        }       
+        }
 
         private void UpdateCharacteristics()
         {
@@ -81,17 +153,36 @@ namespace PriestOfPlague.Source.Unit
             _regenOfMP += GetCharacteristics(CharactiristicsEnum.Luck);
         }
 
-
         // Use this for initialization
         void Start()
         {
 
         }
 
+        private void ReverseCharacteristics(int indexIn)
+        {
+            //характеристики мода к характеристикам юнита
+            for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
+                _arrayOfCharactiristics[i] -= CharacterModifiersContainer.GetBuff(indexIn).CharcsChanges[i] * arrOfAllBuffs[i].levelOfModifier;
+            //реген HP для юнита *яд - особая ситуация
+            if (indexIn == (int)BuffsAndDebuffsEnum.Poisoning)
+                _regenOfHP = _regenOfHPForPoisoning;
+            else _regenOfHP -= CharacterModifiersContainer.GetBuff(indexIn).PlusRegen * arrOfAllBuffs[indexIn].levelOfModifier;
+        }
+
         // Update is called once per frame
         void Update()
         {
-
+            for (int i = 0; i < ModifiersOnUnit.Count; i++)
+            {
+                arrOfAllBuffs[ModifiersOnUnit[i]].timeOfModifier -= Time.deltaTime; //??
+                if (arrOfAllBuffs[ModifiersOnUnit[i]].timeOfModifier <= 0)
+                {
+                    ModifiersOnUnit.RemoveAt(i);
+                    arrOfAllBuffs[ModifiersOnUnit[i]].timeOfModifier = CharacterModifiersContainer.GetBuff(ModifiersOnUnit[i]).timeOfBuff;
+                    ReverseCharacteristics(ModifiersOnUnit[i]);
+                }
+            }
         }
     }
 }

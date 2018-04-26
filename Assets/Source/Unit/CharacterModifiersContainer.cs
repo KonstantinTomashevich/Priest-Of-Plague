@@ -5,18 +5,19 @@ using UnityEngine;
 
 namespace PriestOfPlague.Source.Unit
 {
-    enum CharactiristicsEnum { Vitality = 0, Lucky, Agility, Strength, Intelligence }
+    public enum CharactiristicsEnum { Vitality = 0, Luck, Agility, Strength, Intelligence }
     public enum BuffsAndDebuffsEnum { Healing = 0, Satiety, Magic_support, Weakening, Poisoning, Disease, Paralysis }
 
     public class CharacterModifiersContainer : MonoBehaviour
     {
-        CharacterModifier[] dict = new CharacterModifier[7];
+        const int numberOfBuffsAndDebuffs = 7;
+        static CharacterModifier[] dict = new CharacterModifier[numberOfBuffsAndDebuffs];
         /// <summary>
         /// Даёт баффы по индексу
         /// </summary>
         /// <param name="IndexIn">Уникальный индекс баффа</param>
         /// <returns>бафф</returns>
-        public CharacterModifier GetBuff(int IndexIn) //Меня терзают смутные сомнения о правильности такой реализации...
+        public static CharacterModifier GetBuff(int IndexIn)
         {
             if (dict[IndexIn] != null)
                 return dict[IndexIn];
@@ -37,32 +38,38 @@ namespace PriestOfPlague.Source.Unit
 
             //Сытость
             a = new CharacterModifier("Сытость", 5);
+            a.PlusRegen = 0;
             a.SetArr(1, 0, 1, 1, 0);
             dict[(int)BuffsAndDebuffsEnum.Satiety] = a;
 
             //Магическая поддержка
             a = new CharacterModifier("Магическая поддержка", 5);
+            a.PlusRegen = 0;
             a.SetArr(1, 1, 1, 1, 1);
             dict[(int)BuffsAndDebuffsEnum.Magic_support] = a;
 
             //Ослаблен
             a = new CharacterModifier("Ослабление", 5);
+            a.PlusRegen = 0;
             a.SetArr(-1, 0, -1, -1, 0);
             dict[(int)BuffsAndDebuffsEnum.Weakening] = a;
 
             //Отравлен
             a = new CharacterModifier("Отравление", 5);
+            a.PlusRegen = -1; //?
             a.SetArr(-1, 0, -1, -1, 0);
             a.PlusRegen = -1;
             dict[(int)BuffsAndDebuffsEnum.Poisoning] = a;
 
             //Болен 
             a = new CharacterModifier("Болезнь", 5);
+            a.PlusRegen = 0;
             a.SetArr(-1, -1, -1, -1, -1);
             dict[(int)BuffsAndDebuffsEnum.Disease] = a;
 
-            //Парализован(Опять же не реализовать, так как нужно понимание действий (класс unit))
+            //Парализован
             a = new CharacterModifier("Паралич", 5);
+            a.PlusRegen = 0;
             a.SetArr(0, 0, 0, 0, 0);
             dict[(int)BuffsAndDebuffsEnum.Paralysis] = a;
         }

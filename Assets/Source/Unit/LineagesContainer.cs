@@ -12,13 +12,13 @@ namespace PriestOfPlague.Source.Unit
     {
         private const int NumberOfLineages = 5;
         //Dictionary<int, Lineage> cont = new Dictionary<int, Lineage>(5);
-        Lineage[] cont = new Lineage[5];
+        static Lineage[] cont = new Lineage[5];
         /// <summary>
         /// Метод возвращает нужное происхождение
         /// </summary>
         /// <param name="index">Индекс происхождения, которое мы хотим получить</param>
         /// <returns></returns>
-        public Lineage GetLineage(int IndexIn)
+        public static Lineage GetLineage(int IndexIn)
         {
             if (cont[IndexIn] != null)
                 return cont[IndexIn];
