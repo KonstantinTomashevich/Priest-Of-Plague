@@ -9,7 +9,7 @@ namespace PriestOfPlague.Source.Unit
     public class Unit : MonoBehaviour
     {
         const int numberOfBuffsAndDebuffs = 7;
-        private Lineage lineage; // private?
+        private int lineage = -1;
         public string _nameOfCharacter { get; private set; }
         public bool _isMan { get; private set; }
 
@@ -31,75 +31,88 @@ namespace PriestOfPlague.Source.Unit
         public int _maxHeightOfInvertory { get; private set; }
 
         int[] _arrayOfCharactiristics = new int[5];
-        private float _regenOfHPForPoisoning;
-        //тут конкретно моды, которые в данный момент на юните
-        public List<int> ModifiersOnUnit = new List<int>();
 
-        private void ApplyLineage()
+        //Контейнер для хранения модов, которые сейчас на юните
+        public List<StructOfModifier> ModifiersOnUnit = new List<StructOfModifier>();
+
+        private bool _hpRegenerationBlocked;
+        private bool _mpRegenerationBlocked;
+        private bool _movementBlocked;
+        private float _unblockableHPRegeneration;
+        private float _unblockableMPRegeneration;
+
+        private void ApplyLineage(int lineageIndex, LineagesContainer container)
         {
-            for (int i = 0; i < 5; i++)
-                _arrayOfCharactiristics[i] += lineage.CharcsChanges[i];
+            if (lineageIndex != -1)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    _arrayOfCharactiristics[i] += container.GetLineage(lineageIndex).CharcsChanges[i];
+                    _arrayOfCharactiristics[i] -= container.GetLineage(lineage).CharcsChanges[i];
+                }
+                lineage = lineageIndex;
+            }
         }
 
-        struct StructOfModifier
+        public class StructOfModifier //Было сказано использовать структуру, но с ней работало только под костылями
         {
+            public StructOfModifier(int IDin, float timeOfModifierIn, int levelOfModifierIn)
+            {
+                ID = IDin;
+                timeOfModifier = timeOfModifierIn;
+                levelOfModifier = levelOfModifierIn;
+            }
             public int ID { get; set; }
             public float timeOfModifier { get; set; }
             public int levelOfModifier { get; set; }
         }
 
-        //здесь просто все моды, которые могут быть, с базовой информацией о них
-        StructOfModifier[] arrOfAllBuffs = new StructOfModifier[numberOfBuffsAndDebuffs];
-
-        public void SetArrOfBuffs()
-        {
-            for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
-            {
-                arrOfAllBuffs[i].ID = i;
-                arrOfAllBuffs[i].timeOfModifier = CharacterModifiersContainer.GetBuff(i).timeOfBuff;
-                arrOfAllBuffs[i].levelOfModifier = 1;
-            }
-        }
-
-        private void ApplyModifier(int indexIn)
+        //всё переделать к чёртовой матери
+        private void ApplyModifier(int indexIn, CharacterModifiersContainer container)
         {
             //характеристики мода к характеристикам юнита
             for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
-                _arrayOfCharactiristics[i] += CharacterModifiersContainer.GetBuff(indexIn).CharcsChanges[i] * arrOfAllBuffs[i].levelOfModifier;
+                _arrayOfCharactiristics[i] += container.GetBuff(indexIn).CharcsChanges[i] * ModifiersOnUnit[i].levelOfModifier;
             //реген HP для юнита *яд - особая ситуация
             if (indexIn == (int)BuffsAndDebuffsEnum.Poisoning)
             {
-                _regenOfHPForPoisoning = _regenOfHP;
-                _regenOfHP = CharacterModifiersContainer.GetBuff(indexIn).PlusRegen * arrOfAllBuffs[(int)BuffsAndDebuffsEnum.Poisoning].levelOfModifier;
+                _hpRegenerationBlocked = true;
+                _unblockableHPRegeneration += container.GetBuff(indexIn)._unblockableHPRegeneration * ModifiersOnUnit[(int)BuffsAndDebuffsEnum.Poisoning].levelOfModifier;
             }
-            else _regenOfHP += CharacterModifiersContainer.GetBuff(indexIn).PlusRegen * arrOfAllBuffs[indexIn].levelOfModifier;
+            else _regenOfHP += container.GetBuff(indexIn).PlusRegen * ModifiersOnUnit[indexIn].levelOfModifier; //Хил идёт сюда же, так можно? Иначе яд после хила будет едва заметен
             //для лечения особая ситуация (если таких навыков, вызывающих другие навыки или отменяющих другие навыки станет больше одного, 
             //то можно будет выделить в отдельную функцию всё это, если нужно это сделать сейчас - скажи, пожалуйста.
             if (indexIn == (int)BuffsAndDebuffsEnum.Healing)
                 for (int i = 0; i < ModifiersOnUnit.Count; i++)
-                    for (int j = 0; j < CharacterModifiersContainer.GetBuff(indexIn).BuffsForCancel.Count; j++)
-                        if (ModifiersOnUnit[i] == CharacterModifiersContainer.GetBuff(indexIn).BuffsForCancel[j]) //если в списке баффов, что уже на юните, находит те, что нужно отменить...             
+                    for (int j = 0; j < container.GetBuff(indexIn).BuffsForCancel.Count; j++)
+                        if (ModifiersOnUnit[i].ID == container.GetBuff(indexIn).BuffsForCancel[j]) //если в списке баффов, которые уже на юните, находит те, что нужно отменить...             
                         {
                             ModifiersOnUnit.RemoveAt(i);
+                            if (ModifiersOnUnit[i].ID == (int)BuffsAndDebuffsEnum.Poisoning)
+                                _hpRegenerationBlocked = false; //только для хила
                         }
-            if (CharacterModifiersContainer.GetBuff(indexIn).BuffsForUsing.Count != 0)
+            if (container.GetBuff(indexIn).BuffsForUsing.Count != 0)
             {
                 int indexOfBuff = IsModInList(indexIn);
-                for (int j = 0; j < CharacterModifiersContainer.GetBuff(indexIn).BuffsForUsing.Count; j++)
+                for (int j = 0; j < container.GetBuff(indexIn).BuffsForUsing.Count; j++)
                 {
                     //если накладываемого мода нет на юните, то накладываем, есть - продляем
+                    int IndexOfUsingMod = container.GetBuff(indexIn).BuffsForUsing[j]; //индекс мода, который мы хотим наложить дополнительно
                     if (indexOfBuff == -1)
-                        ModifiersOnUnit.Add(CharacterModifiersContainer.GetBuff(indexIn).BuffsForUsing[j]);
+                        ModifiersOnUnit.Add(new StructOfModifier(IndexOfUsingMod, container.GetBuff(IndexOfUsingMod).timeOfBuff, ModifiersOnUnit[IndexOfUsingMod].levelOfModifier));
                     else
-                        arrOfAllBuffs[ModifiersOnUnit[indexOfBuff]].timeOfModifier = CharacterModifiersContainer.GetBuff(ModifiersOnUnit[indexOfBuff]).timeOfBuff;
+                        ModifiersOnUnit[indexOfBuff].timeOfModifier = container.GetBuff(ModifiersOnUnit[indexOfBuff].ID).timeOfBuff;
                 }
             }
+            if (container.GetBuff(indexIn)._blocksMovement)
+                _movementBlocked = true;
+            UpdateCharacteristics();
         }
 
         private int IsModInList(int indexIn)
         {
             for (int i = 0; i < ModifiersOnUnit.Count; i++)
-                if (ModifiersOnUnit[i] == indexIn)
+                if (ModifiersOnUnit[i].ID == indexIn)
                     return i;
             return -1;
         }
@@ -116,41 +129,57 @@ namespace PriestOfPlague.Source.Unit
 
         private void UpdateCharacteristics()
         {
-            //обработка силы
-            _nearDamageBust += (float)(GetCharacteristics(CharactiristicsEnum.Strength) * 0.03);
-            _maxHP += 5 * GetCharacteristics(CharactiristicsEnum.Strength);
-            _maxMP += 2 * GetCharacteristics(CharactiristicsEnum.Strength);
-            _regenOfHP += GetCharacteristics(CharactiristicsEnum.Strength);
-            _maxHeightOfInvertory += 3 * GetCharacteristics(CharactiristicsEnum.Strength);
+            int strength = GetCharacteristics(CharactiristicsEnum.Strength);
+            if (strength <= 0)
+                strength = 1;
+            int agility = GetCharacteristics(CharactiristicsEnum.Agility);
+            if (agility <= 0)
+                agility = 1;
+            int vitality = GetCharacteristics(CharactiristicsEnum.Vitality);
+            if (vitality <= 0)
+                vitality = 1;
+            int intelligence = GetCharacteristics(CharactiristicsEnum.Intelligence);
+            if (intelligence <= 0)
+                intelligence = 1;
+            int luck = GetCharacteristics(CharactiristicsEnum.Luck);
+            if (luck <= 0)
+                luck = 1;
+
+            //обработка силы            
+            _nearDamageBust += (float)((float)strength * 0.03);
+            _maxHP += 5 * strength;
+            _maxMP += 2 * strength;
+            _regenOfHP += strength;
+            _maxHeightOfInvertory += 3 * strength;
 
             //ловкость
-            _onDistanceDamageBust += (float)(0.03 * GetCharacteristics(CharactiristicsEnum.Agility));
-            _maxHP += 2 * GetCharacteristics(CharactiristicsEnum.Agility);
-            _maxMP += 5 * GetCharacteristics(CharactiristicsEnum.Agility);
-            _regenOfMP += GetCharacteristics(CharactiristicsEnum.Agility);
+            _onDistanceDamageBust += (float)(0.03 * (float)agility);
+            _maxHP += 2 * agility;
+            _maxMP += 5 * agility;
+            _regenOfMP += agility;
 
             //выносливость
-            _dictionaryOfResists[TypesOfDamageEnum.Near] += (float)(0.03 * GetCharacteristics(CharactiristicsEnum.Vitality));
-            _dictionaryOfResists[TypesOfDamageEnum.OnDistance] += (float)(0.03 * GetCharacteristics(CharactiristicsEnum.Vitality));
-            _dictionaryOfResists[TypesOfDamageEnum.Magic] += (float)(0.03 * GetCharacteristics(CharactiristicsEnum.Vitality));
-            _dictionaryOfResists[TypesOfDamageEnum.Critical] += (float)(0.03 * GetCharacteristics(CharactiristicsEnum.Vitality));
-            _maxHP += 4 * GetCharacteristics(CharactiristicsEnum.Vitality);
-            _maxMP += 4 * GetCharacteristics(CharactiristicsEnum.Vitality);
-            _regenOfHP += GetCharacteristics(CharactiristicsEnum.Vitality);
-            _regenOfMP += GetCharacteristics(CharactiristicsEnum.Vitality);
-            _maxHeightOfInvertory += 3 * GetCharacteristics(CharactiristicsEnum.Vitality);
+            _dictionaryOfResists[TypesOfDamageEnum.Near] += (float)(0.03 * (float)vitality);
+            _dictionaryOfResists[TypesOfDamageEnum.OnDistance] += (float)(0.03 * (float)vitality);
+            _dictionaryOfResists[TypesOfDamageEnum.Magic] += (float)(0.03 * (float)vitality);
+            _dictionaryOfResists[TypesOfDamageEnum.Critical] += (float)(0.03 * (float)vitality);
+            _maxHP += 4 * vitality;
+            _maxMP += 4 * vitality;
+            _regenOfHP += vitality;
+            _regenOfMP += vitality;
+            _maxHeightOfInvertory += 3 * vitality;
 
             //разум
-            _magicDamageBust += (float)(0.2 * GetCharacteristics(CharactiristicsEnum.Intelligence));
-            _maxMP += 3 * GetCharacteristics(CharactiristicsEnum.Intelligence);
-            _regenOfHP += GetCharacteristics(CharactiristicsEnum.Intelligence);
-            _regenOfMP += GetCharacteristics(CharactiristicsEnum.Intelligence);
+            _magicDamageBust += (float)(0.2 * (float)intelligence);
+            _maxMP += 3 * intelligence;
+            _regenOfHP += intelligence;
+            _regenOfMP += intelligence;
 
             //удачливость
-            _criticalDamageBust += (float)(0.03 * GetCharacteristics(CharactiristicsEnum.Luck));
-            _dictionaryOfResists[TypesOfDamageEnum.Critical] += (float)(0.03 * GetCharacteristics(CharactiristicsEnum.Luck));
-            _regenOfHP += GetCharacteristics(CharactiristicsEnum.Luck);
-            _regenOfMP += GetCharacteristics(CharactiristicsEnum.Luck);
+            _criticalDamageBust += (float)(0.03 * (float)luck);
+            _dictionaryOfResists[TypesOfDamageEnum.Critical] += (float)(0.03 * (float)luck);
+            _regenOfHP += luck;
+            _regenOfMP += luck;
         }
 
         // Use this for initialization
@@ -159,28 +188,42 @@ namespace PriestOfPlague.Source.Unit
 
         }
 
-        private void ReverseCharacteristics(int indexIn)
+        private void ReverseCharacteristics(int indexIn, CharacterModifiersContainer container)
         {
             //характеристики мода к характеристикам юнита
             for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
-                _arrayOfCharactiristics[i] -= CharacterModifiersContainer.GetBuff(indexIn).CharcsChanges[i] * arrOfAllBuffs[i].levelOfModifier;
-            //реген HP для юнита *яд - особая ситуация
+                _arrayOfCharactiristics[i] -= container.GetBuff(indexIn).CharcsChanges[i] * ModifiersOnUnit[i].levelOfModifier;
+            _regenOfHP -= container.GetBuff(indexIn).PlusRegen * ModifiersOnUnit[indexIn].levelOfModifier;
+            _unblockableHPRegeneration -= container.GetBuff(indexIn)._unblockableHPRegeneration * ModifiersOnUnit[indexIn].levelOfModifier;
             if (indexIn == (int)BuffsAndDebuffsEnum.Poisoning)
-                _regenOfHP = _regenOfHPForPoisoning;
-            else _regenOfHP -= CharacterModifiersContainer.GetBuff(indexIn).PlusRegen * arrOfAllBuffs[indexIn].levelOfModifier;
+                _hpRegenerationBlocked = false;
+            if (container.GetBuff(indexIn)._blocksMovement)
+                _movementBlocked = false;
         }
 
         // Update is called once per frame
         void Update()
         {
+            //сделать, чтобы делалось не за раз, а за секунду столько хилилось
+            if (!_hpRegenerationBlocked)
+            {
+                _currentHP += _regenOfHP;
+            }
+            _currentHP += _unblockableHPRegeneration;
+            if (!_mpRegenerationBlocked)
+            {
+                _currentMP += _regenOfMP;
+            }
+            _currentMP += _unblockableMPRegeneration;
+            //проходится по всем наложенным баффам
             for (int i = 0; i < ModifiersOnUnit.Count; i++)
             {
-                arrOfAllBuffs[ModifiersOnUnit[i]].timeOfModifier -= Time.deltaTime; //??
-                if (arrOfAllBuffs[ModifiersOnUnit[i]].timeOfModifier <= 0)
+                ModifiersOnUnit[i].timeOfModifier -= Time.deltaTime;
+                if (ModifiersOnUnit[i].timeOfModifier <= 0)
                 {
+                    ReverseCharacteristics(ModifiersOnUnit[i].ID, new CharacterModifiersContainer());
                     ModifiersOnUnit.RemoveAt(i);
-                    arrOfAllBuffs[ModifiersOnUnit[i]].timeOfModifier = CharacterModifiersContainer.GetBuff(ModifiersOnUnit[i]).timeOfBuff;
-                    ReverseCharacteristics(ModifiersOnUnit[i]);
+                    UpdateCharacteristics();
                 }
             }
         }

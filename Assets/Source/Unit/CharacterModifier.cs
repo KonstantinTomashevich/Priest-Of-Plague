@@ -9,13 +9,19 @@ namespace PriestOfPlague.Source.Unit
     {
         public BuffsAndDebuffsEnum Index { get; set; }
         public string InfoAboutBuffsInString { get; set; }
-        public float timeOfBuff;
+        public float timeOfBuff { get; set; }
         public int[] CharcsChanges = new int[5];
         private static int index = 0;
         public int PlusRegen { set; get; }
         public List<int> BuffsForUsing = new List<int>();
         public List<int> BuffsForCancel = new List<int>();
 
+        //работать с этими штуками
+        public bool _blocksHpRegeneration { get; set; }
+        public bool _blocksMpRegeneration { get; set; }
+        public bool _blocksMovement { get; set; }
+        public float _unblockableHPRegeneration { get; set; }
+        public float _unblockableMPRegeneration { get; set; }
         /// <summary>
         /// Конструктор для изначальной информации о баффах
         /// </summary>
@@ -25,7 +31,13 @@ namespace PriestOfPlague.Source.Unit
         {
             this.Index = (BuffsAndDebuffsEnum)index++;
             this.InfoAboutBuffsInString = infoIn;
-            this.timeOfBuff = timeIn;           
+            this.timeOfBuff = timeIn;
+            _blocksHpRegeneration = false;
+            _blocksMpRegeneration = false;
+            _blocksMovement = false;
+            _unblockableHPRegeneration = 0;
+            _unblockableMPRegeneration = 0;
+            PlusRegen = 0;
         }
 
         /// <summary>

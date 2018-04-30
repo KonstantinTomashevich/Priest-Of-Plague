@@ -10,6 +10,11 @@ namespace PriestOfPlague.Source.Unit
     /// </summary>
     public class LineagesContainer : MonoBehaviour
     {
+        public LineagesContainer()
+        {
+            SetLineages();
+        }
+
         private const int NumberOfLineages = 5;
         //Dictionary<int, Lineage> cont = new Dictionary<int, Lineage>(5);
         static Lineage[] cont = new Lineage[5];
@@ -18,7 +23,7 @@ namespace PriestOfPlague.Source.Unit
         /// </summary>
         /// <param name="index">Индекс происхождения, которое мы хотим получить</param>
         /// <returns></returns>
-        public static Lineage GetLineage(int IndexIn)
+        public Lineage GetLineage(int IndexIn)
         {
             if (cont[IndexIn] != null)
                 return cont[IndexIn];
