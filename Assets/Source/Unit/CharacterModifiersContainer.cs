@@ -16,7 +16,7 @@ namespace PriestOfPlague.Source.Unit
         }
 
         const int numberOfBuffsAndDebuffs = 7;
-        static CharacterModifier[] dict = new CharacterModifier[numberOfBuffsAndDebuffs];
+        CharacterModifier[] dict = new CharacterModifier[numberOfBuffsAndDebuffs];
         /// <summary>
         /// Даёт баффы по индексу
         /// </summary>

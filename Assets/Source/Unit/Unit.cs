@@ -18,7 +18,7 @@ namespace PriestOfPlague.Source.Unit
         public float _nearDamageBust { get; private set; }
         public float _onDistanceDamageBust { get; private set; }
         public float _magicDamageBust { get; private set; }
-        public float _criticalDamageBust { get; private set; }
+        public float _criticalDamageChance { get; private set; }
 
         public float _currentHP { get; private set; }
         public float _maxHP { get; private set; }
@@ -35,13 +35,13 @@ namespace PriestOfPlague.Source.Unit
         //Контейнер для хранения модов, которые сейчас на юните
         public List<StructOfModifier> ModifiersOnUnit = new List<StructOfModifier>();
 
-        private bool _hpRegenerationBlocked;
-        private bool _mpRegenerationBlocked;
-        private bool _movementBlocked;
-        private float _unblockableHPRegeneration;
-        private float _unblockableMPRegeneration;
+        private bool _hpRegenerationBlocked = false;
+        private bool _mpRegenerationBlocked = false;
+        private bool _movementBlocked = false;
+        private float _unblockableHPRegeneration = 0;
+        private float _unblockableMPRegeneration = 0;
 
-        private void ApplyLineage(int lineageIndex, LineagesContainer container)
+        public void ApplyLineage(int lineageIndex, LineagesContainer container)
         {
             if (lineageIndex != -1)
             {
@@ -54,7 +54,7 @@ namespace PriestOfPlague.Source.Unit
             }
         }
 
-        public class StructOfModifier //Было сказано использовать структуру, но с ней работало только под костылями
+        public class StructOfModifier
         {
             public StructOfModifier(int IDin, float timeOfModifierIn, int levelOfModifierIn)
             {
@@ -67,54 +67,33 @@ namespace PriestOfPlague.Source.Unit
             public int levelOfModifier { get; set; }
         }
 
-        //всё переделать к чёртовой матери
         private void ApplyModifier(int indexIn, CharacterModifiersContainer container)
         {
-            //характеристики мода к характеристикам юнита
-            for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
-                _arrayOfCharactiristics[i] += container.GetBuff(indexIn).CharcsChanges[i] * ModifiersOnUnit[i].levelOfModifier;
-            //реген HP для юнита *яд - особая ситуация
-            if (indexIn == (int)BuffsAndDebuffsEnum.Poisoning)
-            {
-                _hpRegenerationBlocked = true;
-                _unblockableHPRegeneration += container.GetBuff(indexIn)._unblockableHPRegeneration * ModifiersOnUnit[(int)BuffsAndDebuffsEnum.Poisoning].levelOfModifier;
-            }
-            else _regenOfHP += container.GetBuff(indexIn).PlusRegen * ModifiersOnUnit[indexIn].levelOfModifier; //Хил идёт сюда же, так можно? Иначе яд после хила будет едва заметен
-            //для лечения особая ситуация (если таких навыков, вызывающих другие навыки или отменяющих другие навыки станет больше одного, 
-            //то можно будет выделить в отдельную функцию всё это, если нужно это сделать сейчас - скажи, пожалуйста.
-            if (indexIn == (int)BuffsAndDebuffsEnum.Healing)
-                for (int i = 0; i < ModifiersOnUnit.Count; i++)
-                    for (int j = 0; j < container.GetBuff(indexIn).BuffsForCancel.Count; j++)
-                        if (ModifiersOnUnit[i].ID == container.GetBuff(indexIn).BuffsForCancel[j]) //если в списке баффов, которые уже на юните, находит те, что нужно отменить...             
-                        {
-                            ModifiersOnUnit.RemoveAt(i);
-                            if (ModifiersOnUnit[i].ID == (int)BuffsAndDebuffsEnum.Poisoning)
-                                _hpRegenerationBlocked = false; //только для хила
-                        }
-            if (container.GetBuff(indexIn).BuffsForUsing.Count != 0)
-            {
-                int indexOfBuff = IsModInList(indexIn);
-                for (int j = 0; j < container.GetBuff(indexIn).BuffsForUsing.Count; j++)
-                {
-                    //если накладываемого мода нет на юните, то накладываем, есть - продляем
-                    int IndexOfUsingMod = container.GetBuff(indexIn).BuffsForUsing[j]; //индекс мода, который мы хотим наложить дополнительно
-                    if (indexOfBuff == -1)
-                        ModifiersOnUnit.Add(new StructOfModifier(IndexOfUsingMod, container.GetBuff(IndexOfUsingMod).timeOfBuff, ModifiersOnUnit[IndexOfUsingMod].levelOfModifier));
-                    else
-                        ModifiersOnUnit[indexOfBuff].timeOfModifier = container.GetBuff(ModifiersOnUnit[indexOfBuff].ID).timeOfBuff;
-                }
-            }
-            if (container.GetBuff(indexIn)._blocksMovement)
-                _movementBlocked = true;
-            UpdateCharacteristics();
-        }
+            //Вопрос: в какой момент задаётся умножение на уровень? По идее в этом месте нужно положить в ModifiersOnUnit структуру с нужным баффом, однако где взять level?
+            //Это вопрос чисто по механике игры: что будет происходить внутри программы, когда на другого персонажа будет кастоваться скилл? Что именно и как пошлётся?
+            CharacterModifier modIn = container.GetBuff(indexIn);
 
-        private int IsModInList(int indexIn)
-        {
+            for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
+                _arrayOfCharactiristics[i] += modIn.CharcsChanges[i] * ModifiersOnUnit[i].levelOfModifier;
+
+            _regenOfHP += modIn.PlusRegen;//а где аналог для MP?
+            _unblockableHPRegeneration += modIn._unblockableHPRegeneration; //умножение на level
+            _unblockableMPRegeneration += modIn._unblockableMPRegeneration; //умножение на level
+            _hpRegenerationBlocked = modIn._blocksHpRegeneration;
+            _mpRegenerationBlocked = modIn._blocksMpRegeneration;
+            _movementBlocked = modIn._blocksMovement;
+
             for (int i = 0; i < ModifiersOnUnit.Count; i++)
-                if (ModifiersOnUnit[i].ID == indexIn)
-                    return i;
-            return -1;
+                for (int j = 0; j < modIn.BuffsForCancel.Count; j++)
+                    if (ModifiersOnUnit[i].ID == modIn.BuffsForCancel[j])
+                    {
+                        ReverseCharacteristics(ModifiersOnUnit[i].ID, new CharacterModifiersContainer());
+                        ModifiersOnUnit.RemoveAt(i);
+                    }
+
+            for (int j = 0; j < modIn.BuffsForUsing.Count; j++)
+                ApplyModifier(modIn.BuffsForUsing[j], new CharacterModifiersContainer());
+            UpdateCharacteristics();
         }
 
         public int GetCharacteristics(CharactiristicsEnum characteristicIn)
@@ -176,7 +155,7 @@ namespace PriestOfPlague.Source.Unit
             _regenOfMP += intelligence;
 
             //удачливость
-            _criticalDamageBust += (float)(0.03 * (float)luck);
+            _criticalDamageChance += (float)(0.03 * (float)luck);
             _dictionaryOfResists[TypesOfDamageEnum.Critical] += (float)(0.03 * (float)luck);
             _regenOfHP += luck;
             _regenOfMP += luck;
@@ -190,42 +169,51 @@ namespace PriestOfPlague.Source.Unit
 
         private void ReverseCharacteristics(int indexIn, CharacterModifiersContainer container)
         {
-            //характеристики мода к характеристикам юнита
+            CharacterModifier modIn = container.GetBuff(indexIn);
+
             for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
-                _arrayOfCharactiristics[i] -= container.GetBuff(indexIn).CharcsChanges[i] * ModifiersOnUnit[i].levelOfModifier;
-            _regenOfHP -= container.GetBuff(indexIn).PlusRegen * ModifiersOnUnit[indexIn].levelOfModifier;
-            _unblockableHPRegeneration -= container.GetBuff(indexIn)._unblockableHPRegeneration * ModifiersOnUnit[indexIn].levelOfModifier;
-            if (indexIn == (int)BuffsAndDebuffsEnum.Poisoning)
+                _arrayOfCharactiristics[i] -= modIn.CharcsChanges[i] * ModifiersOnUnit[i].levelOfModifier;
+
+            _regenOfHP -= modIn.PlusRegen;
+            _unblockableHPRegeneration -= modIn._unblockableHPRegeneration; //умножение на level
+            _unblockableMPRegeneration -= modIn._unblockableMPRegeneration; //умножение на level
+
+            if (modIn._blocksHpRegeneration)
                 _hpRegenerationBlocked = false;
-            if (container.GetBuff(indexIn)._blocksMovement)
+            if (modIn._blocksMpRegeneration)
+                _mpRegenerationBlocked = false;
+            if (modIn._blocksMovement)
                 _movementBlocked = false;
+            UpdateCharacteristics();
         }
 
         // Update is called once per frame
         void Update()
         {
-            //сделать, чтобы делалось не за раз, а за секунду столько хилилось
             if (!_hpRegenerationBlocked)
             {
-                _currentHP += _regenOfHP;
+                _currentHP += _regenOfHP * Time.deltaTime;
             }
-            _currentHP += _unblockableHPRegeneration;
+            _currentHP += _unblockableHPRegeneration * Time.deltaTime;
             if (!_mpRegenerationBlocked)
             {
-                _currentMP += _regenOfMP;
+                _currentMP += _regenOfMP * Time.deltaTime;
             }
-            _currentMP += _unblockableMPRegeneration;
-            //проходится по всем наложенным баффам
+            _currentMP += _unblockableMPRegeneration * Time.deltaTime;
+
+            List<int> arrOfRemoving = new List<int>();
             for (int i = 0; i < ModifiersOnUnit.Count; i++)
             {
                 ModifiersOnUnit[i].timeOfModifier -= Time.deltaTime;
                 if (ModifiersOnUnit[i].timeOfModifier <= 0)
                 {
                     ReverseCharacteristics(ModifiersOnUnit[i].ID, new CharacterModifiersContainer());
-                    ModifiersOnUnit.RemoveAt(i);
+                    arrOfRemoving.Add(i);
                     UpdateCharacteristics();
                 }
             }
+            for (int i = arrOfRemoving.Count - 1; i >= 0; i--)
+                ModifiersOnUnit.RemoveAt(i);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace PriestOfPlague.Source.Unit
 
         private const int NumberOfLineages = 5;
         //Dictionary<int, Lineage> cont = new Dictionary<int, Lineage>(5);
-        static Lineage[] cont = new Lineage[5];
+        Lineage[] cont = new Lineage[5];
         /// <summary>
         /// Метод возвращает нужное происхождение
         /// </summary>

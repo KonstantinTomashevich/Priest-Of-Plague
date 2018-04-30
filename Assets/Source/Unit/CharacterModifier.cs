@@ -22,6 +22,7 @@ namespace PriestOfPlague.Source.Unit
         public bool _blocksMovement { get; set; }
         public float _unblockableHPRegeneration { get; set; }
         public float _unblockableMPRegeneration { get; set; }
+
         /// <summary>
         /// Конструктор для изначальной информации о баффах
         /// </summary>
@@ -32,6 +33,7 @@ namespace PriestOfPlague.Source.Unit
             this.Index = (BuffsAndDebuffsEnum)index++;
             this.InfoAboutBuffsInString = infoIn;
             this.timeOfBuff = timeIn;
+
             _blocksHpRegeneration = false;
             _blocksMpRegeneration = false;
             _blocksMovement = false;
