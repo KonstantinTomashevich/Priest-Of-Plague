@@ -4,8 +4,6 @@ using UnityEngine;
 
 namespace PriestOfPlague.Source.Unit
 {
-    public enum TypesOfDamageEnum { Near = 0, OnDistance, Magic, Critical }
-
     public class Unit : MonoBehaviour
     {
         const int numberOfBuffsAndDebuffs = 7;
@@ -13,12 +11,13 @@ namespace PriestOfPlague.Source.Unit
         public string _nameOfCharacter { get; private set; }
         public bool _isMan { get; private set; }
 
-        Dictionary<TypesOfDamageEnum, float> _dictionaryOfResists = new Dictionary<TypesOfDamageEnum, float>();
+        Dictionary<typesOfDamageEnum, float> _dictionaryOfResists = new Dictionary<typesOfDamageEnum, float>();
 
         public float _nearDamageBust { get; private set; }
         public float _onDistanceDamageBust { get; private set; }
         public float _magicDamageBust { get; private set; }
         public float _criticalDamageChance { get; private set; }
+        public float _criticalDamageResistChance { get; private set; }
 
         public float _currentHP { get; private set; }
         public float _maxHP { get; private set; }
@@ -138,10 +137,14 @@ namespace PriestOfPlague.Source.Unit
             _regenOfMP += agility;
 
             //выносливость
-            _dictionaryOfResists[TypesOfDamageEnum.Near] += (float)(0.03 * (float)vitality);
-            _dictionaryOfResists[TypesOfDamageEnum.OnDistance] += (float)(0.03 * (float)vitality);
-            _dictionaryOfResists[TypesOfDamageEnum.Magic] += (float)(0.03 * (float)vitality);
-            _dictionaryOfResists[TypesOfDamageEnum.Critical] += (float)(0.03 * (float)vitality);
+            _dictionaryOfResists[typesOfDamageEnum.Chopping] += (float)(0.03 * (float)vitality);
+            _dictionaryOfResists[typesOfDamageEnum.Stitching] += (float)(0.03 * (float)vitality);
+            _dictionaryOfResists[typesOfDamageEnum.Armor_piercing] += (float)(0.03 * (float)vitality);
+            _dictionaryOfResists[typesOfDamageEnum.Pushing] += (float)(0.03 * (float)vitality);
+            _dictionaryOfResists[typesOfDamageEnum.Light] += (float)(0.03 * (float)vitality);
+            _dictionaryOfResists[typesOfDamageEnum.Fiery] += (float)(0.03 * (float)vitality);
+            _dictionaryOfResists[typesOfDamageEnum.Icy] += (float)(0.03 * (float)vitality);
+            _dictionaryOfResists[typesOfDamageEnum.Damage_pure_magic] += (float)(0.03 * (float)vitality);
             _maxHP += 4 * vitality;
             _maxMP += 4 * vitality;
             _regenOfHP += vitality;
@@ -156,7 +159,7 @@ namespace PriestOfPlague.Source.Unit
 
             //удачливость
             _criticalDamageChance += (float)(0.03 * (float)luck);
-            _dictionaryOfResists[TypesOfDamageEnum.Critical] += (float)(0.03 * (float)luck);
+            _criticalDamageResistChance += (float)(0.03 * (float)luck);
             _regenOfHP += luck;
             _regenOfMP += luck;
         }
