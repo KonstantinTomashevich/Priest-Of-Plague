@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
+using System.Runtime.Serialization;
 using System.Xml;
 using PriestOfPlague.Source.Core;
 using UnityEngine;
@@ -21,6 +23,13 @@ namespace PriestOfPlague.Source.Items
             return new Item (XmlHelper.GetIntAttribute (input, "Item Type ID"),
                 XmlHelper.GetFloatAttribute (input, "Charge"),
                 XmlHelper.GetIntAttribute (input, "Level"));
+        }
+
+        public void SaveToXml (XmlElement output)
+        {
+            output.SetAttribute ("Item Type ID", _itemTypeId.ToString (NumberFormatInfo.InvariantInfo));
+            output.SetAttribute ("Charge", _charge.ToString (NumberFormatInfo.InvariantInfo));
+            output.SetAttribute ("Level", _level.ToString (NumberFormatInfo.InvariantInfo));
         }
 
         public int ItemTypeId => _itemTypeId;

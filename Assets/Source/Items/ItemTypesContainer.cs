@@ -31,6 +31,9 @@ namespace PriestOfPlague.Source.Items
 
         public void LoadFromXML (XmlNode input)
         {
+            _itemTypes.Clear ();
+            _supertypes.Clear ();
+            
             foreach (var supertypeNode in XmlHelper.IterateChildren (input, "supertype"))
             {
                 int id = XmlHelper.GetIntAttribute (supertypeNode, "ID");
