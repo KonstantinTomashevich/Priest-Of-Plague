@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using PriestOfPlague.Source.Core;
 using UnityEngine;
 
 namespace PriestOfPlague.Source.Items
@@ -20,6 +22,33 @@ namespace PriestOfPlague.Source.Items
             _supertypes = new List <int> ();
             Weight = 0;
             Icon = null;
+        }
+
+        public static ItemType LoadFromXML (XmlNode input)
+        {
+            var itemType = new ItemType (XmlHelper.GetIntAttribute (input, "ID"));
+            foreach (var spellNode in XmlHelper.IterateChildren (input, "opensSpell"))
+            {
+                itemType._opensSpells.Add (XmlHelper.GetIntAttribute (spellNode, "ID"));
+            }
+
+            itemType._maxCharge = XmlHelper.GetFloatAttribute (input, "Max Charge");
+            itemType._chargeRegeneration = XmlHelper.GetFloatAttribute (input, "Charge Regeneration");
+
+            itemType._basicForce = XmlHelper.GetFloatAttribute (input, "Basic Force");
+            itemType._forceAdditionPerLevel = XmlHelper.GetFloatAttribute (input, "Force Addition Per Level");
+            itemType._maxChargeAdditionPerLevel = XmlHelper.GetFloatAttribute (input, "Max Charge Addition Per Level");
+            itemType._chargeRegenerationAdditionPerLevel = XmlHelper.GetFloatAttribute (
+                input, "Charge Regeneration Addition Per Level");
+            
+            foreach (var supertypeNode in XmlHelper.IterateChildren (input, "supertype"))
+            {
+                itemType._opensSpells.Add (XmlHelper.GetIntAttribute (supertypeNode, "ID"));
+            }
+            
+            itemType._weight = XmlHelper.GetFloatAttribute (input, "Weight");
+            itemType._icon = Resources.Load <Sprite> (input.Attributes ["Icon"].InnerText);
+            return itemType;
         }
 
         public int Id => _id;

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml;
+using PriestOfPlague.Source.Core;
 using UnityEngine;
 
 namespace PriestOfPlague.Source.Items
@@ -12,6 +14,13 @@ namespace PriestOfPlague.Source.Items
             _itemTypeId = itemTypeId;
             Charge = charge;
             Level = level;
+        }
+
+        public static Item LoadFromXML (XmlNode input)
+        {
+            return new Item (XmlHelper.GetIntAttribute (input, "Item Type ID"),
+                XmlHelper.GetFloatAttribute (input, "Charge"),
+                XmlHelper.GetIntAttribute (input, "Level"));
         }
 
         public int ItemTypeId => _itemTypeId;

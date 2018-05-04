@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using PriestOfPlague.Source.Core;
 using UnityEngine;
 
 namespace PriestOfPlague.Source.Items
@@ -25,6 +27,22 @@ namespace PriestOfPlague.Source.Items
         public bool RemoveItemType (ItemType itemType)
         {
             return ItemTypes.Remove (itemType.Id);
+        }
+
+        public void LoadFromXML (XmlNode input)
+        {
+            foreach (var supertypeNode in XmlHelper.IterateChildren (input, "supertype"))
+            {
+                int id = XmlHelper.GetIntAttribute (supertypeNode, "ID");
+                string name = supertypeNode.Attributes ["Name"].InnerText;
+                _supertypes.Add (id, name);
+            }
+            
+            foreach (var itemTypeNode in XmlHelper.IterateChildren (input, "itemType"))
+            {
+                var itemType = ItemType.LoadFromXML (itemTypeNode);
+                _itemTypes.Add (itemType.Id, itemType);
+            }
         }
 
         public Dictionary <int, ItemType> ItemTypes => _itemTypes;
