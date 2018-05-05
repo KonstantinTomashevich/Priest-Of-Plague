@@ -67,18 +67,16 @@ namespace PriestOfPlague.Source.Unit
             public int levelOfModifier { get; set; }
         }
 
-        private void ApplyModifier(int indexIn, CharacterModifiersContainer container)
+        private void ApplyModifier(int indexIn, int level, CharacterModifiersContainer container)
         {
-            //Вопрос: в какой момент задаётся умножение на уровень? По идее в этом месте нужно положить в ModifiersOnUnit структуру с нужным баффом, однако где взять level?
-            //Это вопрос чисто по механике игры: что будет происходить внутри программы, когда на другого персонажа будет кастоваться скилл? Что именно и как пошлётся?
-            CharacterModifier modIn = container.GetBuff(indexIn);
+            var modIn = container.GetBuff(indexIn);
 
             for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
                 _arrayOfCharactiristics[i] += modIn.CharcsChanges[i] * ModifiersOnUnit[i].levelOfModifier;
 
-            _regenOfHP += modIn.PlusRegen;//а где аналог для MP?
-            _unblockableHPRegeneration += modIn._unblockableHPRegeneration; //умножение на level
-            _unblockableMPRegeneration += modIn._unblockableMPRegeneration; //умножение на level
+            _regenOfHP += modIn.PlusRegen * level;//а где аналог для MP?
+            _unblockableHPRegeneration += modIn._unblockableHPRegeneration * level; //умножение на level
+            _unblockableMPRegeneration += modIn._unblockableMPRegeneration * level; //умножение на level
             _hpRegenerationBlocked = modIn._blocksHpRegeneration;
             _mpRegenerationBlocked = modIn._blocksMpRegeneration;
             _movementBlocked = modIn._blocksMovement;
@@ -92,7 +90,7 @@ namespace PriestOfPlague.Source.Unit
                     }
 
             for (int j = 0; j < modIn.BuffsForUsing.Count; j++)
-                ApplyModifier(modIn.BuffsForUsing[j], new CharacterModifiersContainer());
+                ApplyModifier(modIn.BuffsForUsing[j], level, new CharacterModifiersContainer());
             UpdateCharacteristics();
         }
 
@@ -167,21 +165,29 @@ namespace PriestOfPlague.Source.Unit
 
         private void ReverseCharacteristics(int indexIn, CharacterModifiersContainer container)
         {
-            CharacterModifier modIn = container.GetBuff(indexIn);
+            CharacterModifier modIn = container.GetBuff(ModifiersOnUnit[indexIn].ID);
 
-            for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
-                _arrayOfCharactiristics[i] -= modIn.CharcsChanges[i] * ModifiersOnUnit[i].levelOfModifier;
+            for (int i = 0; i < 5; i++)
+                _arrayOfCharactiristics[i] -= modIn.CharcsChanges[i] * ModifiersOnUnit[indexIn].levelOfModifier;
 
             _regenOfHP -= modIn.PlusRegen;
-            _unblockableHPRegeneration -= modIn._unblockableHPRegeneration; //умножение на level
-            _unblockableMPRegeneration -= modIn._unblockableMPRegeneration; //умножение на level
+            _unblockableHPRegeneration -= modIn._unblockableHPRegeneration * ModifiersOnUnit[indexIn].levelOfModifier;
+            _unblockableMPRegeneration -= modIn._unblockableMPRegeneration * ModifiersOnUnit[indexIn].levelOfModifier;
 
-            if (modIn._blocksHpRegeneration)
-                _hpRegenerationBlocked = false;
-            if (modIn._blocksMpRegeneration)
-                _mpRegenerationBlocked = false;
-            if (modIn._blocksMovement)
-                _movementBlocked = false;
+            _hpRegenerationBlocked = false;
+            _mpRegenerationBlocked = false;
+            _movementBlocked = false;
+            
+            foreach (var modifier in ModifiersOnUnit)
+            {
+                if (modifier.ID != indexIn)
+                {
+                    _hpRegenerationBlocked |= container.GetBuff (modifier.ID)._blocksHpRegeneration;
+                    _mpRegenerationBlocked |= container.GetBuff (modifier.ID)._blocksMpRegeneration;
+                    _movementBlocked |= container.GetBuff (modifier.ID)._blocksMovement;
+                }
+            }
+
             UpdateCharacteristics();
         }
 
