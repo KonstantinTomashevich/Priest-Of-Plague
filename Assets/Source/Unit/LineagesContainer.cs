@@ -1,36 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
+using PriestOfPlague.Source.Core;
 using UnityEngine;
-
-//enum Chars { Vitality, Lucky, Agility, Strength, Intelligence }
-public enum LineageEnum
-{
-    Gunerates = 0,
-    Canteers,
-    Traders,
-    Villagers,
-    Outlaws
-}
 
 namespace PriestOfPlague.Source.Unit
 {
     public class LineagesContainer : MonoBehaviour
     {
-        private List <Lineage> _lineagesList;
+        private Dictionary <int, Lineage> _lineagesList;
+        public Dictionary <int, Lineage> LineagesList => _lineagesList;
 
-        public Lineage GetLineage (int id)
+        public void LoadFromXML (XmlNode input)
         {
-            if (id >= 0 && id < _lineagesList.Count)
+            _lineagesList.Clear ();
+            foreach (var lineageNode in XmlHelper.IterateChildren (input, "lineage"))
             {
-                return _lineagesList [id];
+                var lineage = Lineage.LoadFromXML (lineageNode);
+                _lineagesList [lineage.ID] = lineage;
             }
-
-            throw new IndexOutOfRangeException ("Unknown lineage id!");
         }
-        
+
         private void Start ()
         {
-            _lineagesList = new List <Lineage> ();
+            _lineagesList = new Dictionary <int, Lineage> ();
         }
 
         /* Move to XML
