@@ -1,39 +1,61 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using PriestOfPlague.Source.Core;
 
 namespace PriestOfPlague.Source.Unit
 {
+    public enum CharacteristicsEnum
+    {
+        Vitality = 0,
+        Luck,
+        Agility,
+        Strength,
+        Intelligence,
+        Count
+    }
+
     public class Unit : CreationInformer
     {
-        const int numberOfBuffsAndDebuffs = 7;
-        private int lineage = -1;
-        public string _nameOfCharacter { get; private set; }
-        public bool _isMan { get; private set; }
+        public class AppliedModifier
+        {
+            public AppliedModifier (int id, float time, int level)
+            {
+                ID = id;
+                Time = time;
+                Level = level;
+            }
 
-        Dictionary<typesOfDamageEnum, float> _dictionaryOfResists = new Dictionary<typesOfDamageEnum, float>();
+            public int ID { get; set; }
+            public float Time { get; set; }
+            public int Level { get; set; }
+        }
 
-        public float _nearDamageBust { get; private set; }
-        public float _onDistanceDamageBust { get; private set; }
-        public float _magicDamageBust { get; private set; }
-        public float _criticalDamageChance { get; private set; }
-        public float _criticalDamageResistChance { get; private set; }
+        public CharacterModifiersContainer characterModifiersContainer;
+        public string Name { get; set; }
+        public bool IsMan { get; set; }
 
-        public float _currentHP { get; private set; }
-        public float _maxHP { get; private set; }
-        public float _regenOfHP { get; private set; }
-        public float _currentMP { get; private set; }
-        public float _maxMP { get; private set; }
-        public float _regenOfMP { get; private set; }
+        public float NearDamageBust { get; private set; }
+        public float OnDistanceDamageBust { get; private set; }
+        public float MagicDamageBust { get; private set; }
+        public float CriticalDamageChance { get; private set; }
+        public float CriticalResistChance { get; private set; }
 
-        public int _experience { get; private set; }
-        public int _maxHeightOfInvertory { get; private set; }
+        public float CurrentHP { get; private set; }
+        public float MaxHP { get; private set; }
+        public float RegenOfHP { get; private set; }
+        public float CurrentMP { get; private set; }
+        public float MaxMP { get; private set; }
+        public float RegenOfMP { get; private set; }
 
-        int[] _arrayOfCharactiristics = new int[5];
+        public int Experience { get; private set; }
+        public int MaxInventoryWeight { get; private set; }
 
-        //Контейнер для хранения модов, которые сейчас на юните
-        public List<StructOfModifier> ModifiersOnUnit = new List<StructOfModifier>();
+        private int [] _charactiristics;
+        private List <AppliedModifier> ModifiersOnUnit;
+        private float [] _resists;
+        private int _lineageID = -1;
 
         private bool _hpRegenerationBlocked = false;
         private bool _mpRegenerationBlocked = false;
@@ -41,158 +63,177 @@ namespace PriestOfPlague.Source.Unit
         private float _unblockableHPRegeneration = 0;
         private float _unblockableMPRegeneration = 0;
 
-        public void ApplyLineage(int lineageIndex, LineagesContainer container)
+        public void ApplyLineage (int lineageIndex, LineagesContainer container)
         {
             if (lineageIndex != -1)
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    _arrayOfCharactiristics[i] += container.GetLineage(lineageIndex).CharcsChanges[i];
-                    _arrayOfCharactiristics[i] -= container.GetLineage(lineage).CharcsChanges[i];
+                    _charactiristics [i] -= container.GetLineage (_lineageID).CharcsChanges [i];
                 }
-                lineage = lineageIndex;
             }
-        }
 
-        public class StructOfModifier
-        {
-            public StructOfModifier(int IDin, float timeOfModifierIn, int levelOfModifierIn)
+            _lineageID = lineageIndex;
+            for (int i = 0; i < 5; i++)
             {
-                ID = IDin;
-                timeOfModifier = timeOfModifierIn;
-                levelOfModifier = levelOfModifierIn;
+                _charactiristics [i] += container.GetLineage (_lineageID).CharcsChanges [i];
             }
-            public int ID { get; set; }
-            public float timeOfModifier { get; set; }
-            public int levelOfModifier { get; set; }
         }
 
-        private void ApplyModifier(int indexIn, int level, CharacterModifiersContainer container)
+        private void ApplyModifier (int id, int level)
         {
-            var modIn = container.GetBuff(indexIn);
+            var modifierType = characterModifiersContainer.GetBuff (id);
+            var modifier = new AppliedModifier (id, modifierType.timeOfBuff * level, level);
+            ModifiersOnUnit.Add (modifier);
 
-            for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
-                _arrayOfCharactiristics[i] += modIn.CharcsChanges[i] * ModifiersOnUnit[i].levelOfModifier;
+            for (int i = 0; i < (int) CharacteristicsEnum.Count; i++)
+                _charactiristics [i] += modifierType.CharcsChanges [i] * level;
 
-            _regenOfHP += modIn.PlusRegen * level;//а где аналог для MP?
-            _unblockableHPRegeneration += modIn._unblockableHPRegeneration * level; //умножение на level
-            _unblockableMPRegeneration += modIn._unblockableMPRegeneration * level; //умножение на level
-            _hpRegenerationBlocked = modIn._blocksHpRegeneration;
-            _mpRegenerationBlocked = modIn._blocksMpRegeneration;
-            _movementBlocked = modIn._blocksMovement;
+            _unblockableHPRegeneration += modifierType._unblockableHPRegeneration * level;
+            _unblockableMPRegeneration += modifierType._unblockableMPRegeneration * level;
+            _hpRegenerationBlocked = modifierType._blocksHpRegeneration;
+            _mpRegenerationBlocked = modifierType._blocksMpRegeneration;
+            _movementBlocked = modifierType._blocksMovement;
 
-            for (int i = 0; i < ModifiersOnUnit.Count; i++)
-                for (int j = 0; j < modIn.BuffsForCancel.Count; j++)
-                    if (ModifiersOnUnit[i].ID == modIn.BuffsForCancel[j])
-                    {
-                        ReverseCharacteristics(ModifiersOnUnit[i].ID, new CharacterModifiersContainer());
-                        ModifiersOnUnit.RemoveAt(i);
-                    }
+            int modifierIndex = 0;
+            while (modifierIndex < ModifiersOnUnit.Count)
+            {
+                var anotherModifier = ModifiersOnUnit [modifierIndex];
+                if (modifierType.BuffsToCancel.Contains (anotherModifier.ID))
+                {
+                    RemoveModifier (anotherModifier);
+                    ModifiersOnUnit.RemoveAt (modifierIndex);
+                }
+                else
+                {
+                    modifierIndex++;
+                }
+            }
 
-            for (int j = 0; j < modIn.BuffsForUsing.Count; j++)
-                ApplyModifier(modIn.BuffsForUsing[j], level, new CharacterModifiersContainer());
-            UpdateCharacteristics();
+            foreach (var anotherId in modifierType.BuffsToApply)
+            {
+                ApplyModifier (anotherId, level);
+            }
+
+            RecalculateChildCharacteristics ();
         }
 
-        public int GetCharacteristics(CharactiristicsEnum characteristicIn)
+        public int GetCharacteristic (CharacteristicsEnum characteristicIn)
         {
-            return _arrayOfCharactiristics[(int)characteristicIn];
-        }
-        public void SetCharactiristics(CharactiristicsEnum typeOfCharacteristicIn, int valueOfCharacteristicIn)
-        {
-            _arrayOfCharactiristics[(int)typeOfCharacteristicIn] += valueOfCharacteristicIn;
-            UpdateCharacteristics();
+            return _charactiristics [(int) characteristicIn];
         }
 
-        private void UpdateCharacteristics()
+        public void SetCharactiristic (CharacteristicsEnum typeOfCharacteristicIn, int valueOfCharacteristicIn)
         {
-            int strength = GetCharacteristics(CharactiristicsEnum.Strength);
+            _charactiristics [(int) typeOfCharacteristicIn] += valueOfCharacteristicIn;
+            RecalculateChildCharacteristics ();
+        }
+
+        public void RecalculateChildCharacteristics ()
+        {
+            NearDamageBust = 0;
+            MaxHP = 0;
+            MaxMP = 0;
+            RegenOfHP = 0;
+            RegenOfMP = 0;
+            MaxInventoryWeight = 0;
+
+            OnDistanceDamageBust = 0;
+            for (int index = 0; index < (int) DamageTypesEnum.Count; index++)
+            {
+                _resists [index] = 0;
+            }
+
+            MagicDamageBust = 0;
+            CriticalDamageChance = 0;
+            CriticalResistChance = 0;
+            
+            int strength = GetCharacteristic (CharacteristicsEnum.Strength);
             if (strength <= 0)
                 strength = 1;
-            int agility = GetCharacteristics(CharactiristicsEnum.Agility);
+            int agility = GetCharacteristic (CharacteristicsEnum.Agility);
             if (agility <= 0)
                 agility = 1;
-            int vitality = GetCharacteristics(CharactiristicsEnum.Vitality);
+            int vitality = GetCharacteristic (CharacteristicsEnum.Vitality);
             if (vitality <= 0)
                 vitality = 1;
-            int intelligence = GetCharacteristics(CharactiristicsEnum.Intelligence);
+            int intelligence = GetCharacteristic (CharacteristicsEnum.Intelligence);
             if (intelligence <= 0)
                 intelligence = 1;
-            int luck = GetCharacteristics(CharactiristicsEnum.Luck);
+            int luck = GetCharacteristic (CharacteristicsEnum.Luck);
             if (luck <= 0)
                 luck = 1;
 
             //обработка силы            
-            _nearDamageBust += (float)((float)strength * 0.03);
-            _maxHP += 5 * strength;
-            _maxMP += 2 * strength;
-            _regenOfHP += strength;
-            _maxHeightOfInvertory += 3 * strength;
+            NearDamageBust += (float) ((float) strength * 0.03);
+            MaxHP += 5 * strength;
+            MaxMP += 2 * strength;
+            RegenOfHP += strength;
+            MaxInventoryWeight += 3 * strength;
 
             //ловкость
-            _onDistanceDamageBust += (float)(0.03 * (float)agility);
-            _maxHP += 2 * agility;
-            _maxMP += 5 * agility;
-            _regenOfMP += agility;
+            OnDistanceDamageBust += (float) (0.03 * (float) agility);
+            MaxHP += 2 * agility;
+            MaxMP += 5 * agility;
+            RegenOfMP += agility;
 
             //выносливость
-            _dictionaryOfResists[typesOfDamageEnum.Chopping] += (float)(0.03 * (float)vitality);
-            _dictionaryOfResists[typesOfDamageEnum.Stitching] += (float)(0.03 * (float)vitality);
-            _dictionaryOfResists[typesOfDamageEnum.Armor_piercing] += (float)(0.03 * (float)vitality);
-            _dictionaryOfResists[typesOfDamageEnum.Pushing] += (float)(0.03 * (float)vitality);
-            _dictionaryOfResists[typesOfDamageEnum.Light] += (float)(0.03 * (float)vitality);
-            _dictionaryOfResists[typesOfDamageEnum.Fiery] += (float)(0.03 * (float)vitality);
-            _dictionaryOfResists[typesOfDamageEnum.Icy] += (float)(0.03 * (float)vitality);
-            _dictionaryOfResists[typesOfDamageEnum.Damage_pure_magic] += (float)(0.03 * (float)vitality);
-            _maxHP += 4 * vitality;
-            _maxMP += 4 * vitality;
-            _regenOfHP += vitality;
-            _regenOfMP += vitality;
-            _maxHeightOfInvertory += 3 * vitality;
+            for (int index = 0; index < (int) DamageTypesEnum.Count; index++)
+            {
+                _resists [index] += (float) (0.03 * vitality);
+            }
+            
+            MaxHP += 4 * vitality;
+            MaxMP += 4 * vitality;
+            RegenOfHP += vitality;
+            RegenOfMP += vitality;
+            MaxInventoryWeight += 3 * vitality;
 
             //разум
-            _magicDamageBust += (float)(0.2 * (float)intelligence);
-            _maxMP += 3 * intelligence;
-            _regenOfHP += intelligence;
-            _regenOfMP += intelligence;
+            MagicDamageBust += (float) (0.2 * (float) intelligence);
+            MaxMP += 3 * intelligence;
+            RegenOfHP += intelligence;
+            RegenOfMP += intelligence;
 
             //удачливость
-            _criticalDamageChance += (float)(0.03 * (float)luck);
-            _criticalDamageResistChance += (float)(0.03 * (float)luck);
-            _regenOfHP += luck;
-            _regenOfMP += luck;
+            CriticalDamageChance += (float) (0.03 * (float) luck);
+            CriticalResistChance += (float) (0.03 * (float) luck);
+            RegenOfHP += luck;
+            RegenOfMP += luck;
         }
 
-        private void ReverseCharacteristics(int indexIn, CharacterModifiersContainer container)
+        private void RemoveModifier (AppliedModifier modifier)
         {
-            CharacterModifier modIn = container.GetBuff(ModifiersOnUnit[indexIn].ID);
+            CharacterModifier modifierType = characterModifiersContainer.GetBuff (modifier.ID);
 
-            for (int i = 0; i < 5; i++)
-                _arrayOfCharactiristics[i] -= modIn.CharcsChanges[i] * ModifiersOnUnit[indexIn].levelOfModifier;
+            for (int i = 0; i < (int) CharacteristicsEnum.Count; i++)
+                _charactiristics [i] -= modifierType.CharcsChanges [i] * modifier.Level;
 
-            _regenOfHP -= modIn.PlusRegen;
-            _unblockableHPRegeneration -= modIn._unblockableHPRegeneration * ModifiersOnUnit[indexIn].levelOfModifier;
-            _unblockableMPRegeneration -= modIn._unblockableMPRegeneration * ModifiersOnUnit[indexIn].levelOfModifier;
+            _unblockableHPRegeneration -= modifierType._unblockableHPRegeneration * modifier.Level;
+            _unblockableMPRegeneration -= modifierType._unblockableMPRegeneration * modifier.Level;
 
             _hpRegenerationBlocked = false;
             _mpRegenerationBlocked = false;
             _movementBlocked = false;
-            
-            foreach (var modifier in ModifiersOnUnit)
+
+            foreach (var anotherModifier in ModifiersOnUnit)
             {
-                if (modifier.ID != indexIn)
+                if (anotherModifier != modifier)
                 {
-                    _hpRegenerationBlocked |= container.GetBuff (modifier.ID)._blocksHpRegeneration;
-                    _mpRegenerationBlocked |= container.GetBuff (modifier.ID)._blocksMpRegeneration;
-                    _movementBlocked |= container.GetBuff (modifier.ID)._blocksMovement;
+                    _hpRegenerationBlocked |= characterModifiersContainer.GetBuff (modifier.ID)._blocksHpRegeneration;
+                    _mpRegenerationBlocked |= characterModifiersContainer.GetBuff (modifier.ID)._blocksMpRegeneration;
+                    _movementBlocked |= characterModifiersContainer.GetBuff (modifier.ID)._blocksMovement;
                 }
             }
 
-            UpdateCharacteristics();
+            RecalculateChildCharacteristics ();
         }
 
-        new void Start()
+        new void Start ()
         {
+            _charactiristics = new int[(int) CharacteristicsEnum.Count];
+            _resists = new float[(int) DamageTypesEnum.Count];
+            ModifiersOnUnit = new List <AppliedModifier> ();
             base.Start ();
         }
 
@@ -200,33 +241,37 @@ namespace PriestOfPlague.Source.Unit
         {
             base.OnDestroy ();
         }
-        
-        void Update()
+
+        void Update ()
         {
             if (!_hpRegenerationBlocked)
             {
-                _currentHP += _regenOfHP * Time.deltaTime;
+                CurrentHP += RegenOfHP * Time.deltaTime;
             }
-            _currentHP += _unblockableHPRegeneration * Time.deltaTime;
+            CurrentHP += _unblockableHPRegeneration * Time.deltaTime;
+            
             if (!_mpRegenerationBlocked)
             {
-                _currentMP += _regenOfMP * Time.deltaTime;
+                CurrentMP += RegenOfMP * Time.deltaTime;
             }
-            _currentMP += _unblockableMPRegeneration * Time.deltaTime;
+            CurrentMP += _unblockableMPRegeneration * Time.deltaTime;
 
-            List<int> arrOfRemoving = new List<int>();
-            for (int i = 0; i < ModifiersOnUnit.Count; i++)
+            int modifierIndex = 0;
+            while (modifierIndex < ModifiersOnUnit.Count)
             {
-                ModifiersOnUnit[i].timeOfModifier -= Time.deltaTime;
-                if (ModifiersOnUnit[i].timeOfModifier <= 0)
+                var modifier = ModifiersOnUnit [modifierIndex];
+                modifier.Time -= Time.deltaTime;
+
+                if (modifier.Time <= 0.0f)
                 {
-                    ReverseCharacteristics(ModifiersOnUnit[i].ID, new CharacterModifiersContainer());
-                    arrOfRemoving.Add(i);
-                    UpdateCharacteristics();
+                    RemoveModifier (modifier);
+                    ModifiersOnUnit.RemoveAt (modifierIndex);
+                }
+                else
+                {
+                    modifierIndex++;
                 }
             }
-            for (int i = arrOfRemoving.Count - 1; i >= 0; i--)
-                ModifiersOnUnit.RemoveAt(i);
         }
     }
 }

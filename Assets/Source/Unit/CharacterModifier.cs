@@ -7,58 +7,39 @@ namespace PriestOfPlague.Source.Unit
 {
     public class CharacterModifier
     {
-        public BuffsAndDebuffsEnum Index { get; set; }
+        public int ID { get; set; }
         public string InfoAboutBuffsInString { get; set; }
         public float timeOfBuff { get; set; }
-        public int[] CharcsChanges = new int[5];
-        private static int index = 0;
-        public int PlusRegen { set; get; }
-        public List<int> BuffsForUsing = new List<int>();
-        public List<int> BuffsForCancel = new List<int>();
+        public int [] CharcsChanges = new int[(int) CharacteristicsEnum.Count];
+        public List <int> BuffsToApply = new List <int> ();
+        public HashSet <int> BuffsToCancel = new HashSet <int> ();
 
-        //работать с этими штуками
         public bool _blocksHpRegeneration { get; set; }
         public bool _blocksMpRegeneration { get; set; }
         public bool _blocksMovement { get; set; }
         public float _unblockableHPRegeneration { get; set; }
         public float _unblockableMPRegeneration { get; set; }
 
-        /// <summary>
-        /// Конструктор для изначальной информации о баффах
-        /// </summary>
-        /// <param name="infoIn"> Информация о баффе</param>
-        /// <param name="timeIn">Время действия баффа</param>
-        public CharacterModifier(string infoIn, int timeIn)
+        public CharacterModifier (int id, string infoIn, int timeIn)
         {
-            this.Index = (BuffsAndDebuffsEnum)index++;
-            this.InfoAboutBuffsInString = infoIn;
-            this.timeOfBuff = timeIn;
+            ID = id;
+            InfoAboutBuffsInString = infoIn;
+            timeOfBuff = timeIn;
 
             _blocksHpRegeneration = false;
             _blocksMpRegeneration = false;
             _blocksMovement = false;
             _unblockableHPRegeneration = 0;
             _unblockableMPRegeneration = 0;
-            PlusRegen = 0;
         }
 
-        /// <summary>
-        /// Метод заполняет массив-проихождение значениями, на которое данное происхождение меняет указанные характеристики
-        /// </summary>
-        /// <param name="Vit">Выносливость</param>
-        /// <param name="Luc">Удачи</param>
-        /// <param name="Ag">Ловкость</param>
-        /// <param name="Str">Сила</param>
-        /// <param name="Int">Разум</param>
-        /// 
-        public void SetArr(int Vit, int Luc, int Ag, int Str, int Int)
+        public void SetCharacteristicsChanges (int Vit, int Luc, int Ag, int Str, int Int)
         {
-            CharcsChanges[(int)CharactiristicsEnum.Vitality] = Vit;
-            CharcsChanges[(int)CharactiristicsEnum.Luck] = Luc;
-            CharcsChanges[(int)CharactiristicsEnum.Agility] = Ag;
-            CharcsChanges[(int)CharactiristicsEnum.Strength] = Str;
-            CharcsChanges[(int)CharactiristicsEnum.Intelligence] = Int;
+            CharcsChanges [(int) CharacteristicsEnum.Vitality] = Vit;
+            CharcsChanges [(int) CharacteristicsEnum.Luck] = Luc;
+            CharcsChanges [(int) CharacteristicsEnum.Agility] = Ag;
+            CharcsChanges [(int) CharacteristicsEnum.Strength] = Str;
+            CharcsChanges [(int) CharacteristicsEnum.Intelligence] = Int;
         }
     }
-
 }
