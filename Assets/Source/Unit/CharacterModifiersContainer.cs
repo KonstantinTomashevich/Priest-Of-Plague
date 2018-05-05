@@ -36,7 +36,7 @@ namespace PriestOfPlague.Source.Unit
             //Лечение
             CharacterModifier a = new CharacterModifier("Лечение", 5);
             a.SetArr(0, 0, 0, 0, 0);
-            a.PlusRegen = 3;
+            a._unblockableHPRegeneration = 3;
             a.BuffsForCancel.Add((int)BuffsAndDebuffsEnum.Weakening);
             a.BuffsForCancel.Add((int)BuffsAndDebuffsEnum.Disease);
             dict[(int)BuffsAndDebuffsEnum.Healing] = a;
@@ -61,7 +61,7 @@ namespace PriestOfPlague.Source.Unit
             a._unblockableHPRegeneration = -1;
             a._blocksHpRegeneration = true;
             a.SetArr(-1, 0, -1, -1, 0);
-            a.PlusRegen = -1;
+            a._unblockableHPRegeneration = -1;
             dict[(int)BuffsAndDebuffsEnum.Poisoning] = a;
 
             //Болен 

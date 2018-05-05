@@ -12,7 +12,6 @@ namespace PriestOfPlague.Source.Unit
         public float timeOfBuff { get; set; }
         public int[] CharcsChanges = new int[5];
         private static int index = 0;
-        public int PlusRegen { set; get; }
         public List<int> BuffsForUsing = new List<int>();
         public List<int> BuffsForCancel = new List<int>();
 
@@ -39,7 +38,6 @@ namespace PriestOfPlague.Source.Unit
             _blocksMovement = false;
             _unblockableHPRegeneration = 0;
             _unblockableMPRegeneration = 0;
-            PlusRegen = 0;
         }
 
         /// <summary>

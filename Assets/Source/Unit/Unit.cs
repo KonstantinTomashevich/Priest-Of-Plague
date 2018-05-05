@@ -66,7 +66,11 @@ namespace PriestOfPlague.Source.Unit
             public int levelOfModifier { get; set; }
         }
 
-        private void ApplyModifier(int indexIn, CharacterModifiersContainer container)
+        private int _numberOfParalises = 0;
+        private int _numberOfHPStoppers = 0;
+        private int _numberOfMPStoppers = 0;
+
+        private void ApplyModifier(int indexIn, CharacterModifiersContainer container, int levelIn)
         {
             //Вопрос: в какой момент задаётся умножение на уровень? По идее в этом месте нужно положить в ModifiersOnUnit структуру с нужным баффом, однако где взять level?
             //Это вопрос чисто по механике игры: что будет происходить внутри программы, когда на другого персонажа будет кастоваться скилл? Что именно и как пошлётся?
@@ -75,12 +79,25 @@ namespace PriestOfPlague.Source.Unit
             for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
                 _arrayOfCharactiristics[i] += modIn.CharcsChanges[i] * ModifiersOnUnit[i].levelOfModifier;
 
-            _regenOfHP += modIn.PlusRegen;//а где аналог для MP?
+            _regenOfHP += modIn._unblockableHPRegeneration;//а где аналог для MP?
             _unblockableHPRegeneration += modIn._unblockableHPRegeneration; //умножение на level
             _unblockableMPRegeneration += modIn._unblockableMPRegeneration; //умножение на level
-            _hpRegenerationBlocked = modIn._blocksHpRegeneration;
-            _mpRegenerationBlocked = modIn._blocksMpRegeneration;
-            _movementBlocked = modIn._blocksMovement;
+
+            if (modIn._blocksHpRegeneration)
+            {
+                _hpRegenerationBlocked = modIn._blocksHpRegeneration;
+                _numberOfHPStoppers++;
+            }
+            if (modIn._blocksMpRegeneration)
+            {
+                _mpRegenerationBlocked = modIn._blocksMpRegeneration;
+                _numberOfMPStoppers++;
+            }
+            if (modIn._blocksMovement)
+            {
+                _movementBlocked = modIn._blocksMovement;
+                _numberOfParalises++;
+            }
 
             for (int i = 0; i < ModifiersOnUnit.Count; i++)
                 for (int j = 0; j < modIn.BuffsForCancel.Count; j++)
@@ -91,7 +108,7 @@ namespace PriestOfPlague.Source.Unit
                     }
 
             for (int j = 0; j < modIn.BuffsForUsing.Count; j++)
-                ApplyModifier(modIn.BuffsForUsing[j], new CharacterModifiersContainer());
+                ApplyModifier(modIn.BuffsForUsing[j], new CharacterModifiersContainer(), /*а вот тут мы передаём уровень*/ 1);
             UpdateCharacteristics();
         }
 
@@ -177,15 +194,21 @@ namespace PriestOfPlague.Source.Unit
             for (int i = 0; i < numberOfBuffsAndDebuffs; i++)
                 _arrayOfCharactiristics[i] -= modIn.CharcsChanges[i] * ModifiersOnUnit[i].levelOfModifier;
 
-            _regenOfHP -= modIn.PlusRegen;
+            _regenOfHP -= modIn._unblockableHPRegeneration;
             _unblockableHPRegeneration -= modIn._unblockableHPRegeneration; //умножение на level
             _unblockableMPRegeneration -= modIn._unblockableMPRegeneration; //умножение на level
 
-            if (modIn._blocksHpRegeneration)
+            if (modIn._blocksHpRegeneration && _numberOfHPStoppers > 0)
+                _numberOfHPStoppers--;
+            else
                 _hpRegenerationBlocked = false;
-            if (modIn._blocksMpRegeneration)
+            if (modIn._blocksMpRegeneration && _numberOfMPStoppers > 0)
+                _numberOfMPStoppers--;
+            else
                 _mpRegenerationBlocked = false;
-            if (modIn._blocksMovement)
+            if (modIn._blocksMovement && _numberOfParalises > 0)
+                _numberOfParalises--;
+            else
                 _movementBlocked = false;
             UpdateCharacteristics();
         }
