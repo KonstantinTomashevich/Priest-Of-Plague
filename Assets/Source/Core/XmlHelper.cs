@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -15,17 +16,17 @@ namespace PriestOfPlague.Source.Core
 
 		public static float GetFloatAttribute (XmlNode xml, string attributeName)
 		{
-			return float.Parse (xml.Attributes [attributeName].InnerText);
+			return float.Parse (xml.Attributes [attributeName].InnerText, NumberFormatInfo.InvariantInfo);
 		}
 
 		public static int GetIntAttribute (XmlNode xml, string attributeName)
 		{
-			return int.Parse (xml.Attributes [attributeName].InnerText);
+			return int.Parse (xml.Attributes [attributeName].InnerText, NumberFormatInfo.InvariantInfo);
 		}
 
 		public static uint GetUIntAttribute (XmlNode xml, string attributeName)
 		{
-			return uint.Parse (xml.Attributes [attributeName].InnerText);
+			return uint.Parse (xml.Attributes [attributeName].InnerText, NumberFormatInfo.InvariantInfo);
 		}
 
 		public static bool GetBoolAttribute (XmlNode xml, string attributeName)
