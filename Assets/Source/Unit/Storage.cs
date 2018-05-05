@@ -57,8 +57,8 @@ namespace PriestOfPlague.Source.Unit
         
         public void LoadFromXML (XmlNode input)
         {
-            _maxWeight = XmlHelper.GetFloatAttribute (input, "Max Weight");
-            _currentWeight = XmlHelper.GetFloatAttribute (input, "Current Weight");
+            _maxWeight = XmlHelper.GetFloatAttribute (input, "MaxWeight");
+            _currentWeight = XmlHelper.GetFloatAttribute (input, "CurrentWeight");
             
             _items.Clear ();
             foreach (var itemNode in XmlHelper.IterateChildren (input, "item"))

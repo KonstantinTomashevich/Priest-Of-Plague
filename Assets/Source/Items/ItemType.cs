@@ -7,7 +7,7 @@ namespace PriestOfPlague.Source.Items
 {
     public class ItemType
     {
-        public ItemType (int id)
+        private ItemType (int id)
         {
             _id = id;
             _opensSpells = new List <int> ();
@@ -32,14 +32,14 @@ namespace PriestOfPlague.Source.Items
                 itemType._opensSpells.Add (XmlHelper.GetIntAttribute (spellNode, "ID"));
             }
 
-            itemType._maxCharge = XmlHelper.GetFloatAttribute (input, "Max Charge");
-            itemType._chargeRegeneration = XmlHelper.GetFloatAttribute (input, "Charge Regeneration");
+            itemType._maxCharge = XmlHelper.GetFloatAttribute (input, "MaxCharge");
+            itemType._chargeRegeneration = XmlHelper.GetFloatAttribute (input, "ChargeRegeneration");
 
-            itemType._basicForce = XmlHelper.GetFloatAttribute (input, "Basic Force");
-            itemType._forceAdditionPerLevel = XmlHelper.GetFloatAttribute (input, "Force Addition Per Level");
-            itemType._maxChargeAdditionPerLevel = XmlHelper.GetFloatAttribute (input, "Max Charge Addition Per Level");
+            itemType._basicForce = XmlHelper.GetFloatAttribute (input, "BasicForce");
+            itemType._forceAdditionPerLevel = XmlHelper.GetFloatAttribute (input, "ForceAdditionPerLevel");
+            itemType._maxChargeAdditionPerLevel = XmlHelper.GetFloatAttribute (input, "MaxChargeAdditionPerLevel");
             itemType._chargeRegenerationAdditionPerLevel = XmlHelper.GetFloatAttribute (
-                input, "Charge Regeneration Addition Per Level");
+                input, "ChargeRegenerationAdditionPerLevel");
             
             foreach (var supertypeNode in XmlHelper.IterateChildren (input, "supertype"))
             {
