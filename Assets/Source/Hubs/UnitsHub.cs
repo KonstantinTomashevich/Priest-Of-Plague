@@ -42,7 +42,7 @@ namespace PriestOfPlague.Source.Hubs
             
             foreach (var unit in _units)
             {
-                if (unit._currentHP <= 0.0f)
+                if (unit.CurrentHP <= 0.0f)
                 {
                     toDestroy.Add (unit.gameObject);
                 }
