@@ -5,11 +5,18 @@ using UnityEngine;
 
 namespace PriestOfPlague.Source.Unit
 {
+    public enum CharactiristicsEnum { Vitality = 0, Luck, Agility, Strength, Intelligence }
     public enum BuffsAndDebuffsEnum { Healing = 0, Satiety, Magic_support, Weakening, Poisoning, Disease, Paralysis }
 
     public class CharacterModifiersContainer : MonoBehaviour
     {
-        CharacterModifier[] dict = new CharacterModifier[7];
+        public CharacterModifiersContainer()
+        {
+            SetBuffs();
+        }
+
+        const int numberOfBuffsAndDebuffs = 7;
+        CharacterModifier[] dict = new CharacterModifier[numberOfBuffsAndDebuffs];
         /// <summary>
         /// Даёт баффы по индексу
         /// </summary>
