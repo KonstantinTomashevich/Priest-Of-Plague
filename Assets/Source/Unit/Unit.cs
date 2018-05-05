@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PriestOfPlague.Source.Core;
 
 namespace PriestOfPlague.Source.Unit
 {
-    public class Unit : MonoBehaviour
+    public class Unit : CreationInformer
     {
         const int numberOfBuffsAndDebuffs = 7;
         private int lineage = -1;
@@ -164,12 +165,6 @@ namespace PriestOfPlague.Source.Unit
             _regenOfMP += luck;
         }
 
-        // Use this for initialization
-        void Start()
-        {
-
-        }
-
         private void ReverseCharacteristics(int indexIn, CharacterModifiersContainer container)
         {
             CharacterModifier modIn = container.GetBuff(indexIn);
@@ -190,7 +185,16 @@ namespace PriestOfPlague.Source.Unit
             UpdateCharacteristics();
         }
 
-        // Update is called once per frame
+        new void Start()
+        {
+            base.Start ();
+        }
+
+        new void OnDestroy ()
+        {
+            base.OnDestroy ();
+        }
+        
         void Update()
         {
             if (!_hpRegenerationBlocked)

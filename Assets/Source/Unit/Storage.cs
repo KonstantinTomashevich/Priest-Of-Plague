@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Xml;
+using PriestOfPlague.Source.Core;
 using PriestOfPlague.Source.Items;
 using UnityEngine;
 
@@ -51,6 +54,31 @@ namespace PriestOfPlague.Source.Unit
                 return false;
             }
         }
+        
+        public void LoadFromXML (XmlNode input)
+        {
+            _maxWeight = XmlHelper.GetFloatAttribute (input, "Max Weight");
+            _currentWeight = XmlHelper.GetFloatAttribute (input, "Current Weight");
+            
+            _items.Clear ();
+            foreach (var itemNode in XmlHelper.IterateChildren (input, "item"))
+            {
+                _items.Add (Item.LoadFromXML (itemNode));
+            }
+        }
+
+        public void SaveToXml (XmlElement output)
+        {
+            output.SetAttribute ("Max Weight", _maxWeight.ToString (NumberFormatInfo.InvariantInfo));
+            output.SetAttribute ("Current Weight", _currentWeight.ToString (NumberFormatInfo.InvariantInfo));
+
+            foreach (var item in _items)
+            {
+                var itemElement = output.OwnerDocument.CreateElement ("item");
+                item.SaveToXml (itemElement);
+                output.AppendChild (itemElement);
+            }
+        }
 
         public ItemTypesContainer ItemTypesContainerRef;
         public float MaxWeight
@@ -64,7 +92,7 @@ namespace PriestOfPlague.Source.Unit
         }
         
         public float CurrentWeight => _currentWeight;
-        public ReadOnlyCollection <Item> Items => _items.AsReadOnly ();
+        public IReadOnlyCollection <Item> Items => _items.AsReadOnly ();
 
         private float _maxWeight;
         private float _currentWeight;

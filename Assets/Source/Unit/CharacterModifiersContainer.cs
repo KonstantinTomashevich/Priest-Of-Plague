@@ -22,7 +22,7 @@ namespace PriestOfPlague.Source.Unit
         /// </summary>
         /// <param name="IndexIn">Уникальный индекс баффа</param>
         /// <returns>бафф</returns>
-        public CharacterModifier GetBuff(int IndexIn)
+        public CharacterModifier GetBuff(int IndexIn) //Меня терзают смутные сомнения о правильности такой реализации...
         {
             if (dict[IndexIn] != null)
                 return dict[IndexIn];
@@ -58,8 +58,6 @@ namespace PriestOfPlague.Source.Unit
 
             //Отравлен
             a = new CharacterModifier("Отравление", 5);
-            a._unblockableHPRegeneration = -1;
-            a._blocksHpRegeneration = true;
             a.SetArr(-1, 0, -1, -1, 0);
             a.PlusRegen = -1;
             dict[(int)BuffsAndDebuffsEnum.Poisoning] = a;
@@ -69,9 +67,8 @@ namespace PriestOfPlague.Source.Unit
             a.SetArr(-1, -1, -1, -1, -1);
             dict[(int)BuffsAndDebuffsEnum.Disease] = a;
 
-            //Парализован
+            //Парализован(Опять же не реализовать, так как нужно понимание действий (класс unit))
             a = new CharacterModifier("Паралич", 5);
-            a._blocksMovement = true;
             a.SetArr(0, 0, 0, 0, 0);
             dict[(int)BuffsAndDebuffsEnum.Paralysis] = a;
         }
