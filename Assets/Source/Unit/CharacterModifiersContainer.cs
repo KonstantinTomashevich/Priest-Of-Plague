@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using NUnit.Framework;
+using PriestOfPlague.Source.Core;
 using UnityEngine;
 
 
@@ -9,21 +11,22 @@ namespace PriestOfPlague.Source.Unit
 {
     public class CharacterModifiersContainer : MonoBehaviour
     {
-        private List <CharacterModifier> _modifiersArray;
+        private Dictionary <int, CharacterModifier> _modifiers;
+        public Dictionary <int, CharacterModifier> Modifiers => _modifiers;
 
-        public CharacterModifier GetBuff (int id)
+        public void LoadFromXML (XmlNode input)
         {
-            if (id >= 0 && id < _modifiersArray.Count)
+            _modifiers.Clear ();
+            foreach (var modifierNode in XmlHelper.IterateChildren (input, "modifier"))
             {
-                return _modifiersArray [id];
+                var modifier = CharacterModifier.LoadFromXML (modifierNode);
+                _modifiers [modifier.ID] = modifier;
             }
-
-            throw new IndexOutOfRangeException ("Unknown modifier id!");
         }
-
+        
         private void Start ()
         {
-            _modifiersArray = new List <CharacterModifier> ();
+            _modifiers = new Dictionary <int, CharacterModifier> ();
         }
 
         /* Move to XML
@@ -67,6 +70,6 @@ namespace PriestOfPlague.Source.Unit
             a = new CharacterModifier("Паралич", 5);
             a.SetCharacteristicsChanges(0, 0, 0, 0, 0);
             modifiersArray[(int)BuffsAndDebuffsEnum.Paralysis] = a;
-        }**/
+        }*/
     }
 }
