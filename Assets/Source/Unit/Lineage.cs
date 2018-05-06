@@ -33,6 +33,8 @@ namespace PriestOfPlague.Source.Unit
         public static Lineage LoadFromXML (XmlNode input)
         {
             var lineage = new Lineage (XmlHelper.GetIntAttribute (input, "ID"));
+            lineage.InfoAboutLineage = input.Attributes ["Info"].InnerText;
+            
             string stringData = input.Attributes ["Value"].InnerText;
             string [] separated = stringData.Split (' ');
 
