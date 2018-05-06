@@ -57,12 +57,12 @@ namespace PriestOfPlague.Source.Unit
             
             string charsChangedStringData = input.Attributes ["CharacteristicsChanged"].InnerText;
             string [] charsChangedSeparated = charsChangedStringData.Split (' ');
-            modifier.SetCharacteristicsChanges (
-                int.Parse (charsChangedSeparated [0], NumberFormatInfo.InvariantInfo),
-                int.Parse (charsChangedSeparated [1], NumberFormatInfo.InvariantInfo),
-                int.Parse (charsChangedSeparated [2], NumberFormatInfo.InvariantInfo),
-                int.Parse (charsChangedSeparated [3], NumberFormatInfo.InvariantInfo),
-                int.Parse (charsChangedSeparated [4], NumberFormatInfo.InvariantInfo));
+            
+            for (int index = 0; index < charsChangedSeparated.Length; index++)
+            {
+                modifier.CharcsChanges [index] =
+                    int.Parse (charsChangedSeparated [index], NumberFormatInfo.InvariantInfo);
+            }
 
             modifier.BuffsToApply.Clear ();;
             foreach (var toApplyNode in XmlHelper.IterateChildren (input, "applies"))
