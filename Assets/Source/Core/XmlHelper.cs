@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -54,6 +55,11 @@ namespace PriestOfPlague.Source.Core
 					yield return child;
 				}
 			}
+		}
+		
+		public static XmlNode FirstChild (XmlNode node, string tag)
+		{
+			return IterateChildren (node, tag).FirstOrDefault ();
 		}
 	}
 }
