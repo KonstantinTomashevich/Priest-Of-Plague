@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<modifiers>
+    <modifier
+            ID="0"
+            Info="Healing"
+            TimeOfBuff="10"
+            CharacteristicsChanged="0 0 0 0 0"
+            BlocksHpRegeneration="false"
+            BlocksMpRegeneration="false"
+            BlocksMovement="false"
+
+            UnblockableHpRegeneration="3"
+            UnblockableMpRegeneration="1"
+    >
+        <cancels ID="3"/>
+        <cancels ID="5"/>
+    </modifier>
+
+    <modifier
+            ID="1"
+            Info="Eaten"
+            TimeOfBuff="100"
+            CharacteristicsChanged="1 0 1 1 0"
+            BlocksHpRegeneration="false"
+            BlocksMpRegeneration="false"
+            BlocksMovement="false"
+
+            UnblockableHpRegeneration="0"
+            UnblockableMpRegeneration="0"
+    >
+    </modifier>
+
+    <modifier
+            ID="2"
+            Info="MagicalSupport"
+            TimeOfBuff="10"
+            CharacteristicsChanged="1 1 1 1 1"
+            BlocksHpRegeneration="false"
+            BlocksMpRegeneration="false"
+            BlocksMovement="false"
+
+            UnblockableHpRegeneration="0"
+            UnblockableMpRegeneration="0"
+    >
+    </modifier>
+
+    <modifier
+            ID="3"
+            Info="Weaking"
+            TimeOfBuff="10"
+            CharacteristicsChanged="-1 0 -1 -1 0"
+            BlocksHpRegeneration="false"
+            BlocksMpRegeneration="false"
+            BlocksMovement="false"
+
+            UnblockableHpRegeneration="0"
+            UnblockableMpRegeneration="0"
+    >
+    </modifier>
+
+    <modifier
+            ID="4"
+            Info="Poison"
+            TimeOfBuff="30"
+            CharacteristicsChanged="-1 0 -1 -1 0"
+            BlocksHpRegeneration="true"
+            BlocksMpRegeneration="false"
+            BlocksMovement="false"
+
+            UnblockableHpRegeneration="-1"
+            UnblockableMpRegeneration="0"
+    >
+    </modifier>
+
+    <modifier
+            ID="5"
+            Info="Ill"
+            TimeOfBuff="100"
+            CharacteristicsChanged="-1 -1 -1 -1 -1"
+            BlocksHpRegeneration="false"
+            BlocksMpRegeneration="false"
+            BlocksMovement="false"
+
+            UnblockableHpRegeneration="0"
+            UnblockableMpRegeneration="0"
+    >
+    </modifier>
+
+    <modifier
+            ID="6"
+            Info="Paralyzed"
+            TimeOfBuff="5"
+            CharacteristicsChanged="0 0 0 0 0"
+            BlocksHpRegeneration="true"
+            BlocksMpRegeneration="true"
+            BlocksMovement="true"
+
+            UnblockableHpRegeneration="0"
+            UnblockableMpRegeneration="0"
+    >
+    </modifier>
+</modifiers>

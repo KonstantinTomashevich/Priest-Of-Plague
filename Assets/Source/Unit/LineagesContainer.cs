@@ -1,71 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
+using PriestOfPlague.Source.Core;
+using UnityEditor;
 using UnityEngine;
-
-//enum Chars { Vitality, Lucky, Agility, Strength, Intelligence }
-public enum LineageEnum
-{
-    Gunerates = 0,
-    Canteers,
-    Traders,
-    Villagers,
-    Outlaws
-}
 
 namespace PriestOfPlague.Source.Unit
 {
     public class LineagesContainer : MonoBehaviour
     {
-        private List <Lineage> _lineagesList;
+        public TextAsset Xml;
+        private Dictionary <int, Lineage> _lineagesList;
+        public Dictionary <int, Lineage> LineagesList => _lineagesList;
 
-        public Lineage GetLineage (int id)
+        public void LoadFromXML (XmlNode input)
         {
-            if (id >= 0 && id < _lineagesList.Count)
+            _lineagesList.Clear ();
+            foreach (var lineageNode in XmlHelper.IterateChildren (input, "lineage"))
             {
-                return _lineagesList [id];
+                var lineage = Lineage.LoadFromXML (lineageNode);
+                _lineagesList [lineage.ID] = lineage;
             }
-
-            throw new IndexOutOfRangeException ("Unknown lineage id!");
         }
-        
+
         private void Start ()
         {
-            _lineagesList = new List <Lineage> ();
+            _lineagesList = new Dictionary <int, Lineage> ();
+            var document = new XmlDocument ();
+            
+            document.LoadXml (Xml.text);
+            LoadFromXML (document.DocumentElement);
         }
-
-        /* Move to XML
-        public void SetLineages ()
-        {
-            int index = 0;
-            Lineage a = new Lineage ();
-            a.ID = (LineageEnum) index++;
-            a.InfoAboutLineage = "Ганераты";
-            a.SetCharacteristicsChanges (0, 2, 0, 0, 2);
-            cont [(int) LineageEnum.Gunerates] = a;
-
-            a = new Lineage ();
-            a.ID = (LineageEnum) index++;
-            a.InfoAboutLineage = "Кантиры";
-            a.SetCharacteristicsChanges (2, 0, 1, 1, 0);
-            cont [(int) LineageEnum.Canteers] = a;
-
-            a = new Lineage ();
-            a.ID = (LineageEnum) index++;
-            a.InfoAboutLineage = "Торговцы";
-            a.SetCharacteristicsChanges (1, 1, 1, 0, 1);
-            cont [(int) LineageEnum.Villagers] = a;
-
-            a = new Lineage ();
-            a.ID = (LineageEnum) index++;
-            a.InfoAboutLineage = "Крестьяне";
-            a.SetCharacteristicsChanges (2, 0, 0, 2, 0);
-            cont [(int) LineageEnum.Outlaws] = a;
-
-            a = new Lineage ();
-            a.ID = (LineageEnum) index++;
-            a.InfoAboutLineage = "Преступники";
-            a.SetCharacteristicsChanges (1, 1, 2, 0, 0);
-            cont [(int) LineageEnum.Traders] = a;
-        }*/
     }
 }

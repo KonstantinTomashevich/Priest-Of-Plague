@@ -48,9 +48,17 @@ namespace PriestOfPlague.Source.Items
             }
         }
 
+        public TextAsset Xml;
         public Dictionary <int, ItemType> ItemTypes => _itemTypes;
         public Dictionary <int, string> Supertypes => _supertypes;
 
+        private void Start ()
+        {
+            var document = new XmlDocument ();
+            document.LoadXml (Xml.text);
+            LoadFromXML (document.DocumentElement);
+        }
+        
         private Dictionary <int, ItemType> _itemTypes;
         private Dictionary <int, string> _supertypes;
     }

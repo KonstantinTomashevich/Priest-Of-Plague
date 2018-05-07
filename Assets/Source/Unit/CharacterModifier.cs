@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using PriestOfPlague.Source.Core;
 
 namespace PriestOfPlague.Source.Unit
 {
@@ -9,28 +12,32 @@ namespace PriestOfPlague.Source.Unit
     {
         public int ID { get; set; }
         public string InfoAboutBuffsInString { get; set; }
-        public float timeOfBuff { get; set; }
-        public int [] CharcsChanges = new int[(int) CharacteristicsEnum.Count];
-        public List <int> BuffsToApply = new List <int> ();
-        public HashSet <int> BuffsToCancel = new HashSet <int> ();
+        public float TimeOfBuff { get; set; }
+        public int [] CharcsChanges;
+        public List <int> BuffsToApply;
+        public HashSet <int> BuffsToCancel;
 
-        public bool _blocksHpRegeneration { get; set; }
-        public bool _blocksMpRegeneration { get; set; }
-        public bool _blocksMovement { get; set; }
-        public float _unblockableHPRegeneration { get; set; }
-        public float _unblockableMPRegeneration { get; set; }
+        public bool BlocksHpRegeneration { get; set; }
+        public bool BlocksMpRegeneration { get; set; }
+        public bool BlocksMovement { get; set; }
+        public float UnblockableHpRegeneration { get; set; }
+        public float UnblockableMpRegeneration { get; set; }
 
-        public CharacterModifier (int id, string infoIn, int timeIn)
+        private CharacterModifier (int id)
         {
             ID = id;
-            InfoAboutBuffsInString = infoIn;
-            timeOfBuff = timeIn;
+            InfoAboutBuffsInString = "";
+            TimeOfBuff = 0;
+            
+            CharcsChanges = new int[(int) CharacteristicsEnum.Count];
+            BuffsToApply = new List <int> ();
+            BuffsToCancel = new HashSet <int> ();
 
-            _blocksHpRegeneration = false;
-            _blocksMpRegeneration = false;
-            _blocksMovement = false;
-            _unblockableHPRegeneration = 0;
-            _unblockableMPRegeneration = 0;
+            BlocksHpRegeneration = false;
+            BlocksMpRegeneration = false;
+            BlocksMovement = false;
+            UnblockableHpRegeneration = 0;
+            UnblockableMpRegeneration = 0;
         }
 
         public void SetCharacteristicsChanges (int Vit, int Luc, int Ag, int Str, int Int)
@@ -40,6 +47,42 @@ namespace PriestOfPlague.Source.Unit
             CharcsChanges [(int) CharacteristicsEnum.Agility] = Ag;
             CharcsChanges [(int) CharacteristicsEnum.Strength] = Str;
             CharcsChanges [(int) CharacteristicsEnum.Intelligence] = Int;
+        }
+        
+        public static CharacterModifier LoadFromXML (XmlNode input)
+        {
+            var modifier = new CharacterModifier (XmlHelper.GetIntAttribute (input, "ID"));
+            modifier.InfoAboutBuffsInString = input.Attributes ["Info"].InnerText;
+            modifier.TimeOfBuff = XmlHelper.GetFloatAttribute (input, "TimeOfBuff");
+            
+            string charsChangedStringData = input.Attributes ["CharacteristicsChanged"].InnerText;
+            string [] charsChangedSeparated = charsChangedStringData.Split (' ');
+            
+            for (int index = 0; index < charsChangedSeparated.Length; index++)
+            {
+                modifier.CharcsChanges [index] =
+                    int.Parse (charsChangedSeparated [index], NumberFormatInfo.InvariantInfo);
+            }
+
+            modifier.BuffsToApply.Clear ();;
+            foreach (var toApplyNode in XmlHelper.IterateChildren (input, "applies"))
+            {
+                modifier.BuffsToApply.Add (XmlHelper.GetIntAttribute (toApplyNode, "ID"));
+            }
+            
+            modifier.BuffsToCancel.Clear ();;
+            foreach (var toCancelNode in XmlHelper.IterateChildren (input, "cancels"))
+            {
+                modifier.BuffsToCancel.Add (XmlHelper.GetIntAttribute (toCancelNode, "ID"));
+            }
+            
+            modifier.BlocksHpRegeneration = XmlHelper.GetBoolAttribute (input, "BlocksHpRegeneration");
+            modifier.BlocksMpRegeneration = XmlHelper.GetBoolAttribute (input, "BlocksMpRegeneration");
+            modifier.BlocksMovement = XmlHelper.GetBoolAttribute (input, "BlocksMovement");
+
+            modifier.UnblockableHpRegeneration = XmlHelper.GetFloatAttribute (input, "UnblockableHpRegeneration");
+            modifier.UnblockableMpRegeneration = XmlHelper.GetFloatAttribute (input, "UnblockableMpRegeneration");
+            return modifier;
         }
     }
 }

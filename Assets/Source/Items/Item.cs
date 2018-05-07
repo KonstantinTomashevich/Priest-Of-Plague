@@ -20,14 +20,14 @@ namespace PriestOfPlague.Source.Items
 
         public static Item LoadFromXML (XmlNode input)
         {
-            return new Item (XmlHelper.GetIntAttribute (input, "Item Type ID"),
+            return new Item (XmlHelper.GetIntAttribute (input, "ItemTypeID"),
                 XmlHelper.GetFloatAttribute (input, "Charge"),
                 XmlHelper.GetIntAttribute (input, "Level"));
         }
 
         public void SaveToXml (XmlElement output)
         {
-            output.SetAttribute ("Item Type ID", _itemTypeId.ToString (NumberFormatInfo.InvariantInfo));
+            output.SetAttribute ("ItemTypeID", _itemTypeId.ToString (NumberFormatInfo.InvariantInfo));
             output.SetAttribute ("Charge", _charge.ToString (NumberFormatInfo.InvariantInfo));
             output.SetAttribute ("Level", _level.ToString (NumberFormatInfo.InvariantInfo));
         }
