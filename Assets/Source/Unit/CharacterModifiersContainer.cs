@@ -11,6 +11,7 @@ namespace PriestOfPlague.Source.Unit
 {
     public class CharacterModifiersContainer : MonoBehaviour
     {
+        public TextAsset Xml;
         private Dictionary <int, CharacterModifier> _modifiers;
         public Dictionary <int, CharacterModifier> Modifiers => _modifiers;
 
@@ -27,6 +28,10 @@ namespace PriestOfPlague.Source.Unit
         private void Start ()
         {
             _modifiers = new Dictionary <int, CharacterModifier> ();
+            var document = new XmlDocument ();
+            
+            document.LoadXml (Xml.text);
+            LoadFromXML (document.DocumentElement);
         }
     }
 }
