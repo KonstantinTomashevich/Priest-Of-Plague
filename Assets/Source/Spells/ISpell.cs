@@ -9,7 +9,7 @@ namespace PriestOfPlague.Source.Spells
         int Id { get; }
         bool CanCast (Unit.Unit unit);
         void Cast (Unit.Unit caster, UnitsHub unitsHub, object parameter);
-        Sprite Icon { get; set; }
+        Sprite Icon { get; }
         string Info { get; }
     }
 }

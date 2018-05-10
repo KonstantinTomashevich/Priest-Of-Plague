@@ -99,4 +99,18 @@
             UnblockableMpRegeneration="0"
     >
     </modifier>
+
+    <modifier
+            ID="7"
+            Info="Burning"
+            TimeOfBuff="5"
+            CharacteristicsChanged="0 0 -1 0 0"
+            BlocksHpRegeneration="true"
+            BlocksMpRegeneration="false"
+            BlocksMovement="false"
+
+            UnblockableHpRegeneration="-3"
+            UnblockableMpRegeneration="0"
+    >
+    </modifier>
 </modifiers>
