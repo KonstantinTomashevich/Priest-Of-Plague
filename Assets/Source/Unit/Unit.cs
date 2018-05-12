@@ -72,6 +72,12 @@ namespace PriestOfPlague.Source.Unit
         public float UnblockableHpRegeneration { get; private set; }
         public float UnblockableMpRegeneration { get; private set; }
 
+        public void ApplyDamage (float damage, DamageTypesEnum type)
+        {
+            CurrentHp -= damage * Resists [(int) type];
+            // TODO: Death logic.
+        }
+
         public void ApplyLineage (int lineageIndex)
         {
             Lineage lineage;
