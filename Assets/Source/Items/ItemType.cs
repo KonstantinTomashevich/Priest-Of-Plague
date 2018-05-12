@@ -19,7 +19,7 @@ namespace PriestOfPlague.Source.Items
             MaxChargeAdditionPerLevel = 0;
             ChargeRegenerationAdditionPerLevel = 0;
             
-            _supertypes = new List <int> ();
+            _supertypes = new List <ItemSuperType> ();
             Weight = 0;
             Icon = null;
         }
@@ -43,7 +43,7 @@ namespace PriestOfPlague.Source.Items
             
             foreach (var supertypeNode in XmlHelper.IterateChildren (input, "supertype"))
             {
-                itemType._opensSpells.Add (XmlHelper.GetIntAttribute (supertypeNode, "ID"));
+                itemType._supertypes.Add ((ItemSuperType) XmlHelper.GetIntAttribute (supertypeNode, "ID"));
             }
             
             itemType._weight = XmlHelper.GetFloatAttribute (input, "Weight");
@@ -98,7 +98,7 @@ namespace PriestOfPlague.Source.Items
             set { _chargeRegenerationAdditionPerLevel = value; }
         }
 
-        public List <int> Supertypes => _supertypes;
+        public List <ItemSuperType> Supertypes => _supertypes;
         public float Weight
         {
             get { return _weight; }
@@ -125,7 +125,7 @@ namespace PriestOfPlague.Source.Items
         private float _maxChargeAdditionPerLevel;
         private float _chargeRegenerationAdditionPerLevel;
 
-        private List <int> _supertypes;
+        private List <ItemSuperType> _supertypes;
         private float _weight;
         private Sprite _icon;
     }

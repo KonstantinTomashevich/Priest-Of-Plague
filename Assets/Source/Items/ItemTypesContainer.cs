@@ -5,6 +5,11 @@ using UnityEngine;
 
 namespace PriestOfPlague.Source.Items
 {
+    public enum ItemSuperType
+    {
+        FireWand = 0,
+    }
+    
     public class ItemTypesContainer : MonoBehaviour
     {
         public ItemTypesContainer ()
@@ -32,15 +37,6 @@ namespace PriestOfPlague.Source.Items
         public void LoadFromXML (XmlNode input)
         {
             _itemTypes.Clear ();
-            _supertypes.Clear ();
-            
-            foreach (var supertypeNode in XmlHelper.IterateChildren (input, "supertype"))
-            {
-                int id = XmlHelper.GetIntAttribute (supertypeNode, "ID");
-                string name = supertypeNode.Attributes ["Name"].InnerText;
-                _supertypes.Add (id, name);
-            }
-            
             foreach (var itemTypeNode in XmlHelper.IterateChildren (input, "itemType"))
             {
                 var itemType = ItemType.LoadFromXML (itemTypeNode);
