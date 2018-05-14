@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<itemsTypes>
+    <!-- Standart fire wand. -->
+    <itemType ID="0"
+              MaxCharge="4"
+              ChargeRegeneration="0.1"
+              BasicForce="0.9"
+              ForceAdditionPerLevel="0.1"
+              MaxChargeAdditionPerLevel="1"
+              ChargeRegenerationAdditionPerLevel="0.05"
+              Weight="8"
+              Icon="Icons/SttandartFireWand.png"
+    >
+        <supertype ID="0"/>
+        <supertype ID="1"/>
+    </itemType>
+</itemsTypes>
