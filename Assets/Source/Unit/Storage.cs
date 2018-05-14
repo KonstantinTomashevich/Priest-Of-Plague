@@ -15,12 +15,12 @@ namespace PriestOfPlague.Source.Unit
             ItemTypesContainerRef = itemTypesContainer;
             _maxWeight = 0;
             _currentWeight = 0;
-            _items = new List <Item> ();
+            _items = new Dictionary <int, Item> ();
         }
 
         public bool AddItem (Item item)
         {
-            if (_items.Contains (item))
+            if (_items.ContainsKey (item.Id))
             {
                 return true;
             }
@@ -34,13 +34,13 @@ namespace PriestOfPlague.Source.Unit
             }
 
             _currentWeight += itemType.Weight;
-            _items.Add (item);
+            _items.Add (item.Id, item);
             return true;
         }
 
         public bool RemoveItem (Item item)
         {
-            if (_items.Remove (item))
+            if (_items.Remove (item.Id))
             {
                 ItemType itemType = ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
                 Debug.Assert (itemType != null);
@@ -49,13 +49,11 @@ namespace PriestOfPlague.Source.Unit
                 Debug.Assert (_currentWeight >= 0.0f);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
         
-        public void LoadFromXML (XmlNode input)
+        public void LoadFromXML (ItemsRegistrator itemsRegistrator, XmlNode input)
         {
             _maxWeight = XmlHelper.GetFloatAttribute (input, "MaxWeight");
             _currentWeight = XmlHelper.GetFloatAttribute (input, "CurrentWeight");
@@ -63,7 +61,8 @@ namespace PriestOfPlague.Source.Unit
             _items.Clear ();
             foreach (var itemNode in XmlHelper.IterateChildren (input, "item"))
             {
-                _items.Add (Item.LoadFromXML (itemNode));
+                var item = Item.LoadFromXML (itemsRegistrator, itemNode);
+                _items.Add (item.Id, item);
             }
         }
 
@@ -72,7 +71,7 @@ namespace PriestOfPlague.Source.Unit
             output.SetAttribute ("Max Weight", _maxWeight.ToString (NumberFormatInfo.InvariantInfo));
             output.SetAttribute ("Current Weight", _currentWeight.ToString (NumberFormatInfo.InvariantInfo));
 
-            foreach (var item in _items)
+            foreach (var item in Items)
             {
                 var itemElement = output.OwnerDocument.CreateElement ("item");
                 item.SaveToXml (itemElement);
@@ -92,10 +91,11 @@ namespace PriestOfPlague.Source.Unit
         }
         
         public float CurrentWeight => _currentWeight;
-        public IReadOnlyCollection <Item> Items => _items.AsReadOnly ();
+        public Dictionary <int, Item>.ValueCollection Items => _items.Values;
+        public Item this [int id] => _items [id];
 
         private float _maxWeight;
         private float _currentWeight;
-        private List <Item> _items;
+        private Dictionary <int, Item> _items;
     }
 }
