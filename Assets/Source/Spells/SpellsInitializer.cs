@@ -12,7 +12,11 @@ namespace PriestOfPlague.Source.Spells
                 1.0f, 0.1f, 45.0f, 5.0f, 1.0f, 1.0f,
                 (unit, parameter) =>
                 {
-                    unit.ApplyDamage (1.0f + parameter.Level, DamageTypesEnum.Flamy);
+                    var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
+                    unit.ApplyDamage (
+                        (1.0f + parameter.Level) *
+                        (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level),
+                        DamageTypesEnum.Flamy);
                     unit.ApplyModifier (7, parameter.Level);
                 }));
         }
