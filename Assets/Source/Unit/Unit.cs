@@ -37,11 +37,13 @@ namespace PriestOfPlague.Source.Unit
         public CharacterModifiersContainer CharacterModifiersContainerRef;
         public LineagesContainer LineagesContainerRef;
         public ItemTypesContainer ItemTypesContainerRef;
+        public ItemsRegistrator ItemsRegistratorRef;
         
         public int ID { get; set; }
         public string Name { get; set; }
         public bool IsMan { get; set; }
-        public Storage MyStorage { get; set; }
+        public Storage MyStorage { get; private set; }
+        public Equipment MyEquipment { get; private set; }
 
         public float NearDamageBust { get; private set; }
         public float OnDistanceDamageBust { get; private set; }
@@ -265,7 +267,9 @@ namespace PriestOfPlague.Source.Unit
             
             ApplyLineage (XmlHelper.GetIntAttribute (input, "LineageID"));
             RecalculateChildCharacteristics ();
-            MyStorage.LoadFromXML (XmlHelper.FirstChild (input, "storage"));
+            
+            MyStorage.LoadFromXML (ItemsRegistratorRef, XmlHelper.FirstChild (input, "storage"));
+            MyEquipment.LoadFromXML (MyStorage, XmlHelper.FirstChild (input, "equipment"));
         }
 
         public void SaveToXml (XmlElement output)
@@ -330,6 +334,10 @@ namespace PriestOfPlague.Source.Unit
             var storageElement = output.OwnerDocument.CreateElement ("storage");
             MyStorage.SaveToXml (storageElement);
             output.AppendChild (storageElement);
+            
+            var equipmentElement = output.OwnerDocument.CreateElement ("equipment");
+            MyEquipment.SaveToXml (equipmentElement);
+            output.AppendChild (equipmentElement);
         }
 
         private void RemoveModifier (AppliedModifier modifier)
@@ -373,7 +381,10 @@ namespace PriestOfPlague.Source.Unit
             
             ModifiersOnUnit = new List <AppliedModifier> ();
             AvailableSpells = new List <int> ();
+            
             MyStorage = new Storage (ItemTypesContainerRef);
+            MyEquipment = new Equipment (ItemTypesContainerRef);
+            
             RecalculateChildCharacteristics ();
             base.Start ();
         }
