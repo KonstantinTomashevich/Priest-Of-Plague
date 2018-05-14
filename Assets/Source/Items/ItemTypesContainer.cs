@@ -8,6 +8,14 @@ namespace PriestOfPlague.Source.Items
     public enum ItemSuperType
     {
         FireWand = 0,
+        TwoHandedWeapon,
+        OneHandedWeapon,
+        Shield,
+        BodyArmor,
+        HandsArmor,
+        HeadArmor,
+        LegsArmor,
+        AdditionalItem,
     }
     
     public class ItemTypesContainer : MonoBehaviour
