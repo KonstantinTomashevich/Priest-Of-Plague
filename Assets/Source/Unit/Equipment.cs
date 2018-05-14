@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using PriestOfPlague.Source.Core;
 using PriestOfPlague.Source.Items;
+using UnityEngine;
 
 namespace PriestOfPlague.Source.Unit
 {
@@ -30,6 +33,32 @@ namespace PriestOfPlague.Source.Unit
         public bool CanBeSetted (EquipmentSlot slot, Item item)
         {
             return _checkers [(int) slot] (_itemsOnSlots, item, _itemTypesContainer);
+        }
+
+        public void LoadFromXML (Storage storage, XmlNode input)
+        {
+            _itemsOnSlots = new List <Item> ((int) EquipmentSlot.Count);
+            foreach (var slotNode in XmlHelper.IterateChildren (input, "slot"))
+            {
+                int slotTypeId = int.Parse (slotNode.Attributes ["Type"].InnerText);
+                Debug.Assert (slotTypeId >= 0 && slotTypeId < (int) EquipmentSlot.Count);
+                
+                int itemId = int.Parse (slotNode.Attributes ["Id"].InnerText);
+                _itemsOnSlots [slotTypeId] = storage [itemId];
+            }
+        }
+
+        public void SaveToXml (XmlElement output)
+        {
+            EquipmentSlot slot = 0;
+            foreach (var item in _itemsOnSlots)
+            {
+                var slotElement = output.OwnerDocument.CreateElement ("slot");
+                slotElement.SetAttribute ("Type", ((int) slot).ToString ());
+                slotElement.SetAttribute ("Id", item.Id.ToString ());
+                output.AppendChild (slotElement);
+                slot++;
+            }
         }
 
         public Item this[EquipmentSlot slot]
