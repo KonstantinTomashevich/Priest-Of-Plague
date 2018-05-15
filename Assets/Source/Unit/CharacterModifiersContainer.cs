@@ -21,7 +21,7 @@ namespace PriestOfPlague.Source.Unit
             foreach (var modifierNode in XmlHelper.IterateChildren (input, "modifier"))
             {
                 var modifier = CharacterModifier.LoadFromXML (modifierNode);
-                _modifiers [modifier.ID] = modifier;
+                _modifiers [modifier.Id] = modifier;
             }
         }
         

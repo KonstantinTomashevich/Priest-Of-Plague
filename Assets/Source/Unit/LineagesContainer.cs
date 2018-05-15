@@ -19,7 +19,7 @@ namespace PriestOfPlague.Source.Unit
             foreach (var lineageNode in XmlHelper.IterateChildren (input, "lineage"))
             {
                 var lineage = Lineage.LoadFromXML (lineageNode);
-                _lineagesList [lineage.ID] = lineage;
+                _lineagesList [lineage.Id] = lineage;
             }
         }
 

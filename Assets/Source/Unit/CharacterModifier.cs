@@ -10,7 +10,7 @@ namespace PriestOfPlague.Source.Unit
 {
     public class CharacterModifier
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string InfoAboutBuffsInString { get; set; }
         public float TimeOfBuff { get; set; }
         public int [] CharcsChanges;
@@ -25,7 +25,7 @@ namespace PriestOfPlague.Source.Unit
 
         private CharacterModifier (int id)
         {
-            ID = id;
+            Id = id;
             InfoAboutBuffsInString = "";
             TimeOfBuff = 0;
             
@@ -51,7 +51,7 @@ namespace PriestOfPlague.Source.Unit
         
         public static CharacterModifier LoadFromXML (XmlNode input)
         {
-            var modifier = new CharacterModifier (XmlHelper.GetIntAttribute (input, "ID"));
+            var modifier = new CharacterModifier (XmlHelper.GetIntAttribute (input, "Id"));
             modifier.InfoAboutBuffsInString = input.Attributes ["Info"].InnerText;
             modifier.TimeOfBuff = XmlHelper.GetFloatAttribute (input, "TimeOfBuff");
             
@@ -67,13 +67,13 @@ namespace PriestOfPlague.Source.Unit
             modifier.BuffsToApply.Clear ();;
             foreach (var toApplyNode in XmlHelper.IterateChildren (input, "applies"))
             {
-                modifier.BuffsToApply.Add (XmlHelper.GetIntAttribute (toApplyNode, "ID"));
+                modifier.BuffsToApply.Add (XmlHelper.GetIntAttribute (toApplyNode, "Id"));
             }
             
             modifier.BuffsToCancel.Clear ();;
             foreach (var toCancelNode in XmlHelper.IterateChildren (input, "cancels"))
             {
-                modifier.BuffsToCancel.Add (XmlHelper.GetIntAttribute (toCancelNode, "ID"));
+                modifier.BuffsToCancel.Add (XmlHelper.GetIntAttribute (toCancelNode, "Id"));
             }
             
             modifier.BlocksHpRegeneration = XmlHelper.GetBoolAttribute (input, "BlocksHpRegeneration");
