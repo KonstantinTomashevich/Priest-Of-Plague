@@ -38,7 +38,7 @@ namespace PriestOfPlague.Source.Items
         public void SaveToXml (XmlElement output)
         {
             output.SetAttribute ("Id", _id.ToString (NumberFormatInfo.InvariantInfo));
-            output.SetAttribute ("ItemTypeID", _itemTypeId.ToString (NumberFormatInfo.InvariantInfo));
+            output.SetAttribute ("ItemTypeId", _itemTypeId.ToString (NumberFormatInfo.InvariantInfo));
             output.SetAttribute ("Charge", _charge.ToString (NumberFormatInfo.InvariantInfo));
             output.SetAttribute ("Level", _level.ToString (NumberFormatInfo.InvariantInfo));
         }

@@ -26,10 +26,10 @@ namespace PriestOfPlague.Source.Items
 
         public static ItemType LoadFromXML (XmlNode input)
         {
-            var itemType = new ItemType (XmlHelper.GetIntAttribute (input, "ID"));
+            var itemType = new ItemType (XmlHelper.GetIntAttribute (input, "Id"));
             foreach (var spellNode in XmlHelper.IterateChildren (input, "opensSpell"))
             {
-                itemType._opensSpells.Add (XmlHelper.GetIntAttribute (spellNode, "ID"));
+                itemType._opensSpells.Add (XmlHelper.GetIntAttribute (spellNode, "Id"));
             }
 
             itemType._maxCharge = XmlHelper.GetFloatAttribute (input, "MaxCharge");
@@ -43,7 +43,7 @@ namespace PriestOfPlague.Source.Items
             
             foreach (var supertypeNode in XmlHelper.IterateChildren (input, "supertype"))
             {
-                itemType._supertypes.Add ((ItemSuperType) XmlHelper.GetIntAttribute (supertypeNode, "ID"));
+                itemType._supertypes.Add ((ItemSuperType) XmlHelper.GetIntAttribute (supertypeNode, "Id"));
             }
             
             itemType._weight = XmlHelper.GetFloatAttribute (input, "Weight");

@@ -10,13 +10,13 @@ namespace PriestOfPlague.Source.Unit
 {
     public class Lineage
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string InfoAboutLineage { get; set; }
         public int [] CharcsChanges;
 
         private Lineage (int id)
         {
-            ID = id;
+            Id = id;
             InfoAboutLineage = "";
             CharcsChanges = new int[(int) CharacteristicsEnum.Count];
         }
@@ -32,7 +32,7 @@ namespace PriestOfPlague.Source.Unit
 
         public static Lineage LoadFromXML (XmlNode input)
         {
-            var lineage = new Lineage (XmlHelper.GetIntAttribute (input, "ID"));
+            var lineage = new Lineage (XmlHelper.GetIntAttribute (input, "Id"));
             lineage.InfoAboutLineage = input.Attributes ["Info"].InnerText;
             
             string stringData = input.Attributes ["Value"].InnerText;

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <modifiers>
     <modifier
-            ID="0"
+            Id="0"
             Info="Healing"
             TimeOfBuff="10"
             CharacteristicsChanged="0 0 0 0 0"
@@ -12,12 +12,12 @@
             UnblockableHpRegeneration="3"
             UnblockableMpRegeneration="1"
     >
-        <cancels ID="3"/>
-        <cancels ID="5"/>
+        <cancels Id="3"/>
+        <cancels Id="5"/>
     </modifier>
 
     <modifier
-            ID="1"
+            Id="1"
             Info="Eaten"
             TimeOfBuff="100"
             CharacteristicsChanged="1 0 1 1 0"
@@ -31,7 +31,7 @@
     </modifier>
 
     <modifier
-            ID="2"
+            Id="2"
             Info="MagicalSupport"
             TimeOfBuff="10"
             CharacteristicsChanged="1 1 1 1 1"
@@ -45,7 +45,7 @@
     </modifier>
 
     <modifier
-            ID="3"
+            Id="3"
             Info="Weaking"
             TimeOfBuff="10"
             CharacteristicsChanged="-1 0 -1 -1 0"
@@ -59,7 +59,7 @@
     </modifier>
 
     <modifier
-            ID="4"
+            Id="4"
             Info="Poison"
             TimeOfBuff="30"
             CharacteristicsChanged="-1 0 -1 -1 0"
@@ -73,7 +73,7 @@
     </modifier>
 
     <modifier
-            ID="5"
+            Id="5"
             Info="Ill"
             TimeOfBuff="100"
             CharacteristicsChanged="-1 -1 -1 -1 -1"
@@ -87,7 +87,7 @@
     </modifier>
 
     <modifier
-            ID="6"
+            Id="6"
             Info="Paralyzed"
             TimeOfBuff="5"
             CharacteristicsChanged="0 0 0 0 0"
@@ -101,7 +101,7 @@
     </modifier>
 
     <modifier
-            ID="7"
+            Id="7"
             Info="Burning"
             TimeOfBuff="5"
             CharacteristicsChanged="0 0 -1 0 0"

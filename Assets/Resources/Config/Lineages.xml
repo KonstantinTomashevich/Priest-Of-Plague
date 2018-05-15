@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <lineages>
-    <lineage ID="0" Info="Ganerates" Value="0 2 0 0 2"/>
-    <lineage ID="1" Info="Canteers" Value="2 0 1 1 0"/>
-    <lineage ID="2" Info="Traders" Value="1 1 1 0 1"/>
-    <lineage ID="3" Info="Villagers" Value="2 0 0 2 0"/>
-    <lineage ID="4" Info="Outlaws" Value="1 1 2 0 0"/>
+    <lineage Id="0" Info="Ganerates" Value="0 2 0 0 2"/>
+    <lineage Id="1" Info="Canteers" Value="2 0 1 1 0"/>
+    <lineage Id="2" Info="Traders" Value="1 1 1 0 1"/>
+    <lineage Id="3" Info="Villagers" Value="2 0 0 2 0"/>
+    <lineage Id="4" Info="Outlaws" Value="1 1 2 0 0"/>
 </lineages>
