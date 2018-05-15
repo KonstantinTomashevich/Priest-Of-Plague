@@ -17,15 +17,22 @@ namespace PriestOfPlague.Source.Spells
         public delegate void PerUnitCallbackType (Unit.Unit unit, CastParameter parameter);
 
         public MagicDamageWallSpell (int id, Sprite icon, string info, ItemSuperType requiredItemSupertype,
-            float requiredBaseCharge, float requiredChargePerLevel, float baseAngle, float baseDistance,
-            float anglePerLevel, float distancePerLevel, PerUnitCallbackType perUnitCallback)
+            float requiredBaseCharge, float requiredChargePerLevel, float basicCastTime, float castTimeAdditionPerLevel,
+            float baseAngle,
+            float anglePerLevel, float baseDistance,
+            float distancePerLevel, PerUnitCallbackType perUnitCallback)
         {
             Id = id;
             Icon = icon;
             Info = info;
             RequiredItemSupertype = requiredItemSupertype;
+            
             RequiredBaseCharge = requiredBaseCharge;
             RequiredChargePerLevel = requiredChargePerLevel;
+
+            BasicCastTime = basicCastTime;
+            CastTimeAdditionPerLevel = castTimeAdditionPerLevel;
+            
             BaseAngle = baseAngle;
             BaseDistance = baseDistance;
             AnglePerLevel = anglePerLevel;
@@ -67,8 +74,12 @@ namespace PriestOfPlague.Source.Spells
         public Sprite Icon { get; private set; }
         public string Info { get; private set; }
         public ItemSuperType RequiredItemSupertype { get; private set; }
+        
         public float RequiredBaseCharge { get; private set; }
         public float RequiredChargePerLevel { get; private set; }
+
+        public float BasicCastTime { get; private set; }
+        public float CastTimeAdditionPerLevel { get; private set; }
 
         public float BaseAngle { get; private set; }
         public float BaseDistance { get; private set; }

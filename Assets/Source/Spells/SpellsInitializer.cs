@@ -8,9 +8,13 @@ namespace PriestOfPlague.Source.Spells
         public static void InitializeSpells (SpellsContainer container)
         {
             // TODO: Add icon.
-            container.AddSpell (new MagicDamageWallSpell (0, null, "Fire wall", ItemSuperType.FireWand,
-                1.0f, 0.1f, 45.0f, 5.0f, 1.0f, 1.0f,
-                (unit, parameter) =>
+            container.AddSpell (new MagicDamageWallSpell (/*ID*/0, 
+                /*Icon*/ null, /*Info*/ "Fire wall", /*IST*/ ItemSuperType.FireWand,
+                /*Charge*/ 1.0f, /*Per level*/ 0.1f, 
+                /*Cast time*/ 3.0f, /*Per level*/ 0.5f,
+                /*Angle*/ 45.0f, /*Per level*/ 1.0f,
+                /*Distance*/ 5.0f, /*Per level*/ 1.0f, 
+                /*Callback*/ (unit, parameter) =>
                 {
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
