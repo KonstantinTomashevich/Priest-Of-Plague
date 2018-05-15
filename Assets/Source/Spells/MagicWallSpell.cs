@@ -8,13 +8,7 @@ namespace PriestOfPlague.Source.Spells
 {
     public class MagicDamageWallSpell : ISpell
     {
-        public struct CastParameter
-        {
-            public Item UsedItem;
-            public int Level;
-        }
-
-        public delegate void PerUnitCallbackType (Unit.Unit unit, CastParameter parameter);
+        public delegate void PerUnitCallbackType (Unit.Unit unit, SpellCastParameter parameter);
 
         public MagicDamageWallSpell (int id, Sprite icon, string info, ItemSuperType requiredItemSupertype,
             float requiredBaseCharge, float requiredChargePerLevel, float basicCastTime, float castTimeAdditionPerLevel,
@@ -40,33 +34,40 @@ namespace PriestOfPlague.Source.Spells
             PerUnitCallback = perUnitCallback;
         }
 
-        public bool CanCast (Unit.Unit unit)
+        public bool CanCast (Unit.Unit unit, int level = 0, Item item = null)
         {
             ItemTypesContainer itemTypesContainer = unit.ItemTypesContainerRef;
-            foreach (var item in unit.MyStorage.Items)
+
+            if (item == null)
             {
-                if (itemTypesContainer.ItemTypes [item.ItemTypeId].Supertypes.Contains (RequiredItemSupertype) &&
-                    item.Charge >= RequiredBaseCharge + RequiredChargePerLevel)
+                foreach (var storageItem in unit.MyStorage.Items)
                 {
-                    return true;
+                    if (itemTypesContainer.ItemTypes [storageItem.ItemTypeId].Supertypes.Contains (RequiredItemSupertype) &&
+                        storageItem.Charge >= RequiredBaseCharge + RequiredChargePerLevel)
+                    {
+                        return true;
+                    }
                 }
+            }
+            else
+            {
+                return itemTypesContainer.ItemTypes [item.ItemTypeId].Supertypes.Contains (RequiredItemSupertype) &&
+                       item.Charge >= RequiredBaseCharge + RequiredChargePerLevel * level;
             }
 
             return false;
         }
 
-
-        public void Cast (Unit.Unit caster, UnitsHub unitsHub, object parameter)
+        public void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
         {
-            var castParameter = (CastParameter) parameter;
-            castParameter.UsedItem.Charge -= (RequiredBaseCharge + RequiredChargePerLevel * castParameter.Level);
+            parameter.UsedItem.Charge -= (RequiredBaseCharge + RequiredChargePerLevel * parameter.Level);
 
             foreach (var unit in unitsHub.GetUnitsByCriteria (unitToCheck =>
                 UnitsHubCriterias.MaxDistanceAndMaxAngle (caster, unitToCheck,
-                    BaseDistance + DistancePerLevel * castParameter.Level,
-                    BaseAngle + AnglePerLevel * castParameter.Level)))
+                    BaseDistance + DistancePerLevel * parameter.Level,
+                    BaseAngle + AnglePerLevel * parameter.Level)))
             {
-                PerUnitCallback (unit, castParameter);
+                PerUnitCallback (unit, parameter);
             }
         }
 

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using PriestOfPlague.Source.Core;
+using PriestOfPlague.Source.Hubs;
 using PriestOfPlague.Source.Items;
 using PriestOfPlague.Source.Spells;
 using UnityEngine;
@@ -40,6 +41,7 @@ namespace PriestOfPlague.Source.Unit
         public ItemTypesContainer ItemTypesContainerRef;
         public ItemsRegistrator ItemsRegistratorRef;
         public SpellsContainer SpellsContainerRef;
+        public UnitsHub UnitsHubRef;
         
         public int Id { get; set; }
         public string Name { get; set; }
@@ -64,7 +66,7 @@ namespace PriestOfPlague.Source.Unit
         public int MaxStorageWeight { get; private set; }
         
         public List <AppliedModifier> ModifiersOnUnit { get; private set; }
-        public List <int> AvailableSpells { get; private set; }
+        public HashSet <int> AvailableSpells { get; private set; }
 
         public int [] Charactiristics { get; private set; }
         public float [] Resists { get; private set; }
@@ -76,10 +78,50 @@ namespace PriestOfPlague.Source.Unit
         public float UnblockableHpRegeneration { get; private set; }
         public float UnblockableMpRegeneration { get; private set; }
 
+        public ISpell CurrentlyCasting { get; private set; }
+        public float TimeFromCastingStart { get; private set; }
+
         public void ApplyDamage (float damage, DamageTypesEnum type)
         {
             CurrentHp -= damage * Resists [(int) type];
             // TODO: Death logic.
+        }
+
+        public bool StartCastingSpell (ISpell spell)
+        {
+            if (!AvailableSpells.Contains (spell.Id) || !spell.CanCast (this))
+            {
+                return false;
+            }
+
+            CurrentlyCasting = spell;
+            TimeFromCastingStart = 0.0f;
+            return true;
+        }
+
+        public bool CanCast (int level = 1, Item item = null)
+        {
+            return CurrentlyCasting != null && CurrentlyCasting.CanCast (this, level, item) &&
+                   TimeFromCastingStart >=
+                   CurrentlyCasting.BasicCastTime + CurrentlyCasting.CastTimeAdditionPerLevel * level;
+        }
+
+        public bool CastSpell (int level = 1, Item item = null, object additionalParameter = null)
+        {
+            if (!CanCast (level, item))
+            {
+                return false;
+            }
+
+            var parameter = new SpellCastParameter ();
+            parameter.Level = level;
+            parameter.UsedItem = item;
+            parameter.Additional = additionalParameter;
+            
+            CurrentlyCasting.Cast (this, UnitsHubRef, parameter);
+            CurrentlyCasting = null;
+            TimeFromCastingStart = 0.0f;
+            return true;
         }
 
         public void ApplyLineage (int lineageIndex)
@@ -382,7 +424,7 @@ namespace PriestOfPlague.Source.Unit
             Resists = new float[(int) DamageTypesEnum.Count];
             
             ModifiersOnUnit = new List <AppliedModifier> ();
-            AvailableSpells = new List <int> ();
+            AvailableSpells = new HashSet <int> ();
             
             MyStorage = new Storage (ItemTypesContainerRef);
             MyEquipment = new Equipment (ItemTypesContainerRef);
@@ -398,6 +440,7 @@ namespace PriestOfPlague.Source.Unit
 
         void Update ()
         {
+            TimeFromCastingStart += Time.deltaTime;
             if (!HpRegenerationBlocked)
             {
                 CurrentHp += RegenOfHp * Time.deltaTime;
