@@ -8,6 +8,7 @@ namespace PriestOfPlague.Source.Spells
         public SpellsContainer ()
         {
             _spells = new Dictionary <int, ISpell> ();
+            SpellsInitializer.InitializeSpells (this);
         }
 
         public bool AddSpell (ISpell spell)

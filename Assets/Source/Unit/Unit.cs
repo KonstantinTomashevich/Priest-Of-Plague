@@ -419,6 +419,10 @@ namespace PriestOfPlague.Source.Unit
 
         new void Start ()
         {
+            GameEngineCoreUtils.GetCoreInstances (
+                out UnitsHubRef, out ItemsRegistratorRef, out ItemTypesContainerRef,
+                out SpellsContainerRef, out CharacterModifiersContainerRef, out LineagesContainerRef);
+            
             LineageId = -1;
             Charactiristics = new int[(int) CharacteristicsEnum.Count];
             Resists = new float[(int) DamageTypesEnum.Count];
