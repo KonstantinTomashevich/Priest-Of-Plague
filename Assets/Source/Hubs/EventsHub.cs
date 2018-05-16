@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PriestOfPlague.Source.Hubs
@@ -9,7 +10,7 @@ namespace PriestOfPlague.Source.Hubs
 
         public void SendGlobalEvent (string eventName, object eventData)
         {
-            var list = _subscribers [eventName.GetHashCode ()];
+            var list = GetSubscribers (eventName.GetHashCode ());
             if (list != null)
             {
                 foreach (var monoBehaviour in list)
@@ -21,11 +22,11 @@ namespace PriestOfPlague.Source.Hubs
 
         public void Subscribe (MonoBehaviour subscriber, string eventName)
         {
-            var list = _subscribers [eventName.GetHashCode ()];
+            var list = GetSubscribers (eventName.GetHashCode ());
             if (list == null)
             {
                 list = new HashSet <MonoBehaviour> ();
-                _subscribers [eventName.GetHashCode ()] = list;
+                _subscribers.Add (eventName.GetHashCode (), list);
             }
 
             list.Add (subscriber);
@@ -33,10 +34,22 @@ namespace PriestOfPlague.Source.Hubs
 
         public void Unsubscribe (MonoBehaviour subscriber, string eventName)
         {
-            var list = _subscribers [eventName.GetHashCode ()];
+            var list = GetSubscribers (eventName.GetHashCode ());
             if (list != null)
             {
                 list.Remove (subscriber);
+            }
+        }
+
+        private HashSet <MonoBehaviour> GetSubscribers (int hashCode)
+        {
+            try
+            {
+                return _subscribers [hashCode];
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
         
