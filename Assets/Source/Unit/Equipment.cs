@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using PriestOfPlague.Source.Core;
 using PriestOfPlague.Source.Items;
@@ -25,8 +26,11 @@ namespace PriestOfPlague.Source.Unit
         public Equipment (ItemTypesContainer itemTypesContainer)
         {
             _itemTypesContainer = itemTypesContainer;
-            _itemsOnSlots = new List <Item> ((int) EquipmentSlot.Count);
-            _checkers = new List <SlotSetAttemptChecker> ((int) EquipmentSlot.Count);
+            _itemsOnSlots = new List <Item> ();
+            _itemsOnSlots.AddRange (Enumerable.Repeat <Item> (null, (int) EquipmentSlot.Count));
+            
+            _checkers = new List <SlotSetAttemptChecker> ();
+            _checkers.AddRange (Enumerable.Repeat <SlotSetAttemptChecker> (null, (int) EquipmentSlot.Count));
             InitEquipmentSlotsCheckers ();
         }
 
