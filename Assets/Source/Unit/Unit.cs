@@ -417,13 +417,14 @@ namespace PriestOfPlague.Source.Unit
             RecalculateChildCharacteristics ();
         }
 
-        new void Start ()
+        private new void Start ()
         {
             GameEngineCoreUtils.GetCoreInstances (
                 out UnitsHubRef, out ItemsRegistratorRef, out ItemTypesContainerRef,
                 out SpellsContainerRef, out CharacterModifiersContainerRef, out LineagesContainerRef);
             
             LineageId = -1;
+            CurrentHp = 0.00001f;
             Charactiristics = new int[(int) CharacteristicsEnum.Count];
             Resists = new float[(int) DamageTypesEnum.Count];
             
@@ -437,12 +438,12 @@ namespace PriestOfPlague.Source.Unit
             base.Start ();
         }
 
-        new void OnDestroy ()
+        private new void OnDestroy ()
         {
             base.OnDestroy ();
         }
 
-        void Update ()
+        private void Update ()
         {
             TimeFromCastingStart += Time.deltaTime;
             if (!HpRegenerationBlocked)
