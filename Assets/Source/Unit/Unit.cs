@@ -83,7 +83,7 @@ namespace PriestOfPlague.Source.Unit
 
         public void ApplyDamage (float damage, DamageTypesEnum type)
         {
-            CurrentHp -= damage * Resists [(int) type];
+            CurrentHp -= damage * (1 - Resists [(int) type]);
             // TODO: Death logic.
         }
 
