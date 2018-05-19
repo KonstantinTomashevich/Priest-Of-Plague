@@ -7,6 +7,13 @@ namespace PriestOfPlague.Source.Spells
 {
     public struct SpellCastParameter
     {
+        public SpellCastParameter (Item usedItem, int level, object additional)
+        {
+            UsedItem = usedItem;
+            Level = level;
+            Additional = additional;
+        }
+
         public Item UsedItem;
         public int Level;
         public object Additional;
