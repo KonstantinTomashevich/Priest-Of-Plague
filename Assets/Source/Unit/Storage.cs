@@ -42,8 +42,8 @@ namespace PriestOfPlague.Source.Unit
         {
             if (_items.Remove (item.Id))
             {
+                Debug.Assert (ItemTypesContainerRef.ItemTypes.ContainsKey (item.ItemTypeId));
                 ItemType itemType = ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
-                Debug.Assert (itemType != null);
                 _currentWeight -= itemType.Weight;
                 
                 Debug.Assert (_currentWeight >= 0.0f);
