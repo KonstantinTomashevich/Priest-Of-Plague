@@ -43,7 +43,7 @@ namespace PriestOfPlague.Source.Spells
                 foreach (var storageItem in unit.MyStorage.Items)
                 {
                     if (itemTypesContainer.ItemTypes [storageItem.ItemTypeId].Supertypes.Contains (RequiredItemSupertype) &&
-                        storageItem.Charge >= RequiredBaseCharge + RequiredChargePerLevel)
+                        storageItem.Charge >= RequiredBaseCharge + RequiredChargePerLevel * level)
                     {
                         return true;
                     }
@@ -67,7 +67,10 @@ namespace PriestOfPlague.Source.Spells
                     BaseDistance + DistancePerLevel * parameter.Level,
                     BaseAngle + AnglePerLevel * parameter.Level)))
             {
-                PerUnitCallback (unit, parameter);
+                if (unit != caster)
+                {
+                    PerUnitCallback (unit, parameter);
+                }
             }
         }
 

@@ -11,12 +11,12 @@ namespace PriestOfPlague.Source.Items
 {
     public class Item
     {
-        public Item (ItemsRegistrator itemsRegistrator, int itemTypeId, float charge = 0, int level = 0) : 
+        public Item (ItemsRegistrator itemsRegistrator, int itemTypeId, float charge, int level) : 
             this (itemsRegistrator, itemsRegistrator.FreeId, itemTypeId, charge, level)
         {
         }
 
-        public Item (ItemsRegistrator itemsRegistrator, int id, int itemTypeId, float charge = 0, int level = 0)
+        public Item (ItemsRegistrator itemsRegistrator, int id, int itemTypeId, float charge, int level)
         {
             _id = id;
             itemsRegistrator.Register (this);
