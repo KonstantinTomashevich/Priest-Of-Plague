@@ -22,6 +22,21 @@ namespace PriestOfPlague.Source.Unit
 
     public class Unit : CreationInformer
     {
+        public const string EventSpellLearned = "SpellLearned";
+        public const string EventSpellForgotten = "SpellForgotten";
+
+        public class SpellLearnedOrForgottenEventData
+        {
+            public SpellLearnedOrForgottenEventData (Unit eventUnit, int spellId)
+            {
+                EventUnit = eventUnit;
+                SpellId = spellId;
+            }
+
+            public Unit EventUnit;
+            public int SpellId;
+        }
+
         public class AppliedModifier
         {
             public AppliedModifier (int id, float time, int level)
@@ -42,7 +57,7 @@ namespace PriestOfPlague.Source.Unit
         public ItemsRegistrator ItemsRegistratorRef;
         public SpellsContainer SpellsContainerRef;
         public UnitsHub UnitsHubRef;
-        
+
         public int Id { get; set; }
         public string Name { get; set; }
         public bool IsMan { get; set; }
@@ -64,7 +79,7 @@ namespace PriestOfPlague.Source.Unit
 
         public int Experience { get; private set; }
         public int MaxStorageWeight { get; private set; }
-        
+
         public List <AppliedModifier> ModifiersOnUnit { get; private set; }
         public HashSet <int> AvailableSpells { get; private set; }
 
@@ -89,7 +104,7 @@ namespace PriestOfPlague.Source.Unit
 
         public bool StartCastingSpell (ISpell spell)
         {
-            if (!AvailableSpells.Contains (spell.Id) || !spell.CanCast (this))
+            if (spell != null && (!AvailableSpells.Contains (spell.Id) || !spell.CanCast (this)))
             {
                 return false;
             }
@@ -108,16 +123,18 @@ namespace PriestOfPlague.Source.Unit
 
         public bool CastSpell (int level = 1, Item item = null, object additionalParameter = null)
         {
-            if (!CanCast (level, item))
+            if (CurrentlyCasting == null || !CanCast (level, item))
             {
                 return false;
             }
 
-            var parameter = new SpellCastParameter ();
-            parameter.Level = level;
-            parameter.UsedItem = item;
-            parameter.Additional = additionalParameter;
-            
+            var parameter = new SpellCastParameter
+            {
+                Level = level,
+                UsedItem = item,
+                Additional = additionalParameter
+            };
+
             CurrentlyCasting.Cast (this, UnitsHubRef, parameter);
             CurrentlyCasting = null;
             TimeFromCastingStart = 0.0f;
@@ -194,6 +211,35 @@ namespace PriestOfPlague.Source.Unit
             RecalculateChildCharacteristics ();
         }
 
+        public bool LearnSpell (int spellId)
+        {
+            if (AvailableSpells.Add (spellId))
+            {
+                EventsHub.Instance.SendGlobalEvent (EventSpellLearned,
+                    new SpellLearnedOrForgottenEventData (this, spellId));
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool ForgetSpell (int spellId)
+        {
+            if (AvailableSpells.Remove (spellId))
+            {
+                EventsHub.Instance.SendGlobalEvent (EventSpellForgotten,
+                    new SpellLearnedOrForgottenEventData (this, spellId));
+
+                if (CurrentlyCasting.Id == spellId)
+                {
+                    StartCastingSpell (null);
+                }
+                return true;
+            }
+
+            return false;
+        }
+
         public void RecalculateChildCharacteristics ()
         {
             NearDamageBust = 0;
@@ -215,16 +261,16 @@ namespace PriestOfPlague.Source.Unit
 
             int strength = GetCharacteristic (CharacteristicsEnum.Strength);
             if (strength < 1) strength = 1;
-            
+
             int agility = GetCharacteristic (CharacteristicsEnum.Agility);
             if (agility < 1) agility = 1;
-            
+
             int vitality = GetCharacteristic (CharacteristicsEnum.Vitality);
             if (vitality < 1) vitality = 1;
-            
+
             int intelligence = GetCharacteristic (CharacteristicsEnum.Intelligence);
             if (intelligence < 1) intelligence = 1;
-            
+
             int luck = GetCharacteristic (CharacteristicsEnum.Luck);
             if (luck < 1) luck = 1;
 
@@ -273,16 +319,16 @@ namespace PriestOfPlague.Source.Unit
             Name = input.Attributes ["Name"].InnerText;
             IsMan = XmlHelper.GetBoolAttribute (input, "IsMan");
             Experience = XmlHelper.GetIntAttribute (input, "Experience");
-            
+
             string charsStringData = input.Attributes ["Characteristics"].InnerText;
             string [] charsSeparated = charsStringData.Split (' ');
-            
+
             for (int index = 0; index < charsSeparated.Length; index++)
             {
                 Charactiristics [index] =
                     int.Parse (charsSeparated [index], NumberFormatInfo.InvariantInfo);
             }
-            
+
             ModifiersOnUnit.Clear ();
             foreach (var modifier in XmlHelper.IterateChildren (input, "modifier"))
             {
@@ -290,28 +336,28 @@ namespace PriestOfPlague.Source.Unit
                 ApplyModifier (XmlHelper.GetIntAttribute (modifier, "Id"),
                     XmlHelper.GetIntAttribute (modifier, "Level"));
             }
-            
+
             string resistsStringData = input.Attributes ["Resists"].InnerText;
             string [] resistsSeparated = resistsStringData.Split (' ');
-            
+
             for (int index = 0; index < resistsSeparated.Length; index++)
             {
                 Resists [index] =
                     int.Parse (resistsSeparated [index], NumberFormatInfo.InvariantInfo);
             }
-            
+
             string availableSpellsStringData = input.Attributes ["AvailableSpells"].InnerText;
             string [] availableSpellsSeparated = availableSpellsStringData.Split (' ');
             AvailableSpells.Clear ();
-            
+
             foreach (var spellIdString in availableSpellsSeparated)
             {
                 AvailableSpells.Add (int.Parse (spellIdString));
             }
-            
+
             ApplyLineage (XmlHelper.GetIntAttribute (input, "LineageId"));
             RecalculateChildCharacteristics ();
-            
+
             MyStorage.LoadFromXML (ItemsRegistratorRef, XmlHelper.FirstChild (input, "storage"));
             MyEquipment.LoadFromXML (MyStorage, XmlHelper.FirstChild (input, "equipment"));
         }
@@ -322,7 +368,7 @@ namespace PriestOfPlague.Source.Unit
             output.SetAttribute ("Name", Name);
             output.SetAttribute ("IsMan", IsMan.ToString ());
             output.SetAttribute ("Experience", Experience.ToString (NumberFormatInfo.InvariantInfo));
-            
+
             foreach (var modifier in ModifiersOnUnit)
             {
                 CharacterModifier modifierType = CharacterModifiersContainerRef.Modifiers [modifier.Id];
@@ -340,7 +386,7 @@ namespace PriestOfPlague.Source.Unit
 
             output.SetAttribute ("Characteristics", stringBuilder.ToString ());
             stringBuilder.Clear ();
-            
+
             foreach (var modifier in ModifiersOnUnit)
             {
                 CharacterModifier modifierType = CharacterModifiersContainerRef.Modifiers [modifier.Id];
@@ -362,15 +408,15 @@ namespace PriestOfPlague.Source.Unit
             {
                 stringBuilder.Append (resist).Append (' ');
             }
-            
+
             output.SetAttribute ("Resists", stringBuilder.ToString ());
             stringBuilder.Clear ();
-            
+
             foreach (var availableSpell in AvailableSpells)
             {
                 stringBuilder.Append (availableSpell).Append (' ');
             }
-            
+
             output.SetAttribute ("AvailableSpells", stringBuilder.ToString ());
             stringBuilder.Clear ();
 
@@ -378,7 +424,7 @@ namespace PriestOfPlague.Source.Unit
             var storageElement = output.OwnerDocument.CreateElement ("storage");
             MyStorage.SaveToXml (storageElement);
             output.AppendChild (storageElement);
-            
+
             var equipmentElement = output.OwnerDocument.CreateElement ("equipment");
             MyEquipment.SaveToXml (equipmentElement);
             output.AppendChild (equipmentElement);
@@ -406,10 +452,10 @@ namespace PriestOfPlague.Source.Unit
                 {
                     HpRegenerationBlocked |=
                         CharacterModifiersContainerRef.Modifiers [anotherModifier.Id].BlocksHpRegeneration;
-                    
+
                     MpRegenerationBlocked |=
                         CharacterModifiersContainerRef.Modifiers [anotherModifier.Id].BlocksMpRegeneration;
-                    
+
                     MovementBlocked |= CharacterModifiersContainerRef.Modifiers [anotherModifier.Id].BlocksMovement;
                 }
             }
@@ -422,20 +468,26 @@ namespace PriestOfPlague.Source.Unit
             GameEngineCoreUtils.GetCoreInstances (
                 out UnitsHubRef, out ItemsRegistratorRef, out ItemTypesContainerRef,
                 out SpellsContainerRef, out CharacterModifiersContainerRef, out LineagesContainerRef);
-            
+
             LineageId = -1;
             CurrentHp = 0.00001f;
             Charactiristics = new int[(int) CharacteristicsEnum.Count];
             Resists = new float[(int) DamageTypesEnum.Count];
-            
+
             ModifiersOnUnit = new List <AppliedModifier> ();
             AvailableSpells = new HashSet <int> ();
-            
+
             MyStorage = new Storage (ItemTypesContainerRef);
             MyEquipment = new Equipment (ItemTypesContainerRef);
-            
+
+            LearnCommonSpells ();
             RecalculateChildCharacteristics ();
             base.Start ();
+        }
+
+        private void LearnCommonSpells ()
+        {
+            LearnSpell (SpellsInitializer.EquipSpellId);
         }
 
         private new void OnDestroy ()
@@ -445,7 +497,11 @@ namespace PriestOfPlague.Source.Unit
 
         private void Update ()
         {
-            TimeFromCastingStart += Time.deltaTime;
+            if (CurrentlyCasting != null)
+            {
+                TimeFromCastingStart += Time.deltaTime;
+            }
+
             if (!HpRegenerationBlocked)
             {
                 CurrentHp += RegenOfHp * Time.deltaTime;
