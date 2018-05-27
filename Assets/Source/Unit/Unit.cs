@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -7,6 +8,7 @@ using PriestOfPlague.Source.Hubs;
 using PriestOfPlague.Source.Items;
 using PriestOfPlague.Source.Spells;
 using UnityEngine;
+using Random = System.Random;
 
 namespace PriestOfPlague.Source.Unit
 {
@@ -234,6 +236,7 @@ namespace PriestOfPlague.Source.Unit
                 {
                     StartCastingSpell (null);
                 }
+
                 return true;
             }
 
@@ -352,7 +355,7 @@ namespace PriestOfPlague.Source.Unit
 
             foreach (var spellIdString in availableSpellsSeparated)
             {
-                AvailableSpells.Add (int.Parse (spellIdString));
+                LearnSpell (int.Parse (spellIdString));
             }
 
             ApplyLineage (XmlHelper.GetIntAttribute (input, "LineageId"));
@@ -480,8 +483,24 @@ namespace PriestOfPlague.Source.Unit
             MyStorage = new Storage (ItemTypesContainerRef);
             MyEquipment = new Equipment (ItemTypesContainerRef);
 
+            // TODO: Temporary, for items testing.
+            // {
+            Charactiristics [(int) CharacteristicsEnum.Strength] += 10;
+            // }
+            
             LearnCommonSpells ();
             RecalculateChildCharacteristics ();
+            
+            // TODO: Temporary, for items testing.
+            // {
+            var random = new Random ();
+            for (int index = 0; index < 4; index++)
+            {
+                var item = new Item (ItemsRegistratorRef, 0, 0.0f, random.Next (0, 10));
+                MyStorage.AddItem (item);
+            }
+            // }
+            
             base.Start ();
         }
 
@@ -508,15 +527,14 @@ namespace PriestOfPlague.Source.Unit
             }
 
             CurrentHp += UnblockableHpRegeneration * Time.deltaTime;
-
             if (!MpRegenerationBlocked)
             {
                 CurrentMp += RegenOfMp * Time.deltaTime;
             }
 
             CurrentMp += UnblockableMpRegeneration * Time.deltaTime;
-
             int modifierIndex = 0;
+
             while (modifierIndex < ModifiersOnUnit.Count)
             {
                 var modifier = ModifiersOnUnit [modifierIndex];
