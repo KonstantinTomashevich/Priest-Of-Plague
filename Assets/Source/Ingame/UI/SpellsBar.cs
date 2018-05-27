@@ -16,11 +16,14 @@ public class SpellsBar : MonoBehaviour
 	private void Start () 
 	{
 		_icons = new Dictionary <int, GameObject> ();
-		foreach (var spellId in SourceUnit.AvailableSpells)
+		if (SourceUnit.AvailableSpells != null)
 		{
-			AddSpellUIItem (spellId);
+			foreach (var spellId in SourceUnit.AvailableSpells)
+			{
+				AddSpellUIItem (spellId);
+			}
 		}
-		
+
 		EventsHub.Instance.Subscribe (this, Unit.EventSpellLearned);
 		EventsHub.Instance.Subscribe (this, Unit.EventSpellForgotten);
 	}
@@ -38,8 +41,7 @@ public class SpellsBar : MonoBehaviour
 			return;
 		}
 		
-		var spellsContainer = GameObject.FindGameObjectWithTag ("GameEngineCore").GetComponent <SpellsContainer> ();
-		var spell = spellsContainer.Spells [spellId];
+		var spell = SourceUnit.SpellsContainerRef.Spells [spellId];
 		var spellUIItem = Instantiate (SpellUIItemPrefab);
 		_icons.Add (spellId, spellUIItem);
 		
