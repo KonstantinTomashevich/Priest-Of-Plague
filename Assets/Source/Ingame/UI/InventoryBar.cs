@@ -68,7 +68,7 @@ public class InventoryBar : MonoBehaviour
 
             infoBuilder.Append (itemType.ShortInfo).AppendLine ().Append ("Level: ").Append (item.Level).Append (".")
                 .AppendLine ().Append ("Charge: ").Append (Math.Round (item.Charge * 10.0f) / 10.0f).Append ("/")
-                .Append (Math.Round (itemType.MaxCharge + itemType.MaxChargeAdditionPerLevel * item.Level * 10.0f) /
+                .Append (Math.Round ((itemType.MaxCharge + itemType.MaxChargeAdditionPerLevel * item.Level) * 10.0f) /
                          10.0f).Append (".").AppendLine ();
 
             SelectedItemInfoObject.GetComponent <Text> ().text = infoBuilder.ToString ();
