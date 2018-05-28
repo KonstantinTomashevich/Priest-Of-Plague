@@ -506,6 +506,7 @@ namespace PriestOfPlague.Source.Unit
 
         private void LearnCommonSpells ()
         {
+            LearnSpell (SpellsInitializer.FireWallSpellId);
             LearnSpell (SpellsInitializer.EquipSpellId);
         }
 
@@ -516,6 +517,7 @@ namespace PriestOfPlague.Source.Unit
 
         private void Update ()
         {
+            MyStorage.UpdateItems (Time.deltaTime);
             if (CurrentlyCasting != null)
             {
                 TimeFromCastingStart += Time.deltaTime;
