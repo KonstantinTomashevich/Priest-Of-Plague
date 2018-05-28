@@ -14,6 +14,7 @@ namespace PriestOfPlague.Source.Spells
             container.AddSpell (new MagicDamageWallSpell (FireWallSpellId, 
                 /*Icon*/ null, /*Info*/ "Fire wall", /*IST*/ ItemSuperType.FireWand,
                 /*Charge*/ 1.0f, /*Per level*/ 0.1f, 
+                /*Required base movement points*/ 1.0f, /*Per level*/ 0.5f, 
                 /*Cast time*/ 3.0f, /*Per level*/ 0.5f,
                 /*Angle*/ 45.0f, /*Per level*/ 1.0f,
                 /*Distance*/ 5.0f, /*Per level*/ 1.0f, 
