@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using PriestOfPlague.Source.Hubs;
@@ -16,8 +17,8 @@ public class InventoryBar : MonoBehaviour
     public GameObject SelectedItemInfoObject;
     public GameObject DestroySelectedObjectButtonObject;
 
+    public int SelectedItemId { get; private set; }
     private Dictionary <int, GameObject> _icons;
-    private int _selectedItemId;
 
     public void Toggle ()
     {
@@ -26,15 +27,15 @@ public class InventoryBar : MonoBehaviour
 
     public void DestroySelectedItem ()
     {
-        if (_selectedItemId != -1 && SourceUnit.MyStorage [_selectedItemId] != null)
+        if (SelectedItemId != -1 && SourceUnit.MyStorage [SelectedItemId] != null)
         {
-            SourceUnit.MyStorage.RemoveItem (SourceUnit.MyStorage [_selectedItemId]);
+            SourceUnit.MyStorage.RemoveItem (SourceUnit.MyStorage [SelectedItemId]);
         }
     }
 
     private void Start ()
     {
-        _selectedItemId = -1;
+        SelectedItemId = -1;
         _icons = new Dictionary <int, GameObject> ();
         SelectedItemInfoObject.SetActive (false);
         DestroySelectedObjectButtonObject.SetActive (false);
@@ -55,6 +56,23 @@ public class InventoryBar : MonoBehaviour
     {
         EventsHub.Instance.Subscribe (this, Storage.EventItemAdded);
         EventsHub.Instance.Subscribe (this, Storage.EventItemRemoved);
+    }
+
+    private void Update ()
+    {
+        if (SelectedItemId != -1)
+        {
+            var item = SourceUnit.MyStorage [SelectedItemId];
+            var itemType = SourceUnit.ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
+            var infoBuilder = new StringBuilder ();
+
+            infoBuilder.Append (itemType.ShortInfo).AppendLine ().Append ("Level: ").Append (item.Level).Append (".")
+                .AppendLine ().Append ("Charge: ").Append (Math.Round (item.Charge * 10.0f) / 10.0f).Append ("/")
+                .Append (Math.Round (itemType.MaxCharge + itemType.MaxChargeAdditionPerLevel * item.Level * 10.0f) /
+                         10.0f).Append (".").AppendLine ();
+
+            SelectedItemInfoObject.GetComponent <Text> ().text = infoBuilder.ToString ();
+        }
     }
 
     private void AddItemUIItem (Item item)
@@ -104,10 +122,10 @@ public class InventoryBar : MonoBehaviour
         if (argument.EventStorage == SourceUnit.MyStorage)
         {
             RemoveItemUIItem (argument.ItemId);
-            
-            if (_selectedItemId == argument.ItemId)
+
+            if (SelectedItemId == argument.ItemId)
             {
-                _selectedItemId = -1;
+                SelectedItemId = -1;
                 SelectedItemInfoObject.SetActive (false);
                 DestroySelectedObjectButtonObject.SetActive (false);
             }
@@ -119,24 +137,13 @@ public class InventoryBar : MonoBehaviour
         int itemId = (int) parameter;
         if (SourceUnit.MyStorage [itemId] != null)
         {
-            _selectedItemId = itemId;
+            SelectedItemId = itemId;
             SelectedItemInfoObject.SetActive (true);
             DestroySelectedObjectButtonObject.SetActive (true);
-
-            var item = SourceUnit.MyStorage [itemId];
-            var itemType = SourceUnit.ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
-            var infoBuilder = new StringBuilder ();
-
-            infoBuilder.Append (itemType.ShortInfo).AppendLine ().Append ("Level: ").Append (item.Level).Append (".")
-                .AppendLine ().Append ("Charge: ").Append (item.Charge).Append ("/")
-                .Append (itemType.MaxCharge + itemType.MaxChargeAdditionPerLevel * item.Level).Append (".")
-                .AppendLine ();
-
-            SelectedItemInfoObject.GetComponent <Text> ().text = infoBuilder.ToString ();
         }
         else
         {
-            _selectedItemId = -1;
+            SelectedItemId = -1;
             SelectedItemInfoObject.SetActive (false);
             DestroySelectedObjectButtonObject.SetActive (false);
         }
