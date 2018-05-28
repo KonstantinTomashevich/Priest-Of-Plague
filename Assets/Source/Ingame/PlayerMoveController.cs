@@ -8,7 +8,8 @@ namespace PriestOfPlague.Source.Ingame
 {
     public enum PlayerCurrentActionType
     {
-        Walk = 0
+        Walk = 0,
+        Count
     }
 
     public class PlayerMoveController : MonoBehaviour
@@ -16,8 +17,9 @@ namespace PriestOfPlague.Source.Ingame
         private NavMeshAgent _navMeshAgent;
         private Animator _animator;
         private Camera _playerCamera;
+        private Unit.Unit _unit;
 
-        public PlayerCurrentActionType PlayerCurrentAction = PlayerCurrentActionType.Walk;
+        public PlayerCurrentActionType PlayerCurrentAction { get; private set; } = PlayerCurrentActionType.Walk;
         public float NavigationAccuracy = 1.0f;
 
         public void MouseClick ()
@@ -38,11 +40,18 @@ namespace PriestOfPlague.Source.Ingame
             }
         }
 
+        public void SelectWalkAction ()
+        {
+            PlayerCurrentAction = PlayerCurrentActionType.Walk;
+            _unit.StartCastingSpell (null);
+        }
+
         private void Start ()
         {
             _navMeshAgent = GetComponent <NavMeshAgent> ();
             _animator = GetComponent <Animator> ();
             _playerCamera = GetComponentInChildren <Camera> ();
+            _unit = GetComponent <Unit.Unit> ();
         }
 
         private void Update ()

@@ -22,6 +22,7 @@ namespace PriestOfPlague.Source.Items
             _supertypes = new List <ItemSuperType> ();
             Weight = 0;
             Icon = null;
+            _shortInfo = "";
         }
 
         public static ItemType LoadFromXML (XmlNode input)
@@ -48,6 +49,7 @@ namespace PriestOfPlague.Source.Items
             
             itemType._weight = XmlHelper.GetFloatAttribute (input, "Weight");
             itemType._icon = Resources.Load <Sprite> (input.Attributes ["Icon"].InnerText);
+            itemType._shortInfo = input.Attributes ["ShortInfo"].InnerText;
             return itemType;
         }
 
@@ -115,6 +117,12 @@ namespace PriestOfPlague.Source.Items
             set { _icon = value; }
         }
 
+        public string ShortInfo
+        {
+            get { return _shortInfo; }
+            set { _shortInfo = value; }
+        }
+
         private int _id;
         private List <int> _opensSpells;
         private float _maxCharge;
@@ -128,5 +136,6 @@ namespace PriestOfPlague.Source.Items
         private List <ItemSuperType> _supertypes;
         private float _weight;
         private Sprite _icon;
+        private string _shortInfo;
     }
 }

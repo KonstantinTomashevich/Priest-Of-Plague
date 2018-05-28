@@ -10,6 +10,7 @@
               ChargeRegenerationAdditionPerLevel="0.05"
               Weight="8"
               Icon="Icons/SttandartFireWand.png"
+              ShortInfo="Fire Wand"
     >
         <supertype Id="0"/>
         <supertype Id="1"/>
