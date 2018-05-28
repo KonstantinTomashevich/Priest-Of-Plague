@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using PriestOfPlague.Source.Hubs;
+using PriestOfPlague.Source.Items;
 using PriestOfPlague.Source.Spells;
 using PriestOfPlague.Source.Unit;
 using UnityEngine;
@@ -11,6 +14,10 @@ public class SpellsBar : MonoBehaviour
 {
 	public Unit SourceUnit;
 	public GameObject SpellUIItemPrefab;
+	public Text SpellMaxLevelIndicatorTextObject;
+	public InventoryBar InventoryBarRef;
+	
+	public const int MaxCastLevel = 10;
 	private Dictionary <int, GameObject> _icons;
 
 	private void Start () 
@@ -32,6 +39,65 @@ public class SpellsBar : MonoBehaviour
 	{
 		EventsHub.Instance.Unsubscribe (this, Unit.EventSpellLearned);
 		EventsHub.Instance.Unsubscribe (this, Unit.EventSpellForgotten);
+	}
+
+	private void Update ()
+	{
+		int maxCastLevelWithSelectedItem;
+		Item selectedItem = SourceUnit.MyStorage [InventoryBarRef.SelectedItemId];
+		
+		UpdateMaxLevelIndicatorText (out maxCastLevelWithSelectedItem, selectedItem);
+		ProcessInput (maxCastLevelWithSelectedItem, selectedItem);
+	}
+
+	private void UpdateMaxLevelIndicatorText (out int maxCastLevelWithSelectedItem, Item selectedItem)
+	{
+		if (SourceUnit.CurrentlyCasting == null)
+		{
+			SpellMaxLevelIndicatorTextObject.text = "~";
+		}
+
+		maxCastLevelWithSelectedItem = 0;
+		selectedItem = SourceUnit.MyStorage [InventoryBarRef.SelectedItemId];
+
+		if (selectedItem == null)
+		{
+			SpellMaxLevelIndicatorTextObject.text = "~";
+			return;
+		}
+
+		for (int index = 1; index <= Math.Min (MaxCastLevel, selectedItem.Level); index++)
+		{
+			if (SourceUnit.CanCast (index, selectedItem))
+			{
+				maxCastLevelWithSelectedItem = index;
+			}
+		}
+
+		if (maxCastLevelWithSelectedItem > 0)
+		{
+			SpellMaxLevelIndicatorTextObject.text = maxCastLevelWithSelectedItem.ToString ();
+		}
+		else
+		{
+			SpellMaxLevelIndicatorTextObject.text = "~";
+		}
+	}
+	
+	private void ProcessInput (int maxCastLevelWithSelectedItem, Item selectedItem)
+	{
+		if (maxCastLevelWithSelectedItem > 0)
+		{
+			for (int code = 1; code <= maxCastLevelWithSelectedItem; code++)
+			{
+				var keyCode = KeyCode.Alpha0 + (code % 10);
+				if (Input.GetKeyDown (keyCode))
+				{
+					SourceUnit.CastSpell (code, selectedItem);
+					break;
+				}
+			}
+		}
 	}
 
 	private void AddSpellUIItem (int spellId)
@@ -86,6 +152,6 @@ public class SpellsBar : MonoBehaviour
 
 	private void SpellUIItemClicked (object parameter)
 	{
-		// TODO: Implement.
+		SourceUnit.StartCastingSpell (SourceUnit.SpellsContainerRef.Spells [(int) parameter]);
 	}
 }
