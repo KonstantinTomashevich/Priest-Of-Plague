@@ -6,6 +6,7 @@ using UnityEngine.Assertions.Must;
 
 namespace PriestOfPlague.Source.Spells
 {
+    // TODO: Unit movement points usage.
     public class MagicDamageWallSpell : ISpell
     {
         public delegate void PerUnitCallbackType (Unit.Unit unit, SpellCastParameter parameter);
@@ -20,13 +21,13 @@ namespace PriestOfPlague.Source.Spells
             Icon = icon;
             Info = info;
             RequiredItemSupertype = requiredItemSupertype;
-            
+
             RequiredBaseCharge = requiredBaseCharge;
             RequiredChargePerLevel = requiredChargePerLevel;
 
             BasicCastTime = basicCastTime;
             CastTimeAdditionPerLevel = castTimeAdditionPerLevel;
-            
+
             BaseAngle = baseAngle;
             BaseDistance = baseDistance;
             AnglePerLevel = anglePerLevel;
@@ -42,8 +43,10 @@ namespace PriestOfPlague.Source.Spells
             {
                 foreach (var storageItem in unit.MyStorage.Items)
                 {
-                    if (itemTypesContainer.ItemTypes [storageItem.ItemTypeId].Supertypes.Contains (RequiredItemSupertype) &&
-                        storageItem.Charge >= RequiredBaseCharge + RequiredChargePerLevel * level)
+                    if (itemTypesContainer.ItemTypes [storageItem.ItemTypeId].Supertypes
+                            .Contains (RequiredItemSupertype) &&
+                        storageItem.Charge >= RequiredBaseCharge + RequiredChargePerLevel * level &&
+                        storageItem.Level >= level)
                     {
                         return true;
                     }
@@ -52,7 +55,8 @@ namespace PriestOfPlague.Source.Spells
             else
             {
                 return itemTypesContainer.ItemTypes [item.ItemTypeId].Supertypes.Contains (RequiredItemSupertype) &&
-                       item.Charge >= RequiredBaseCharge + RequiredChargePerLevel * level;
+                       item.Charge >= RequiredBaseCharge + RequiredChargePerLevel * level &&
+                       item.Level >= level;
             }
 
             return false;
@@ -78,7 +82,7 @@ namespace PriestOfPlague.Source.Spells
         public Sprite Icon { get; private set; }
         public string Info { get; private set; }
         public ItemSuperType RequiredItemSupertype { get; private set; }
-        
+
         public float RequiredBaseCharge { get; private set; }
         public float RequiredChargePerLevel { get; private set; }
 
