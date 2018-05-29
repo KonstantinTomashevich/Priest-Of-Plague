@@ -104,6 +104,12 @@ namespace PriestOfPlague.Source.Unit
             // TODO: Death logic.
         }
 
+        public void UseMovementPoints (float points)
+        {
+            Debug.Assert (CurrentMp - points >= 0.0f);
+            CurrentMp = Math.Max (CurrentMp - points, 0.0f);
+        }
+
         public bool StartCastingSpell (ISpell spell)
         {
             if (spell != null && (!AvailableSpells.Contains (spell.Id) || !spell.CanCast (this)))
@@ -501,6 +507,7 @@ namespace PriestOfPlague.Source.Unit
             }
             // }
             
+            ApplyModifier (5, 3);
             base.Start ();
         }
 
@@ -529,14 +536,17 @@ namespace PriestOfPlague.Source.Unit
             }
 
             CurrentHp += UnblockableHpRegeneration * Time.deltaTime;
+            if (CurrentHp > MaxHp) CurrentHp = MaxHp;
+            
             if (!MpRegenerationBlocked)
             {
                 CurrentMp += RegenOfMp * Time.deltaTime;
             }
 
             CurrentMp += UnblockableMpRegeneration * Time.deltaTime;
+            if (CurrentMp > MaxMp) CurrentMp = MaxMp;
+            
             int modifierIndex = 0;
-
             while (modifierIndex < ModifiersOnUnit.Count)
             {
                 var modifier = ModifiersOnUnit [modifierIndex];
