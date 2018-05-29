@@ -728,8 +728,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be92a9c92ce55a54f90cb752e20cd7a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SourceUnit: {fileID: 0}
-  SpellUIItemPrefab: {fileID: 0}
+  SourceUnit: {fileID: 1958052925}
+  ModifierUIItemPrefab: {fileID: 1282399815412034, guid: 32dcceb59247aea4cb5d00fa93b2ab9e,
+    type: 2}
+  HealthText: {fileID: 1686178629}
+  MovementsPointsText: {fileID: 1917120691}
 --- !u!1 &435223606
 GameObject:
   m_ObjectHideFlags: 0
@@ -1805,7 +1808,7 @@ Prefab:
     - target: {fileID: 224130979039292826, guid: adc2f32ce64e046429e6b3c1849a7e84,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224130979039292826, guid: adc2f32ce64e046429e6b3c1849a7e84,
         type: 2}
