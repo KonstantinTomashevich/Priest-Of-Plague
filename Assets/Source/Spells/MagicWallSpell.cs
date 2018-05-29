@@ -25,6 +25,8 @@ namespace PriestOfPlague.Source.Spells
 
             RequiredBaseCharge = requiredBaseCharge;
             RequiredChargePerLevel = requiredChargePerLevel;
+            RequiredBaseMovementPoints = requiredBaseMovementPoints;
+            RequiredMovementPointsPerLevel = requiredMovementPointsPerLevel;
 
             BasicCastTime = basicCastTime;
             CastTimeAdditionPerLevel = castTimeAdditionPerLevel;
@@ -39,6 +41,10 @@ namespace PriestOfPlague.Source.Spells
         public bool CanCast (Unit.Unit unit, int level = 0, Item item = null)
         {
             ItemTypesContainer itemTypesContainer = unit.ItemTypesContainerRef;
+            if (unit.CurrentMp < RequiredBaseMovementPoints + RequiredMovementPointsPerLevel * level)
+            {
+                return false;
+            }
 
             if (item == null)
             {
@@ -66,6 +72,7 @@ namespace PriestOfPlague.Source.Spells
         public void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
         {
             parameter.UsedItem.Charge -= (RequiredBaseCharge + RequiredChargePerLevel * parameter.Level);
+            caster.UseMovementPoints (RequiredBaseMovementPoints + RequiredMovementPointsPerLevel * parameter.Level);
 
             foreach (var unit in unitsHub.GetUnitsByCriteria (unitToCheck =>
                 UnitsHubCriterias.MaxDistanceAndMaxAngle (caster, unitToCheck,
