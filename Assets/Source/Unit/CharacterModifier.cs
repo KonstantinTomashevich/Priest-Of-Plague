@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using PriestOfPlague.Source.Core;
+using UnityEngine;
 
 namespace PriestOfPlague.Source.Unit
 {
@@ -22,6 +23,7 @@ namespace PriestOfPlague.Source.Unit
         public bool BlocksMovement { get; set; }
         public float UnblockableHpRegeneration { get; set; }
         public float UnblockableMpRegeneration { get; set; }
+        public Sprite Icon { get; set; }
 
         private CharacterModifier (int id)
         {
@@ -82,6 +84,7 @@ namespace PriestOfPlague.Source.Unit
 
             modifier.UnblockableHpRegeneration = XmlHelper.GetFloatAttribute (input, "UnblockableHpRegeneration");
             modifier.UnblockableMpRegeneration = XmlHelper.GetFloatAttribute (input, "UnblockableMpRegeneration");
+            modifier.Icon = Resources.Load <Sprite> (input.Attributes ["Icon"].InnerText);
             return modifier;
         }
     }

@@ -11,6 +11,7 @@
 
             UnblockableHpRegeneration="3"
             UnblockableMpRegeneration="1"
+            Icon="Icons/Modifiers/Healing.png"
     >
         <cancels Id="3"/>
         <cancels Id="5"/>
@@ -27,6 +28,7 @@
 
             UnblockableHpRegeneration="0"
             UnblockableMpRegeneration="0"
+            Icon="Icons/Modifiers/Eaten.png"
     >
     </modifier>
 
@@ -41,6 +43,7 @@
 
             UnblockableHpRegeneration="0"
             UnblockableMpRegeneration="0"
+            Icon="Icons/Modifiers/MagicalSupport.png"
     >
     </modifier>
 
@@ -55,6 +58,7 @@
 
             UnblockableHpRegeneration="0"
             UnblockableMpRegeneration="0"
+            Icon="Icons/Modifiers/Weaking.png"
     >
     </modifier>
 
@@ -69,6 +73,7 @@
 
             UnblockableHpRegeneration="-1"
             UnblockableMpRegeneration="0"
+            Icon="Icons/Modifiers/Poison.png"
     >
     </modifier>
 
@@ -83,6 +88,7 @@
 
             UnblockableHpRegeneration="0"
             UnblockableMpRegeneration="0"
+            Icon="Icons/Modifiers/Ill.png"
     >
     </modifier>
 
@@ -97,6 +103,7 @@
 
             UnblockableHpRegeneration="0"
             UnblockableMpRegeneration="0"
+            Icon="Icons/Modifiers/Paralyzed.png"
     >
     </modifier>
 
@@ -111,6 +118,7 @@
 
             UnblockableHpRegeneration="-3"
             UnblockableMpRegeneration="0"
+            Icon="Icons/Modifiers/Burning.png"
     >
     </modifier>
 </modifiers>
