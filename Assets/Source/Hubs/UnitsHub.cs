@@ -38,7 +38,8 @@ namespace PriestOfPlague.Source.Hubs
 
         private void Update ()
         {
-            var toDestroy = new List <GameObject> ();
+            // TODO: Destroy units after some time, not exactly at death moment.
+            /*var toDestroy = new List <GameObject> ();
             
             foreach (var unit in _units)
             {
@@ -51,7 +52,7 @@ namespace PriestOfPlague.Source.Hubs
             foreach (var gameObjectToDestroy in toDestroy)
             {
                 Destroy (gameObjectToDestroy);
-            }
+            }*/
         }
         
         private void OnDestroy ()
