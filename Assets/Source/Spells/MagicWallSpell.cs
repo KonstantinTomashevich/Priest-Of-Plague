@@ -6,21 +6,21 @@ using UnityEngine.Assertions.Must;
 
 namespace PriestOfPlague.Source.Spells
 {
-    // TODO: Unit movement points usage.
     public class MagicDamageWallSpell : ISpell
     {
         public delegate void PerUnitCallbackType (Unit.Unit unit, SpellCastParameter parameter);
 
-        public MagicDamageWallSpell (int id, Sprite icon, string info, ItemSuperType requiredItemSupertype,
+        public MagicDamageWallSpell (int id, Sprite icon, string info, bool movementRequired,
+            ItemSuperType requiredItemSupertype,
             float requiredBaseCharge, float requiredChargePerLevel, float requiredBaseMovementPoints,
             float requiredMovementPointsPerLevel, float basicCastTime, float castTimeAdditionPerLevel,
-            float baseAngle,
-            float anglePerLevel, float baseDistance,
+            float baseAngle, float anglePerLevel, float baseDistance,
             float distancePerLevel, PerUnitCallbackType perUnitCallback)
         {
             Id = id;
             Icon = icon;
             Info = info;
+            MovementRequired = movementRequired;
             RequiredItemSupertype = requiredItemSupertype;
 
             RequiredBaseCharge = requiredBaseCharge;
@@ -40,6 +40,11 @@ namespace PriestOfPlague.Source.Spells
 
         public bool CanCast (Unit.Unit unit, int level = 0, Item item = null)
         {
+            if (MovementRequired && unit.MovementBlocked)
+            {
+                return false;
+            }
+            
             ItemTypesContainer itemTypesContainer = unit.ItemTypesContainerRef;
             if (unit.CurrentMp < RequiredBaseMovementPoints + RequiredMovementPointsPerLevel * level)
             {
@@ -89,6 +94,7 @@ namespace PriestOfPlague.Source.Spells
         public int Id { get; private set; }
         public Sprite Icon { get; private set; }
         public string Info { get; private set; }
+        public bool MovementRequired { get; private set; }
         public ItemSuperType RequiredItemSupertype { get; private set; }
 
         public float RequiredBaseCharge { get; private set; }

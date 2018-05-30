@@ -12,7 +12,7 @@ namespace PriestOfPlague.Source.Spells
         {
             // TODO: Add icon.
             container.AddSpell (new MagicDamageWallSpell (FireWallSpellId, 
-                /*Icon*/ null, /*Info*/ "Fire wall", /*IST*/ ItemSuperType.FireWand,
+                /*Icon*/ null, /*Info*/ "Fire wall", /*Movement required*/ true, /*IST*/ ItemSuperType.FireWand,
                 /*Charge*/ 1.0f, /*Per level*/ 0.1f, 
                 /*Required base movement points*/ 1.0f, /*Per level*/ 0.5f, 
                 /*Cast time*/ 3.0f, /*Per level*/ 0.5f,
@@ -27,9 +27,6 @@ namespace PriestOfPlague.Source.Spells
                         DamageTypesEnum.Flamy);
                     unit.ApplyModifier (7, parameter.Level);
                 }));
-            
-            // TODO: Add icon.
-            container.AddSpell (new EquipSpell (EquipSpellId, /*Icon*/ null, /*Info*/ "Equip"));
         }
     }
 }

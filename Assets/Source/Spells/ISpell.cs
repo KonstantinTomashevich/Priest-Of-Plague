@@ -19,7 +19,6 @@ namespace PriestOfPlague.Source.Spells
         public object Additional;
     }
     
-    // TODO: Add movement part requirment.
     public interface ISpell
     {
         int Id { get; }
@@ -27,6 +26,7 @@ namespace PriestOfPlague.Source.Spells
         void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter);
         float BasicCastTime { get; }
         float CastTimeAdditionPerLevel { get; }
+        bool MovementRequired { get; }
         Sprite Icon { get; }
         string Info { get; }
     }
