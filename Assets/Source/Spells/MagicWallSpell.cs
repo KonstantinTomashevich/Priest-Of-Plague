@@ -10,27 +10,24 @@ namespace PriestOfPlague.Source.Spells
     {
         public delegate void PerUnitCallbackType (Unit.Unit unit, SpellCastParameter parameter);
 
-        public MagicDamageWallSpell (int id, Sprite icon, string info, bool movementRequired,
-            ItemSuperType requiredItemSupertype,
-            float requiredBaseCharge, float requiredChargePerLevel, float requiredBaseMovementPoints,
-            float requiredMovementPointsPerLevel, float basicCastTime, float castTimeAdditionPerLevel,
-            float baseAngle, float anglePerLevel, float baseDistance,
+        public MagicDamageWallSpell (int id, Sprite icon, string info, bool movementRequired, bool affectSelf,
+            ItemSuperType requiredItemSupertype, float requiredBaseCharge, float requiredChargePerLevel,
+            float requiredBaseMovementPoints, float requiredMovementPointsPerLevel, float basicCastTime,
+            float castTimeAdditionPerLevel, float baseAngle, float baseDistance, float anglePerLevel,
             float distancePerLevel, PerUnitCallbackType perUnitCallback)
         {
             Id = id;
             Icon = icon;
             Info = info;
             MovementRequired = movementRequired;
+            AffectSelf = affectSelf;
             RequiredItemSupertype = requiredItemSupertype;
-
             RequiredBaseCharge = requiredBaseCharge;
             RequiredChargePerLevel = requiredChargePerLevel;
             RequiredBaseMovementPoints = requiredBaseMovementPoints;
             RequiredMovementPointsPerLevel = requiredMovementPointsPerLevel;
-
             BasicCastTime = basicCastTime;
             CastTimeAdditionPerLevel = castTimeAdditionPerLevel;
-
             BaseAngle = baseAngle;
             BaseDistance = baseDistance;
             AnglePerLevel = anglePerLevel;
@@ -44,7 +41,7 @@ namespace PriestOfPlague.Source.Spells
             {
                 return false;
             }
-            
+
             ItemTypesContainer itemTypesContainer = unit.ItemTypesContainerRef;
             if (unit.CurrentMp < RequiredBaseMovementPoints + RequiredMovementPointsPerLevel * level)
             {
@@ -84,7 +81,7 @@ namespace PriestOfPlague.Source.Spells
                     BaseDistance + DistancePerLevel * parameter.Level,
                     BaseAngle + AnglePerLevel * parameter.Level)))
             {
-                if (unit != caster)
+                if (AffectSelf || unit != caster)
                 {
                     PerUnitCallback (unit, parameter);
                 }
@@ -95,6 +92,7 @@ namespace PriestOfPlague.Source.Spells
         public Sprite Icon { get; private set; }
         public string Info { get; private set; }
         public bool MovementRequired { get; private set; }
+        public bool AffectSelf { get; private set; }
         public ItemSuperType RequiredItemSupertype { get; private set; }
 
         public float RequiredBaseCharge { get; private set; }
