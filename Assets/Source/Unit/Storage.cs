@@ -116,6 +116,7 @@ namespace PriestOfPlague.Source.Unit
             get { return _maxWeight; }
             set
             {
+                // TODO: It's a real situation (with ill modifier, for example) what should we do in this case?
                 Debug.Assert (value >= _currentWeight);
                 _maxWeight = value;
             }

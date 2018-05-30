@@ -56,6 +56,7 @@ namespace PriestOfPlague.Source.Ingame
 
         private void Update ()
         {
+            // TODO: Stop if unit movement is blocked.
             UpdateAnimatorVariables ();
         }
 
