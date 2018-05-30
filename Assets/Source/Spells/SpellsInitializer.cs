@@ -35,7 +35,7 @@ namespace PriestOfPlague.Source.Spells
             container.AddSpell (new DrinkPotion (DrinkPotionSpellId, /*Basic Cast Time*/ 1.0f, /*Icon*/ null));
             
             // TODO: Add icon.
-            container.AddSpell (new MagicDamageWallSpell (ImmediateHealSpellId, 
+            container.AddSpell (new SingleUnitSpell (ImmediateHealSpellId, 
                 /*Icon*/ null, /*Info*/ "Immediate Heal", 
                 /*Movement required*/ true,  /*Affect self*/ true, /*IST*/ ItemSuperType.HealerSphere,
                 /*Charge*/ 1.0f, /*Per level*/ 0.5f, 
@@ -50,7 +50,7 @@ namespace PriestOfPlague.Source.Spells
                 }));
             
             // TODO: Add icon.
-            container.AddSpell (new MagicDamageWallSpell (ContiniousSpellId, 
+            container.AddSpell (new SingleUnitSpell (ContiniousSpellId, 
                 /*Icon*/ null, /*Info*/ "Continious Heal", 
                 /*Movement required*/ true,  /*Affect self*/ true, /*IST*/ ItemSuperType.HealerSphere,
                 /*Charge*/ 2.0f, /*Per level*/ 1.0f, 

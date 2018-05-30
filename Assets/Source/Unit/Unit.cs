@@ -101,7 +101,7 @@ namespace PriestOfPlague.Source.Unit
         public void ApplyDamage (float damage, DamageTypesEnum type)
         {
             Debug.Assert (damage >= 0.0f);
-            CurrentHp -= damage * (1 - Resists [(int) type]);
+            CurrentHp -= damage * (1 - Math.Min (Resists [(int) type], 1.0f));
             // TODO: Death logic.
         }
 

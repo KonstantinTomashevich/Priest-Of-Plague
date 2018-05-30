@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Linq;
+using JetBrains.Annotations;
 using PriestOfPlague.Source.Hubs;
 using PriestOfPlague.Source.Items;
 using UnityEngine;
@@ -6,11 +7,9 @@ using UnityEngine.Assertions.Must;
 
 namespace PriestOfPlague.Source.Spells
 {
-    public class MagicDamageWallSpell : AttackOrSupportSpellBase
+    public class SingleUnitSpell : AttackOrSupportSpellBase
     {
-        public delegate void PerUnitCallbackType (Unit.Unit unit, SpellCastParameter parameter);
-
-        public MagicDamageWallSpell (int id, Sprite icon, string info, bool movementRequired, bool affectSelf,
+        public SingleUnitSpell (int id, Sprite icon, string info, bool movementRequired, bool affectSelf,
             ItemSuperType requiredItemSupertype, float requiredBaseCharge, float requiredChargePerLevel,
             float requiredBaseMovementPoints, float requiredMovementPointsPerLevel, float basicCastTime,
             float castTimeAdditionPerLevel, float baseAngle, float anglePerLevel, float baseDistance,
@@ -21,23 +20,31 @@ namespace PriestOfPlague.Source.Spells
             requiredMovementPointsPerLevel, basicCastTime, castTimeAdditionPerLevel, baseAngle, anglePerLevel,
             baseDistance, distancePerLevel, unitCallback)
         {
+            
         }
 
         public override void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
         {
-            parameter.UsedItem.Charge -= (RequiredBaseCharge + RequiredChargePerLevel * parameter.Level);
-            caster.UseMovementPoints (RequiredBaseMovementPoints + RequiredMovementPointsPerLevel * parameter.Level);
+            base.Cast (caster, unitsHub, parameter);
 
-            foreach (var unit in unitsHub.GetUnitsByCriteria (unitToCheck =>
+            var unit = unitsHub.GetUnitsByCriteria (unitToCheck =>
                 UnitsHubCriterias.MaxDistanceAndMaxAngle (caster, unitToCheck,
                     BaseDistance + DistancePerLevel * parameter.Level,
-                    BaseAngle + AnglePerLevel * parameter.Level)))
+                    BaseAngle + AnglePerLevel * parameter.Level)).FirstOrDefault ();
+
+            if (unit == null)
             {
-                if (AffectSelf || unit != caster)
+                if (AffectSelf)
                 {
-                    UnitCallback (unit, parameter);
+                    unit = caster;
+                }
+                else
+                {
+                    return;
                 }
             }
+
+            UnitCallback (unit, parameter);
         }
     }
 }
