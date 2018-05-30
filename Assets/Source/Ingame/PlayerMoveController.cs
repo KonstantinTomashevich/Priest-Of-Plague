@@ -56,8 +56,17 @@ namespace PriestOfPlague.Source.Ingame
 
         private void Update ()
         {
-            // TODO: Stop if unit movement is blocked.
+            StopUnitIfMovementIsBlocked ();
             UpdateAnimatorVariables ();
+        }
+
+        private void StopUnitIfMovementIsBlocked ()
+        {
+            if (_unit.MovementBlocked)
+            {
+                _animator.SetFloat ("Forward", 0.0f);
+                _navMeshAgent.ResetPath ();
+            }
         }
 
         private void UpdateAnimatorVariables ()
