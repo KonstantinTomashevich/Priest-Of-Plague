@@ -6,6 +6,7 @@ namespace PriestOfPlague.Source.Spells
     public static class SpellsInitializer
     {
         public const int FireWallSpellId = 0;
+        public const int DrinkPotionSpellId = 0;
         
         public static void InitializeSpells (SpellsContainer container)
         {
@@ -26,6 +27,9 @@ namespace PriestOfPlague.Source.Spells
                         DamageTypesEnum.Flamy);
                     unit.ApplyModifier (7, parameter.Level);
                 }));
+
+            // TODO: Add icon.
+            container.AddSpell (new DrinkPotion (DrinkPotionSpellId, /*Basic Cast Time*/ 1.0f, /*Icon*/ null));
         }
     }
 }
