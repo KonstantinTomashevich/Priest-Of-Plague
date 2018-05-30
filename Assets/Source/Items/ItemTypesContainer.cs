@@ -16,6 +16,15 @@ namespace PriestOfPlague.Source.Items
         HeadArmor,
         LegsArmor,
         AdditionalItem,
+        Meal,
+        LightingWand,
+        Potion,
+        HealthPotion,
+        MpPotion,
+        Antidote,
+        PoisonWand,
+        NecromancySphere,
+        HealerSphere
     }
     
     public class ItemTypesContainer : MonoBehaviour

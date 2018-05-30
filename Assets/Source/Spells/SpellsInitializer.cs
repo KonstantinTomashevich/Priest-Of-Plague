@@ -6,7 +6,6 @@ namespace PriestOfPlague.Source.Spells
     public static class SpellsInitializer
     {
         public const int FireWallSpellId = 0;
-        public const int EquipSpellId = 1;
         
         public static void InitializeSpells (SpellsContainer container)
         {

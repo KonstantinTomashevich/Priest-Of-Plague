@@ -512,7 +512,6 @@ namespace PriestOfPlague.Source.Unit
         private void LearnCommonSpells ()
         {
             LearnSpell (SpellsInitializer.FireWallSpellId);
-            LearnSpell (SpellsInitializer.EquipSpellId);
         }
 
         private new void OnDestroy ()

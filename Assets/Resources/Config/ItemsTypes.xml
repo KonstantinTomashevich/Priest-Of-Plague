@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <itemsTypes>
-    <!-- Standart fire wand. -->
+    <!-- Fire wand. -->
     <itemType Id="0"
               MaxCharge="4"
               ChargeRegeneration="0.1"
@@ -9,10 +9,151 @@
               MaxChargeAdditionPerLevel="1"
               ChargeRegenerationAdditionPerLevel="0.05"
               Weight="8"
-              Icon="Icons/Items/StandartFireWand"
+              Icon="Icons/Items/FireWand"
               ShortInfo="Fire Wand"
     >
         <supertype Id="0"/>
         <supertype Id="1"/>
+    </itemType>
+
+    <!-- Meal. -->
+    <itemType Id="1"
+              MaxCharge="2"
+              ChargeRegeneration="0"
+              BasicForce="0"
+              ForceAdditionPerLevel="0"
+              MaxChargeAdditionPerLevel="1"
+              ChargeRegenerationAdditionPerLevel="0"
+              Weight="1"
+              Icon="Icons/Items/Meal"
+              ShortInfo="Meal"
+    >
+        <supertype Id="9"/>
+    </itemType>
+
+    <!-- Health potion. -->
+    <itemType Id="2"
+              MaxCharge="1"
+              ChargeRegeneration="0"
+              BasicForce="0"
+              ForceAdditionPerLevel="10"
+              MaxChargeAdditionPerLevel="0"
+              ChargeRegenerationAdditionPerLevel="0"
+              Weight="1"
+              Icon="Icons/Items/HealthPotion"
+              ShortInfo="Health Potion"
+    >
+        <supertype Id="11"/>
+        <supertype Id="12"/>
+    </itemType>
+
+    <!-- Movement points potion. -->
+    <itemType Id="3"
+              MaxCharge="1"
+              ChargeRegeneration="0"
+              BasicForce="0"
+              ForceAdditionPerLevel="10"
+              MaxChargeAdditionPerLevel="0"
+              ChargeRegenerationAdditionPerLevel="0"
+              Weight="1"
+              Icon="Icons/Items/MpPotion"
+              ShortInfo="MP Potion"
+    >
+        <supertype Id="11"/>
+        <supertype Id="13"/>
+    </itemType>
+
+    <!-- Antidote. -->
+    <itemType Id="4"
+              MaxCharge="5"
+              ChargeRegeneration="0"
+              BasicForce="2"
+              ForceAdditionPerLevel="1"
+              MaxChargeAdditionPerLevel="0"
+              ChargeRegenerationAdditionPerLevel="0"
+              Weight="1"
+              Icon="Icons/Items/Antidote"
+              ShortInfo="Antidote"
+    >
+        <supertype Id="11"/>
+        <supertype Id="14"/>
+    </itemType>
+
+    <!-- Lighting wand. -->
+    <itemType Id="5"
+              MaxCharge="4"
+              ChargeRegeneration="0.1"
+              BasicForce="0.9"
+              ForceAdditionPerLevel="0.1"
+              MaxChargeAdditionPerLevel="1"
+              ChargeRegenerationAdditionPerLevel="0.05"
+              Weight="8"
+              Icon="Icons/Items/LightingWand"
+              ShortInfo="Lighting Wand"
+    >
+        <supertype Id="10"/>
+        <supertype Id="1"/>
+    </itemType>
+
+    <!-- Basilisk eye. -->
+    <itemType Id="6"
+              MaxCharge="1"
+              ChargeRegeneration="0"
+              BasicForce="0"
+              ForceAdditionPerLevel="0"
+              MaxChargeAdditionPerLevel="0"
+              ChargeRegenerationAdditionPerLevel="0"
+              Weight="2"
+              Icon="Icons/Items/BasiliskEye"
+              ShortInfo="Basilisk Eye"
+    >
+        <!-- TODO: Basilisk eye spell. -->
+        <opensSpell Id="-1"/>
+    </itemType>
+
+    <!-- Poison wand. -->
+    <itemType Id="7"
+              MaxCharge="4"
+              ChargeRegeneration="0.1"
+              BasicForce="0.9"
+              ForceAdditionPerLevel="0.1"
+              MaxChargeAdditionPerLevel="1"
+              ChargeRegenerationAdditionPerLevel="0.05"
+              Weight="8"
+              Icon="Icons/Items/PoisonWand"
+              ShortInfo="Poison Wand"
+    >
+        <supertype Id="15"/>
+        <supertype Id="1"/>
+    </itemType>
+
+    <!-- Necromancy sphere. -->
+    <itemType Id="8"
+              MaxCharge="10"
+              ChargeRegeneration="0.05"
+              BasicForce="0.9"
+              ForceAdditionPerLevel="0.1"
+              MaxChargeAdditionPerLevel="1"
+              ChargeRegenerationAdditionPerLevel="0.01"
+              Weight="5"
+              Icon="Icons/Items/NecromancySphere"
+              ShortInfo="Necromancy Sphere"
+    >
+        <supertype Id="16"/>
+    </itemType>
+
+    <!-- Healing sphere. -->
+    <itemType Id="9"
+              MaxCharge="10"
+              ChargeRegeneration="0.05"
+              BasicForce="0.9"
+              ForceAdditionPerLevel="0.1"
+              MaxChargeAdditionPerLevel="1"
+              ChargeRegenerationAdditionPerLevel="0.01"
+              Weight="5"
+              Icon="Icons/Items/HealingSphere"
+              ShortInfo="Healing Sphere"
+    >
+        <supertype Id="17"/>
     </itemType>
 </itemsTypes>
