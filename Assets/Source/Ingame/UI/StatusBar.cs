@@ -12,6 +12,7 @@ namespace PriestOfPlague.Source.Ingame.UI
     {
         public Unit.Unit SourceUnit;
         public GameObject ModifierUIItemPrefab;
+        public GameObject ModifiersListContent;
         public Text HealthText;
         public Text MovementsPointsText;
 
@@ -52,10 +53,13 @@ namespace PriestOfPlague.Source.Ingame.UI
             while (_modifiersUiItems.Count < modifiersCount)
             {
                 var modifierUiItem = Instantiate (ModifierUIItemPrefab);
-                modifierUiItem.transform.SetParent (transform);
+                modifierUiItem.transform.SetParent (ModifiersListContent.transform);
                 modifierUiItem.transform.localScale = Vector3.one;
                 _modifiersUiItems.Add (modifierUiItem);
             }
+
+            ModifiersListContent.GetComponent <RectTransform> ().SetSizeWithCurrentAnchors (RectTransform.Axis.Vertical,
+                ModifiersListContent.GetComponent <VerticalLayoutGroup> ().preferredHeight);
         }
 
         private void UpdateModifiersUiItems ()

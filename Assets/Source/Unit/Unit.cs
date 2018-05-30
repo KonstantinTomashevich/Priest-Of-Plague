@@ -506,8 +506,6 @@ namespace PriestOfPlague.Source.Unit
                 MyStorage.AddItem (item);
             }
             // }
-            
-            ApplyModifier (5, 3);
             base.Start ();
         }
 

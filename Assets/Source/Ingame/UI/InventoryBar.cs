@@ -100,6 +100,9 @@ namespace PriestOfPlague.Source.Ingame.UI
             var entry = new EventTrigger.Entry {eventID = EventTriggerType.PointerClick};
             entry.callback.AddListener (argument => { SendMessage ("ItemUIItemClicked", item.Id); });
             eventTrigger.triggers.Add (entry);
+            
+            ItemsListContentObject.GetComponent <RectTransform> ().SetSizeWithCurrentAnchors (RectTransform.Axis.Vertical,
+                ItemsListContentObject.GetComponent <VerticalLayoutGroup> ().preferredHeight);
         }
 
         private void RemoveItemUIItem (int itemId)
