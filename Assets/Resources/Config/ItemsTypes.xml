@@ -9,7 +9,7 @@
               MaxChargeAdditionPerLevel="1"
               ChargeRegenerationAdditionPerLevel="0.05"
               Weight="8"
-              Icon="Icons/Items/StandartFireWand.png"
+              Icon="Icons/Items/StandartFireWand"
               ShortInfo="Fire Wand"
     >
         <supertype Id="0"/>

@@ -19,6 +19,7 @@ namespace PriestOfPlague.Source.Spells
         public object Additional;
     }
     
+    // TODO: Add movement part requirment.
     public interface ISpell
     {
         int Id { get; }
