@@ -18,17 +18,19 @@
 
     <!-- Meal. -->
     <itemType Id="1"
-              MaxCharge="2"
+              MaxCharge="1"
               ChargeRegeneration="0"
-              BasicForce="0"
-              ForceAdditionPerLevel="0"
-              MaxChargeAdditionPerLevel="1"
+              BasicForce="5"
+              ForceAdditionPerLevel="3"
+              MaxChargeAdditionPerLevel="0"
               ChargeRegenerationAdditionPerLevel="0"
-              Weight="1"
+              Weight="5"
               Icon="Icons/Items/Meal"
               ShortInfo="Meal"
     >
         <supertype Id="9"/>
+        <supertype Id="11"/>
+        <supertype Id="12"/>
     </itemType>
 
     <!-- Health potion. -->
@@ -67,8 +69,8 @@
     <itemType Id="4"
               MaxCharge="5"
               ChargeRegeneration="0"
-              BasicForce="2"
-              ForceAdditionPerLevel="1"
+              BasicForce="4"
+              ForceAdditionPerLevel="2"
               MaxChargeAdditionPerLevel="0"
               ChargeRegenerationAdditionPerLevel="0"
               Weight="1"

@@ -60,9 +60,12 @@ namespace PriestOfPlague.Source.Unit
         public SpellsContainer SpellsContainerRef;
         public UnitsHub UnitsHubRef;
 
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public bool IsMan { get; set; }
+        public int Id { get; private set; }
+        public int Alignment { get; private set; }
+        public bool Alive { get; private set; }
+        
+        public string Name { get; private set; }
+        public bool IsMan { get; private set; }
         public Storage MyStorage { get; private set; }
         public Equipment MyEquipment { get; private set; }
 
@@ -100,14 +103,26 @@ namespace PriestOfPlague.Source.Unit
 
         public void ApplyDamage (float damage, DamageTypesEnum type)
         {
-            CurrentHp -= damage * (1 - Resists [(int) type]);
-            // TODO: Death logic.
+            Debug.Assert (damage >= 0.0f);
+            CurrentHp = Math.Max (CurrentHp - damage * (1 - Math.Min (Resists [(int) type], 1.0f)), 0.0f);
         }
 
         public void UseMovementPoints (float points)
         {
             Debug.Assert (CurrentMp - points >= 0.0f);
             CurrentMp = Math.Max (CurrentMp - points, 0.0f);
+        }
+
+        public void Heal (float amount)
+        {
+            Debug.Assert (amount >= 0.0f);
+            CurrentHp = Math.Min (CurrentHp + amount, MaxHp);
+        }
+        
+        public void Rest (float amount)
+        {
+            Debug.Assert (amount >= 0.0f);
+            CurrentMp = Math.Min (CurrentMp + amount, MaxMp);
         }
 
         public bool StartCastingSpell (ISpell spell)
@@ -129,20 +144,14 @@ namespace PriestOfPlague.Source.Unit
                    CurrentlyCasting.BasicCastTime + CurrentlyCasting.CastTimeAdditionPerLevel * level;
         }
 
-        public bool CastSpell (int level = 1, Item item = null, object additionalParameter = null)
+        public bool CastSpell (int level = 1, Item item = null, Unit target = null)
         {
             if (CurrentlyCasting == null || !CanCast (level, item))
             {
                 return false;
             }
 
-            var parameter = new SpellCastParameter
-            {
-                Level = level,
-                UsedItem = item,
-                Additional = additionalParameter
-            };
-
+            var parameter = new SpellCastParameter (item, level, target);
             CurrentlyCasting.Cast (this, UnitsHubRef, parameter);
             CurrentlyCasting = null;
             TimeFromCastingStart = 0.0f;
@@ -170,14 +179,23 @@ namespace PriestOfPlague.Source.Unit
             }
         }
 
-        public void ApplyModifier (int id, int level)
+        public void ApplyModifier (int id, int level, float overrideTime = -1.0f, bool blockAddition = false,
+            bool blockCancel = false)
         {
             var modifierType = CharacterModifiersContainerRef.Modifiers [id];
-            var modifier = new AppliedModifier (id, modifierType.TimeOfBuff * level, level);
+            var modifier = new AppliedModifier (id, overrideTime < 0 ? modifierType.TimeOfBuff * level : overrideTime,
+                level);
             ModifiersOnUnit.Add (modifier);
 
             for (int i = 0; i < (int) CharacteristicsEnum.Count; i++)
+            {
                 Charactiristics [i] += modifierType.CharcsChanges [i] * level;
+            }
+
+            for (int i = 0; i < (int) DamageTypesEnum.Count; i++)
+            {
+                Resists [i] += modifierType.ResistsChanges [i] * level;
+            }
 
             UnblockableHpRegeneration += modifierType.UnblockableHpRegeneration * level;
             UnblockableMpRegeneration += modifierType.UnblockableMpRegeneration * level;
@@ -186,7 +204,7 @@ namespace PriestOfPlague.Source.Unit
             MovementBlocked |= modifierType.BlocksMovement;
 
             int modifierIndex = 0;
-            while (modifierIndex < ModifiersOnUnit.Count)
+            while (!blockCancel && modifierIndex < ModifiersOnUnit.Count)
             {
                 var anotherModifier = ModifiersOnUnit [modifierIndex];
                 if (modifierType.BuffsToCancel.Contains (anotherModifier.Id))
@@ -200,12 +218,44 @@ namespace PriestOfPlague.Source.Unit
                 }
             }
 
-            foreach (var anotherId in modifierType.BuffsToApply)
+            if (!blockAddition)
             {
-                ApplyModifier (anotherId, level);
+                foreach (var anotherId in modifierType.BuffsToApply)
+                {
+                    ApplyModifier (anotherId, level);
+                }
             }
 
             RecalculateChildCharacteristics ();
+        }
+
+        public void DecreaseModifiers (int ofType, int level)
+        {
+            int modifierIndex = 0;
+            while (modifierIndex < ModifiersOnUnit.Count && level > 0)
+            {
+                var modifier = ModifiersOnUnit [modifierIndex];
+                if (modifier.Id == ofType)
+                {
+                    if (modifier.Level <= level)
+                    {
+                        level -= modifier.Level;
+                        RemoveModifier (modifier);
+                        ModifiersOnUnit.RemoveAt (modifierIndex);
+                    }
+                    else
+                    {
+                        RemoveModifier (modifier);
+                        ModifiersOnUnit.RemoveAt (modifierIndex);
+                        ApplyModifier (modifier.Id, modifier.Level - level, modifier.Time, true, true);
+                        break;
+                    }
+                }
+                else
+                {
+                    modifierIndex++;
+                }
+            }
         }
 
         public int GetCharacteristic (CharacteristicsEnum characteristicIn)
@@ -247,6 +297,20 @@ namespace PriestOfPlague.Source.Unit
             }
 
             return false;
+        }
+
+        public void Resurrect (int alignment, float percentsOfMaxHp)
+        {
+            Debug.Assert (!Alive);
+            Debug.Assert (percentsOfMaxHp >= 0.0f);
+            Debug.Assert (percentsOfMaxHp <= 1.0f);
+
+            if (!Alive)
+            {
+                Alive = true;
+                Alignment = alignment;
+                CurrentHp = percentsOfMaxHp * MaxHp;
+            }
         }
 
         public void RecalculateChildCharacteristics ()
@@ -324,7 +388,8 @@ namespace PriestOfPlague.Source.Unit
 
         public void LoadFromXML (XmlNode input)
         {
-            Id = XmlHelper.GetIntAttribute (input, "LineageId");
+            Id = XmlHelper.GetIntAttribute (input, "Id");
+            Alignment = XmlHelper.GetIntAttribute (input, "Alignment");
             Name = input.Attributes ["Name"].InnerText;
             IsMan = XmlHelper.GetBoolAttribute (input, "IsMan");
             Experience = XmlHelper.GetIntAttribute (input, "Experience");
@@ -374,6 +439,7 @@ namespace PriestOfPlague.Source.Unit
         public void SaveToXml (XmlElement output)
         {
             output.SetAttribute ("Id", Id.ToString (NumberFormatInfo.InvariantInfo));
+            output.SetAttribute ("Alignment", Alignment.ToString (NumberFormatInfo.InvariantInfo));
             output.SetAttribute ("Name", Name);
             output.SetAttribute ("IsMan", IsMan.ToString ());
             output.SetAttribute ("Experience", Experience.ToString (NumberFormatInfo.InvariantInfo));
@@ -447,6 +513,11 @@ namespace PriestOfPlague.Source.Unit
             {
                 Charactiristics [i] -= modifierType.CharcsChanges [i] * modifier.Level;
             }
+            
+            for (int i = 0; i < (int) DamageTypesEnum.Count; i++)
+            {
+                Resists [i] -= modifierType.ResistsChanges [i] * modifier.Level;
+            }
 
             UnblockableHpRegeneration -= modifierType.UnblockableHpRegeneration * modifier.Level;
             UnblockableMpRegeneration -= modifierType.UnblockableMpRegeneration * modifier.Level;
@@ -478,6 +549,7 @@ namespace PriestOfPlague.Source.Unit
                 out UnitsHubRef, out ItemsRegistratorRef, out ItemTypesContainerRef,
                 out SpellsContainerRef, out CharacterModifiersContainerRef, out LineagesContainerRef);
 
+            Alive = true;
             LineageId = -1;
             CurrentHp = 0.00001f;
             Charactiristics = new int[(int) CharacteristicsEnum.Count];
@@ -493,10 +565,10 @@ namespace PriestOfPlague.Source.Unit
             // {
             Charactiristics [(int) CharacteristicsEnum.Strength] += 10;
             // }
-            
+
             LearnCommonSpells ();
             RecalculateChildCharacteristics ();
-            
+
             // TODO: Temporary, for items testing.
             // {
             var random = new Random ();
@@ -505,6 +577,7 @@ namespace PriestOfPlague.Source.Unit
                 var item = new Item (ItemsRegistratorRef, 0, 0.0f, random.Next (0, 10));
                 MyStorage.AddItem (item);
             }
+
             // }
             base.Start ();
         }
@@ -521,6 +594,16 @@ namespace PriestOfPlague.Source.Unit
 
         private void Update ()
         {
+            if (CurrentHp <= 0.0f)
+            {
+                Alive = false;
+            }
+
+            if (!Alive)
+            {
+                return;
+            }
+            
             MyStorage.UpdateItems (Time.deltaTime);
             if (CurrentlyCasting != null)
             {
@@ -534,7 +617,7 @@ namespace PriestOfPlague.Source.Unit
 
             CurrentHp += UnblockableHpRegeneration * Time.deltaTime;
             if (CurrentHp > MaxHp) CurrentHp = MaxHp;
-            
+
             if (!MpRegenerationBlocked)
             {
                 CurrentMp += RegenOfMp * Time.deltaTime;
@@ -542,7 +625,7 @@ namespace PriestOfPlague.Source.Unit
 
             CurrentMp += UnblockableMpRegeneration * Time.deltaTime;
             if (CurrentMp > MaxMp) CurrentMp = MaxMp;
-            
+
             int modifierIndex = 0;
             while (modifierIndex < ModifiersOnUnit.Count)
             {

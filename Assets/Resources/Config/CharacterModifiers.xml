@@ -4,7 +4,9 @@
             Id="0"
             Info="Healing"
             TimeOfBuff="10"
-            CharacteristicsChanged="0 0 0 0 0"
+            CharacteristicsChanges="0 0 0 0 0"
+            ResistsChanges="0 0 0 0 0 0 0 0"
+            
             BlocksHpRegeneration="false"
             BlocksMpRegeneration="false"
             BlocksMovement="false"
@@ -21,7 +23,9 @@
             Id="1"
             Info="Eaten"
             TimeOfBuff="100"
-            CharacteristicsChanged="1 0 1 1 0"
+            CharacteristicsChanges="1 0 1 1 0"
+            ResistsChanges="0 0 0 0 0 0 0 0"
+            
             BlocksHpRegeneration="false"
             BlocksMpRegeneration="false"
             BlocksMovement="false"
@@ -36,7 +40,9 @@
             Id="2"
             Info="MagicalSupport"
             TimeOfBuff="10"
-            CharacteristicsChanged="1 1 1 1 1"
+            CharacteristicsChanges="1 1 1 1 1"
+            ResistsChanges="0 0 0 0 0 0 0 0"
+            
             BlocksHpRegeneration="false"
             BlocksMpRegeneration="false"
             BlocksMovement="false"
@@ -51,7 +57,9 @@
             Id="3"
             Info="Weaking"
             TimeOfBuff="10"
-            CharacteristicsChanged="-1 0 -1 -1 0"
+            CharacteristicsChanges="-1 0 -1 -1 0"
+            ResistsChanges="0 0 0 0 0 0 0 0"
+            
             BlocksHpRegeneration="false"
             BlocksMpRegeneration="false"
             BlocksMovement="false"
@@ -66,7 +74,9 @@
             Id="4"
             Info="Poison"
             TimeOfBuff="30"
-            CharacteristicsChanged="-1 0 -1 -1 0"
+            CharacteristicsChanges="-1 0 -1 -1 0"
+            ResistsChanges="0 0 0 0 0 0 0 0"
+            
             BlocksHpRegeneration="true"
             BlocksMpRegeneration="false"
             BlocksMovement="false"
@@ -81,7 +91,9 @@
             Id="5"
             Info="Ill"
             TimeOfBuff="100"
-            CharacteristicsChanged="-1 -1 -1 -1 -1"
+            CharacteristicsChanges="-1 -1 -1 -1 -1"
+            ResistsChanges="0 0 0 0 0 0 0 0"
+            
             BlocksHpRegeneration="false"
             BlocksMpRegeneration="false"
             BlocksMovement="false"
@@ -96,7 +108,9 @@
             Id="6"
             Info="Paralyzed"
             TimeOfBuff="5"
-            CharacteristicsChanged="0 0 0 0 0"
+            CharacteristicsChanges="0 0 0 0 0"
+            ResistsChanges="0 0 0 0 0 0 0 0"
+            
             BlocksHpRegeneration="true"
             BlocksMpRegeneration="true"
             BlocksMovement="true"
@@ -111,7 +125,9 @@
             Id="7"
             Info="Burning"
             TimeOfBuff="5"
-            CharacteristicsChanged="0 0 -1 0 0"
+            CharacteristicsChanges="0 0 -1 0 0"
+            ResistsChanges="0 0 0 0 0 0 0 0"
+            
             BlocksHpRegeneration="true"
             BlocksMpRegeneration="false"
             BlocksMovement="false"
@@ -119,6 +135,23 @@
             UnblockableHpRegeneration="-3"
             UnblockableMpRegeneration="0"
             Icon="Icons/Modifiers/Burning"
+    >
+    </modifier>
+
+    <modifier
+            Id="8"
+            Info="Invulnurable"
+            TimeOfBuff="2"
+            CharacteristicsChanges="0 0 0 0 0"
+            ResistsChanges="1 1 1 1 1 1 1 1"
+
+            BlocksHpRegeneration="false"
+            BlocksMpRegeneration="false"
+            BlocksMovement="false"
+
+            UnblockableHpRegeneration="0"
+            UnblockableMpRegeneration="0"
+            Icon="Icons/Modifiers/Invulnurable"
     >
     </modifier>
 </modifiers>

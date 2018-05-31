@@ -15,6 +15,7 @@ namespace PriestOfPlague.Source.Unit
         public string InfoAboutBuffsInString { get; set; }
         public float TimeOfBuff { get; set; }
         public int [] CharcsChanges;
+        public float [] ResistsChanges;
         public List <int> BuffsToApply;
         public HashSet <int> BuffsToCancel;
 
@@ -32,6 +33,7 @@ namespace PriestOfPlague.Source.Unit
             TimeOfBuff = 0;
             
             CharcsChanges = new int[(int) CharacteristicsEnum.Count];
+            ResistsChanges = new float[(int) DamageTypesEnum.Count];
             BuffsToApply = new List <int> ();
             BuffsToCancel = new HashSet <int> ();
 
@@ -57,13 +59,22 @@ namespace PriestOfPlague.Source.Unit
             modifier.InfoAboutBuffsInString = input.Attributes ["Info"].InnerText;
             modifier.TimeOfBuff = XmlHelper.GetFloatAttribute (input, "TimeOfBuff");
             
-            string charsChangedStringData = input.Attributes ["CharacteristicsChanged"].InnerText;
-            string [] charsChangedSeparated = charsChangedStringData.Split (' ');
+            string charsChangesStringData = input.Attributes ["CharacteristicsChanges"].InnerText;
+            string [] charsChangesSeparated = charsChangesStringData.Split (' ');
             
-            for (int index = 0; index < charsChangedSeparated.Length; index++)
+            for (int index = 0; index < charsChangesSeparated.Length; index++)
             {
                 modifier.CharcsChanges [index] =
-                    int.Parse (charsChangedSeparated [index], NumberFormatInfo.InvariantInfo);
+                    int.Parse (charsChangesSeparated [index], NumberFormatInfo.InvariantInfo);
+            }
+            
+            string resistsChangesStringData = input.Attributes ["ResistsChanges"].InnerText;
+            string [] resistsChangesSeparated = resistsChangesStringData.Split (' ');
+            
+            for (int index = 0; index < resistsChangesSeparated.Length; index++)
+            {
+                modifier.ResistsChanges [index] =
+                    float.Parse (resistsChangesSeparated [index], NumberFormatInfo.InvariantInfo);
             }
 
             modifier.BuffsToApply.Clear ();;

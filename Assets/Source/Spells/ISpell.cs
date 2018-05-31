@@ -7,16 +7,16 @@ namespace PriestOfPlague.Source.Spells
 {
     public struct SpellCastParameter
     {
-        public SpellCastParameter (Item usedItem, int level, object additional)
+        public SpellCastParameter (Item usedItem, int level, Unit.Unit target)
         {
             UsedItem = usedItem;
             Level = level;
-            Additional = additional;
+            Target = target;
         }
 
         public Item UsedItem;
         public int Level;
-        public object Additional;
+        public Unit.Unit Target;
     }
     
     public interface ISpell
@@ -27,6 +27,7 @@ namespace PriestOfPlague.Source.Spells
         float BasicCastTime { get; }
         float CastTimeAdditionPerLevel { get; }
         bool MovementRequired { get; }
+        bool TargetRequired { get; }
         Sprite Icon { get; }
         string Info { get; }
     }
