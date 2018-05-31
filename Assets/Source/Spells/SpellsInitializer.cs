@@ -1,5 +1,6 @@
 ﻿using PriestOfPlague.Source.Items;
 using PriestOfPlague.Source.Unit;
+using UnityEngine;
 
 namespace PriestOfPlague.Source.Spells
 {
@@ -15,6 +16,7 @@ namespace PriestOfPlague.Source.Spells
         public const int LightSwordAttackSpellId = 7;
         public const int HeavySwordAttackSpellId = 8;
         public const int ElectricDefenseSpellId = 9;
+        public const int RaiseDeadSpellId = 10;
 
         public static void InitializeSpells (SpellsContainer container)
         {
@@ -161,6 +163,19 @@ namespace PriestOfPlague.Source.Spells
                 /*Callback*/ (caster, unit, parameter) =>
                 {
                     unit.ApplyModifier (8, parameter.Level);
+                }));
+            
+            // TODO: Add icon.
+            container.AddSpell (new TargetedSpell (RaiseDeadSpellId,
+                /*Cast time*/ 4.0f, /*Per level*/ 1.0f,
+                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Raise Dead",
+                /*IST*/ ItemSuperType.NecromancySphere,
+                /*Charge*/ 5.0f, /*Per level*/ 2.0f,
+                /*Required base movement points*/ 4.0f, /*Per level*/ 2.0f,
+                /*Callback*/ (caster, unit, parameter) =>
+                {
+                    Debug.Assert (!unit.Alive);
+                    unit.Resurrect (caster.Alignment, 0.1f * parameter.Level);
                 }));
         }
     }

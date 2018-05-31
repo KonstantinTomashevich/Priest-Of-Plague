@@ -301,12 +301,16 @@ namespace PriestOfPlague.Source.Unit
 
         public void Resurrect (int alignment, float percentsOfMaxHp)
         {
+            Debug.Assert (!Alive);
             Debug.Assert (percentsOfMaxHp >= 0.0f);
             Debug.Assert (percentsOfMaxHp <= 1.0f);
-            
-            Alive = true;
-            Alignment = alignment;
-            CurrentHp = percentsOfMaxHp * MaxHp;
+
+            if (!Alive)
+            {
+                Alive = true;
+                Alignment = alignment;
+                CurrentHp = percentsOfMaxHp * MaxHp;
+            }
         }
 
         public void RecalculateChildCharacteristics ()
