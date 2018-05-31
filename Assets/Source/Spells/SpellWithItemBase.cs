@@ -6,7 +6,7 @@ namespace PriestOfPlague.Source.Spells
 {
     public abstract class SpellWithItemBase : ISpell
     {
-        public delegate void UnitCallbackType (Unit.Unit unit, SpellCastParameter parameter);
+        public delegate void UnitCallbackType (Unit.Unit caster, Unit.Unit unit, SpellCastParameter parameter);
 
         protected SpellWithItemBase (int id, float basicCastTime, float castTimeAdditionPerLevel, bool movementRequired,
             bool targetRequired, Sprite icon, string info, ItemSuperType requiredItemSupertype,

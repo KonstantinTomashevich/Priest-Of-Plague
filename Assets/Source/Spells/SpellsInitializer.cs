@@ -9,6 +9,7 @@ namespace PriestOfPlague.Source.Spells
         public const int DrinkPotionSpellId = 1;
         public const int ImmediateHealSpellId = 2;
         public const int ContiniousSpellId = 3;
+        public const int StealHealthSpellId = 4;
         
         public static void InitializeSpells (SpellsContainer container)
         {
@@ -21,7 +22,7 @@ namespace PriestOfPlague.Source.Spells
                 /*Affect self*/ false, 
                 /*Angle*/ 45.0f, /*Per level*/ 1.0f,
                 /*Distance*/ 5.0f, /*Per level*/ 1.0f, 
-                /*Callback*/ (unit, parameter) =>
+                /*Callback*/ (caster, unit, parameter) =>
                 {
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
@@ -41,7 +42,7 @@ namespace PriestOfPlague.Source.Spells
                 /*IST*/ ItemSuperType.HealerSphere,
                 /*Charge*/ 1.0f, /*Per level*/ 0.5f, 
                 /*Required base movement points*/ 1.0f, /*Per level*/ 0.5f, 
-                /*Callback*/ (unit, parameter) =>
+                /*Callback*/ (caster, unit, parameter) =>
                 {
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.Heal ((itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 10.0f);
@@ -55,9 +56,28 @@ namespace PriestOfPlague.Source.Spells
                 /*Charge*/ 2.0f, /*Per level*/ 1.0f, 
                 /*Required base movement points*/ 1.0f, /*Per level*/ 0.5f, 
                 
-                /*Callback*/ (unit, parameter) =>
+                /*Callback*/ (caster, unit, parameter) =>
                 {
                     unit.ApplyModifier (0, parameter.Level);
+                }));
+
+            // TODO: Add icon.
+            container.AddSpell (new TargetedSpell (StealHealthSpellId, 
+                /*Cast time*/ 4.0f, /*Per level*/ 0.5f,
+                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Steal Health", 
+                /*IST*/ ItemSuperType.NecromancySphere,
+                /*Charge*/ 5.0f, /*Per level*/ 1.0f, 
+                /*Required base movement points*/ 5.0f, /*Per level*/ 2.0f, 
+                
+                /*Callback*/ (caster, unit, parameter) =>
+                {
+                    var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
+                    float unitHealthBefore = unit.CurrentHp;
+                    unit.ApplyDamage ((itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 10.0f,
+                        DamageTypesEnum.PureMagic);
+
+                    float damage = unitHealthBefore - unit.CurrentHp;
+                    caster.Heal (damage);
                 }));
         }
     }

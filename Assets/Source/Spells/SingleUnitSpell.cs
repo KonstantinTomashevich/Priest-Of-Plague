@@ -54,7 +54,7 @@ namespace PriestOfPlague.Source.Spells
                 }
             }
 
-            UnitCallback (nearestUnit, parameter);
+            UnitCallback (caster, nearestUnit, parameter);
         }
     }
 }

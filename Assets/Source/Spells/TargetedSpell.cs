@@ -22,7 +22,7 @@ namespace PriestOfPlague.Source.Spells
         {
             if (parameter.Target != null)
             {
-                UnitCallback (parameter.Target, parameter);
+                UnitCallback (caster, parameter.Target, parameter);
             }
         }
     }

@@ -33,7 +33,7 @@ namespace PriestOfPlague.Source.Spells
             {
                 if (AffectSelf || unit != caster)
                 {
-                    UnitCallback (unit, parameter);
+                    UnitCallback (caster, unit, parameter);
                 }
             }
         }
