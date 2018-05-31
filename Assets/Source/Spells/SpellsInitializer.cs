@@ -10,13 +10,14 @@ namespace PriestOfPlague.Source.Spells
         public const int ImmediateHealSpellId = 2;
         public const int ContiniousSpellId = 3;
         public const int StealHealthSpellId = 4;
+        public const int FireExplosionSpellId = 5;
         
         public static void InitializeSpells (SpellsContainer container)
         {
             // TODO: Add icon.
             container.AddSpell (new MagicWallSpell (FireWallSpellId,
                 /*Cast time*/ 3.0f, /*Per level*/ 0.5f,
-                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Fire wall", /*IST*/ ItemSuperType.FireWand,
+                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Fire Wall", /*IST*/ ItemSuperType.FireWand,
                 /*Charge*/ 1.0f, /*Per level*/ 0.1f, 
                 /*Required base movement points*/ 1.0f, /*Per level*/ 0.5f, 
                 /*Affect self*/ false, 
@@ -26,8 +27,7 @@ namespace PriestOfPlague.Source.Spells
                 {
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
-                        (1.0f + parameter.Level) *
-                        (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level),
+                        itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level,
                         DamageTypesEnum.Flamy);
                     unit.ApplyModifier (7, parameter.Level);
                 }));
@@ -78,6 +78,24 @@ namespace PriestOfPlague.Source.Spells
 
                     float damage = unitHealthBefore - unit.CurrentHp;
                     caster.Heal (damage);
+                }));
+            
+            // TODO: Add Icon.
+            container.AddSpell (new SingleUnitSpell (FireExplosionSpellId,
+                /*Cast time*/ 3.0f, /*Per level*/ 0.5f,
+                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Fire Explosion", /*IST*/ ItemSuperType.FireWand,
+                /*Charge*/ 2.0f, /*Per level*/ 0.5f, 
+                /*Required base movement points*/ 2.0f, /*Per level*/ 0.5f, 
+                /*Affect self*/ false, 
+                /*Angle*/ 10.0f, /*Per level*/ 0.0f,
+                /*Distance*/ 10.0f, /*Per level*/ 3.0f, 
+                /*Callback*/ (caster, unit, parameter) =>
+                {
+                    var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
+                    unit.ApplyDamage (
+                        (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 2.0f,
+                        DamageTypesEnum.Flamy);
+                    unit.ApplyModifier (7, parameter.Level);
                 }));
         }
     }
