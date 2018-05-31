@@ -142,20 +142,14 @@ namespace PriestOfPlague.Source.Unit
                    CurrentlyCasting.BasicCastTime + CurrentlyCasting.CastTimeAdditionPerLevel * level;
         }
 
-        public bool CastSpell (int level = 1, Item item = null, object additionalParameter = null)
+        public bool CastSpell (int level = 1, Item item = null, Unit target = null)
         {
             if (CurrentlyCasting == null || !CanCast (level, item))
             {
                 return false;
             }
 
-            var parameter = new SpellCastParameter
-            {
-                Level = level,
-                UsedItem = item,
-                Additional = additionalParameter
-            };
-
+            var parameter = new SpellCastParameter (item, level, target);
             CurrentlyCasting.Cast (this, UnitsHubRef, parameter);
             CurrentlyCasting = null;
             TimeFromCastingStart = 0.0f;

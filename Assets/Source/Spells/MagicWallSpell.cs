@@ -6,20 +6,18 @@ using UnityEngine.Assertions.Must;
 
 namespace PriestOfPlague.Source.Spells
 {
-    public class MagicDamageWallSpell : AttackOrSupportSpellBase
+    public class MagicWallSpell : AreaSpellBase
     {
-        public delegate void PerUnitCallbackType (Unit.Unit unit, SpellCastParameter parameter);
-
-        public MagicDamageWallSpell (int id, Sprite icon, string info, bool movementRequired, bool affectSelf,
-            ItemSuperType requiredItemSupertype, float requiredBaseCharge, float requiredChargePerLevel,
-            float requiredBaseMovementPoints, float requiredMovementPointsPerLevel, float basicCastTime,
-            float castTimeAdditionPerLevel, float baseAngle, float anglePerLevel, float baseDistance,
-            float distancePerLevel, UnitCallbackType unitCallback) : 
+        public MagicWallSpell (int id, float basicCastTime, float castTimeAdditionPerLevel, bool movementRequired,
+            Sprite icon, string info, ItemSuperType requiredItemSupertype,
+            float requiredBaseCharge, float requiredChargePerLevel, float requiredBaseMovementPoints,
+            float requiredMovementPointsPerLevel, bool affectSelf, float baseAngle, float anglePerLevel,
+            float baseDistance, float distancePerLevel, UnitCallbackType unitCallback) : 
             
-            base (id, icon, info, movementRequired, affectSelf,
-            requiredItemSupertype, requiredBaseCharge, requiredChargePerLevel, requiredBaseMovementPoints,
-            requiredMovementPointsPerLevel, basicCastTime, castTimeAdditionPerLevel, baseAngle, anglePerLevel,
-            baseDistance, distancePerLevel, unitCallback)
+            base (id, basicCastTime,
+            castTimeAdditionPerLevel, movementRequired, icon, info, requiredItemSupertype,
+            requiredBaseCharge, requiredChargePerLevel, requiredBaseMovementPoints, requiredMovementPointsPerLevel,
+            affectSelf, baseAngle, anglePerLevel, baseDistance, distancePerLevel, unitCallback)
         {
         }
 

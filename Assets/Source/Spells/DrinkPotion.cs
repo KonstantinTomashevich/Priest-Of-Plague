@@ -5,42 +5,15 @@ using UnityEngine;
 
 namespace PriestOfPlague.Source.Spells
 {
-    public class DrinkPotion : ISpell
+    public class DrinkPotion : SpellWithItemBase
     {
-        public DrinkPotion (int id, float basicCastTime, Sprite icon)
+        public DrinkPotion (int id, float basicCastTime, Sprite icon) :
+            base (id, basicCastTime, 0.0f, true, false, icon, "Drink Potion", ItemSuperType.Potion,
+                1.0f, 0.0f, 0.0f, 0.0f, null)
         {
-            Id = id;
-            BasicCastTime = basicCastTime;
-            Icon = icon;
         }
 
-        public bool CanCast (Unit.Unit unit, int level = 0, Item item = null)
-        {
-            if (unit.MovementBlocked)
-            {
-                return false;
-            }
-
-            var itemsTypesContainer = unit.ItemTypesContainerRef;
-            if (item != null)
-            {
-                return itemsTypesContainer.ItemTypes [item.ItemTypeId].Supertypes.Contains (ItemSuperType.Potion) &&
-                       item.Charge >= 1.0f;
-            }
-
-            foreach (var itemInStorage in unit.MyStorage.Items)
-            {
-                if (itemsTypesContainer.ItemTypes [itemInStorage.ItemTypeId].Supertypes
-                        .Contains (ItemSuperType.Potion) && itemInStorage.Charge >= 1.0f)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
+        public override void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
         {
             var item = parameter.UsedItem;
             item.Charge -= 1.0f;
@@ -61,18 +34,11 @@ namespace PriestOfPlague.Source.Spells
             {
                 caster.Heal (itemType.BasicForce + item.Level * itemType.ForceAdditionPerLevel);
             }
-            
+
             if (itemType.Supertypes.Contains (ItemSuperType.MpPotion))
             {
                 caster.Rest (itemType.BasicForce + item.Level * itemType.ForceAdditionPerLevel);
             }
         }
-
-        public int Id { get; private set; }
-        public float BasicCastTime { get; private set; }
-        public float CastTimeAdditionPerLevel => 0.0f;
-        public bool MovementRequired => true;
-        public Sprite Icon { get; private set; }
-        public string Info => "Drink Potion";
     }
 }
