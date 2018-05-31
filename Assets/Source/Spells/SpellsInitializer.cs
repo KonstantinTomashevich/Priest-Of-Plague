@@ -14,6 +14,7 @@ namespace PriestOfPlague.Source.Spells
         public const int LightingSpellId = 6;
         public const int LightSwordAttackSpellId = 7;
         public const int HeavySwordAttackSpellId = 8;
+        public const int ElectricDefenseSpellId = 9;
 
         public static void InitializeSpells (SpellsContainer container)
         {
@@ -148,6 +149,18 @@ namespace PriestOfPlague.Source.Spells
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 4.0f,
                         DamageTypesEnum.Bumping);
+                }));
+            
+            // TODO: Add icon.
+            container.AddSpell (new TargetedSpell (ElectricDefenseSpellId,
+                /*Cast time*/ 0.1f, /*Per level*/ 0.1f,
+                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Electric Defense",
+                /*IST*/ ItemSuperType.LightingWand,
+                /*Charge*/ 5.0f, /*Per level*/ 5.0f,
+                /*Required base movement points*/ 3.0f, /*Per level*/ 3.0f,
+                /*Callback*/ (caster, unit, parameter) =>
+                {
+                    unit.ApplyModifier (8, parameter.Level);
                 }));
         }
     }
