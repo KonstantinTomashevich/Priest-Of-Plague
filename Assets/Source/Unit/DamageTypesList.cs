@@ -14,7 +14,7 @@ namespace PriestOfPlague.Source.Unit
         Bright,
         Flamy,
         Icy,
-        PureMagic,
+        Lighting,
         Count
     }
 
@@ -29,7 +29,7 @@ namespace PriestOfPlague.Source.Unit
             "Bright",
             "Flamy",
             "Icy",
-            "Pure Magic"
+            "Lighting"
         };
     }
 }

@@ -73,7 +73,7 @@ namespace PriestOfPlague.Source.Spells
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     float unitHealthBefore = unit.CurrentHp;
                     unit.ApplyDamage ((itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 10.0f,
-                        DamageTypesEnum.PureMagic);
+                        DamageTypesEnum.Lighting);
 
                     float damage = unitHealthBefore - unit.CurrentHp;
                     caster.Heal (damage);
@@ -111,7 +111,7 @@ namespace PriestOfPlague.Source.Spells
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
                         itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level,
-                        DamageTypesEnum.PureMagic);
+                        DamageTypesEnum.Lighting);
                     unit.ApplyModifier (6, parameter.Level);
                 }));
 

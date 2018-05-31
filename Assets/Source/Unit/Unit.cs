@@ -60,9 +60,12 @@ namespace PriestOfPlague.Source.Unit
         public SpellsContainer SpellsContainerRef;
         public UnitsHub UnitsHubRef;
 
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public bool IsMan { get; set; }
+        public int Id { get; private set; }
+        public int Alignment { get; private set; }
+        public bool Alive { get; private set; }
+        
+        public string Name { get; private set; }
+        public bool IsMan { get; private set; }
         public Storage MyStorage { get; private set; }
         public Equipment MyEquipment { get; private set; }
 
@@ -102,7 +105,6 @@ namespace PriestOfPlague.Source.Unit
         {
             Debug.Assert (damage >= 0.0f);
             CurrentHp = Math.Max (CurrentHp - damage * (1 - Math.Min (Resists [(int) type], 1.0f)), 0.0f);
-            // TODO: Death logic.
         }
 
         public void UseMovementPoints (float points)
@@ -297,6 +299,16 @@ namespace PriestOfPlague.Source.Unit
             return false;
         }
 
+        public void Resurrect (int alignment, float percentsOfMaxHp)
+        {
+            Debug.Assert (percentsOfMaxHp >= 0.0f);
+            Debug.Assert (percentsOfMaxHp <= 1.0f);
+            
+            Alive = true;
+            Alignment = alignment;
+            CurrentHp = percentsOfMaxHp * MaxHp;
+        }
+
         public void RecalculateChildCharacteristics ()
         {
             NearDamageBust = 0;
@@ -372,7 +384,8 @@ namespace PriestOfPlague.Source.Unit
 
         public void LoadFromXML (XmlNode input)
         {
-            Id = XmlHelper.GetIntAttribute (input, "LineageId");
+            Id = XmlHelper.GetIntAttribute (input, "Id");
+            Alignment = XmlHelper.GetIntAttribute (input, "Alignment");
             Name = input.Attributes ["Name"].InnerText;
             IsMan = XmlHelper.GetBoolAttribute (input, "IsMan");
             Experience = XmlHelper.GetIntAttribute (input, "Experience");
@@ -422,6 +435,7 @@ namespace PriestOfPlague.Source.Unit
         public void SaveToXml (XmlElement output)
         {
             output.SetAttribute ("Id", Id.ToString (NumberFormatInfo.InvariantInfo));
+            output.SetAttribute ("Alignment", Alignment.ToString (NumberFormatInfo.InvariantInfo));
             output.SetAttribute ("Name", Name);
             output.SetAttribute ("IsMan", IsMan.ToString ());
             output.SetAttribute ("Experience", Experience.ToString (NumberFormatInfo.InvariantInfo));
@@ -531,6 +545,7 @@ namespace PriestOfPlague.Source.Unit
                 out UnitsHubRef, out ItemsRegistratorRef, out ItemTypesContainerRef,
                 out SpellsContainerRef, out CharacterModifiersContainerRef, out LineagesContainerRef);
 
+            Alive = true;
             LineageId = -1;
             CurrentHp = 0.00001f;
             Charactiristics = new int[(int) CharacteristicsEnum.Count];
@@ -575,6 +590,16 @@ namespace PriestOfPlague.Source.Unit
 
         private void Update ()
         {
+            if (CurrentHp <= 0.0f)
+            {
+                Alive = false;
+            }
+
+            if (!Alive)
+            {
+                return;
+            }
+            
             MyStorage.UpdateItems (Time.deltaTime);
             if (CurrentlyCasting != null)
             {
