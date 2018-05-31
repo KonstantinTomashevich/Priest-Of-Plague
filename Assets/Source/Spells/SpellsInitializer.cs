@@ -11,6 +11,7 @@ namespace PriestOfPlague.Source.Spells
         public const int ContiniousSpellId = 3;
         public const int StealHealthSpellId = 4;
         public const int FireExplosionSpellId = 5;
+        public const int LightingSpellId = 5;
         
         public static void InitializeSpells (SpellsContainer container)
         {
@@ -97,6 +98,26 @@ namespace PriestOfPlague.Source.Spells
                         DamageTypesEnum.Flamy);
                     unit.ApplyModifier (7, parameter.Level);
                 }));
+            
+            // TODO: Add Icon.
+            container.AddSpell (new SingleUnitSpell (LightingSpellId,
+                /*Cast time*/ 3.0f, /*Per level*/ 1.0f,
+                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Lighting", /*IST*/ ItemSuperType.LightingWand,
+                /*Charge*/ 3.0f, /*Per level*/ 1.0f, 
+                /*Required base movement points*/ 4.0f, /*Per level*/ 1.0f, 
+                /*Affect self*/ false, 
+                /*Angle*/ 10.0f, /*Per level*/ 0.0f,
+                /*Distance*/ 10.0f, /*Per level*/ 5.0f, 
+                /*Callback*/ (caster, unit, parameter) =>
+                {
+                    var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
+                    unit.ApplyDamage (
+                        itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level,
+                        DamageTypesEnum.PureMagic);
+                    unit.ApplyModifier (6, parameter.Level);
+                }));
+            
+            
         }
     }
 }
