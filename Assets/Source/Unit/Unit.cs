@@ -186,7 +186,14 @@ namespace PriestOfPlague.Source.Unit
             ModifiersOnUnit.Add (modifier);
 
             for (int i = 0; i < (int) CharacteristicsEnum.Count; i++)
+            {
                 Charactiristics [i] += modifierType.CharcsChanges [i] * level;
+            }
+
+            for (int i = 0; i < (int) DamageTypesEnum.Count; i++)
+            {
+                Resists [i] += modifierType.ResistsChanges [i] * level;
+            }
 
             UnblockableHpRegeneration += modifierType.UnblockableHpRegeneration * level;
             UnblockableMpRegeneration += modifierType.UnblockableMpRegeneration * level;
@@ -487,6 +494,11 @@ namespace PriestOfPlague.Source.Unit
             for (int i = 0; i < (int) CharacteristicsEnum.Count; i++)
             {
                 Charactiristics [i] -= modifierType.CharcsChanges [i] * modifier.Level;
+            }
+            
+            for (int i = 0; i < (int) DamageTypesEnum.Count; i++)
+            {
+                Resists [i] -= modifierType.ResistsChanges [i] * modifier.Level;
             }
 
             UnblockableHpRegeneration -= modifierType.UnblockableHpRegeneration * modifier.Level;
