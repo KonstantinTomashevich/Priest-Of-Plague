@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Xml;
@@ -65,7 +66,7 @@ namespace PriestOfPlague.Source.Unit
         public int Id { get; private set; }
         public int Alignment { get; private set; }
         public bool Alive { get; private set; }
-        
+
         public string Name { get; private set; }
         public bool IsMan { get; private set; }
         public Storage MyStorage { get; private set; }
@@ -103,6 +104,18 @@ namespace PriestOfPlague.Source.Unit
         public ISpell CurrentlyCasting { get; private set; }
         public float TimeFromCastingStart { get; private set; }
 
+        public Unit ()
+        {
+            Alive = true;
+            LineageId = -1;
+            CurrentHp = 0.00001f;
+            Charactiristics = new int[(int) CharacteristicsEnum.Count];
+            Resists = new float[(int) DamageTypesEnum.Count];
+
+            ModifiersOnUnit = new List <AppliedModifier> ();
+            AvailableSpells = new HashSet <int> ();
+        }
+
         public void ApplyDamage (float damage, DamageTypesEnum type)
         {
             Debug.Assert (damage >= 0.0f);
@@ -120,7 +133,7 @@ namespace PriestOfPlague.Source.Unit
             Debug.Assert (amount >= 0.0f);
             CurrentHp = Math.Min (CurrentHp + amount, MaxHp);
         }
-        
+
         public void Rest (float amount)
         {
             Debug.Assert (amount >= 0.0f);
@@ -163,7 +176,7 @@ namespace PriestOfPlague.Source.Unit
         public void ApplyLineage (int lineageIndex)
         {
             Lineage lineage;
-            if (lineageIndex != -1)
+            if (LineageId != -1)
             {
                 lineage = LineagesContainerRef.LineagesList [LineageId];
                 for (int i = 0; i < 5; i++)
@@ -397,7 +410,8 @@ namespace PriestOfPlague.Source.Unit
             Experience = XmlHelper.GetIntAttribute (input, "Experience");
 
             string charsStringData = input.Attributes ["Characteristics"].InnerText;
-            string [] charsSeparated = charsStringData.Split (' ');
+            string [] charsSeparated = charsStringData.Split (' ').Select (tag => tag.Trim ())
+                .Where (tag => !string.IsNullOrEmpty (tag)).ToArray ();
 
             for (int index = 0; index < charsSeparated.Length; index++)
             {
@@ -414,16 +428,18 @@ namespace PriestOfPlague.Source.Unit
             }
 
             string resistsStringData = input.Attributes ["Resists"].InnerText;
-            string [] resistsSeparated = resistsStringData.Split (' ');
+            string [] resistsSeparated = resistsStringData.Split (' ').Select (tag => tag.Trim ())
+                .Where (tag => !string.IsNullOrEmpty (tag)).ToArray ();
 
             for (int index = 0; index < resistsSeparated.Length; index++)
             {
                 Resists [index] =
-                    int.Parse (resistsSeparated [index], NumberFormatInfo.InvariantInfo);
+                    float.Parse (resistsSeparated [index], NumberFormatInfo.InvariantInfo);
             }
 
             string availableSpellsStringData = input.Attributes ["AvailableSpells"].InnerText;
-            string [] availableSpellsSeparated = availableSpellsStringData.Split (' ');
+            string [] availableSpellsSeparated = availableSpellsStringData.Split (' ').Select (tag => tag.Trim ())
+                .Where (tag => !string.IsNullOrEmpty (tag)).ToArray ();
             AvailableSpells.Clear ();
 
             foreach (var spellIdString in availableSpellsSeparated)
@@ -515,7 +531,7 @@ namespace PriestOfPlague.Source.Unit
             {
                 Charactiristics [i] -= modifierType.CharcsChanges [i] * modifier.Level;
             }
-            
+
             for (int i = 0; i < (int) DamageTypesEnum.Count; i++)
             {
                 Resists [i] -= modifierType.ResistsChanges [i] * modifier.Level;
@@ -551,43 +567,11 @@ namespace PriestOfPlague.Source.Unit
                 out UnitsHubRef, out ItemsRegistratorRef, out ItemTypesContainerRef,
                 out SpellsContainerRef, out CharacterModifiersContainerRef, out LineagesContainerRef);
 
-            Alive = true;
-            LineageId = -1;
-            CurrentHp = 0.00001f;
-            Charactiristics = new int[(int) CharacteristicsEnum.Count];
-            Resists = new float[(int) DamageTypesEnum.Count];
-
-            ModifiersOnUnit = new List <AppliedModifier> ();
-            AvailableSpells = new HashSet <int> ();
-
             MyStorage = new Storage (ItemTypesContainerRef);
             MyEquipment = new Equipment (ItemTypesContainerRef);
 
-            // TODO: Temporary, for items testing.
-            // {
-            Charactiristics [(int) CharacteristicsEnum.Strength] += 10;
-            // }
-
             LearnCommonSpells ();
             RecalculateChildCharacteristics ();
-
-            // TODO: Temporary, for items testing.
-            // {
-            var random = new Random ();
-            for (int index = 0; index < 4; index++)
-            {
-                var item = new Item (ItemsRegistratorRef, 0, 0.0f, random.Next (0, 10));
-                MyStorage.AddItem (item);
-            }
-
-            // }
-            base.Start ();
-
-            var document = new XmlDocument();
-            var element = document.CreateElement ("unit");
-            SaveToXml (element);
-            document.AppendChild (element);
-            document.Save (File.CreateText ("Temp.xml"));
         }
 
         private void LearnCommonSpells ()
@@ -611,7 +595,7 @@ namespace PriestOfPlague.Source.Unit
             {
                 return;
             }
-            
+
             MyStorage.UpdateItems (Time.deltaTime);
             if (CurrentlyCasting != null)
             {

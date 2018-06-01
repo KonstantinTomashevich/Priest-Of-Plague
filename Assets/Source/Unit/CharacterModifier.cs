@@ -31,7 +31,7 @@ namespace PriestOfPlague.Source.Unit
             Id = id;
             InfoAboutBuffsInString = "";
             TimeOfBuff = 0;
-            
+
             CharcsChanges = new int[(int) CharacteristicsEnum.Count];
             ResistsChanges = new float[(int) DamageTypesEnum.Count];
             BuffsToApply = new List <int> ();
@@ -52,43 +52,47 @@ namespace PriestOfPlague.Source.Unit
             CharcsChanges [(int) CharacteristicsEnum.Strength] = Str;
             CharcsChanges [(int) CharacteristicsEnum.Intelligence] = Int;
         }
-        
+
         public static CharacterModifier LoadFromXML (XmlNode input)
         {
             var modifier = new CharacterModifier (XmlHelper.GetIntAttribute (input, "Id"));
             modifier.InfoAboutBuffsInString = input.Attributes ["Info"].InnerText;
             modifier.TimeOfBuff = XmlHelper.GetFloatAttribute (input, "TimeOfBuff");
-            
+
             string charsChangesStringData = input.Attributes ["CharacteristicsChanges"].InnerText;
-            string [] charsChangesSeparated = charsChangesStringData.Split (' ');
-            
+            string [] charsChangesSeparated = charsChangesStringData.Split (' ').Select (tag => tag.Trim ())
+                .Where (tag => !string.IsNullOrEmpty (tag)).ToArray ();
+
             for (int index = 0; index < charsChangesSeparated.Length; index++)
             {
                 modifier.CharcsChanges [index] =
                     int.Parse (charsChangesSeparated [index], NumberFormatInfo.InvariantInfo);
             }
-            
+
             string resistsChangesStringData = input.Attributes ["ResistsChanges"].InnerText;
-            string [] resistsChangesSeparated = resistsChangesStringData.Split (' ');
-            
+            string [] resistsChangesSeparated = resistsChangesStringData.Split (' ').Select (tag => tag.Trim ())
+                .Where (tag => !string.IsNullOrEmpty (tag)).ToArray ();
+
             for (int index = 0; index < resistsChangesSeparated.Length; index++)
             {
                 modifier.ResistsChanges [index] =
                     float.Parse (resistsChangesSeparated [index], NumberFormatInfo.InvariantInfo);
             }
 
-            modifier.BuffsToApply.Clear ();;
+            modifier.BuffsToApply.Clear ();
+            ;
             foreach (var toApplyNode in XmlHelper.IterateChildren (input, "applies"))
             {
                 modifier.BuffsToApply.Add (XmlHelper.GetIntAttribute (toApplyNode, "Id"));
             }
-            
-            modifier.BuffsToCancel.Clear ();;
+
+            modifier.BuffsToCancel.Clear ();
+            ;
             foreach (var toCancelNode in XmlHelper.IterateChildren (input, "cancels"))
             {
                 modifier.BuffsToCancel.Add (XmlHelper.GetIntAttribute (toCancelNode, "Id"));
             }
-            
+
             modifier.BlocksHpRegeneration = XmlHelper.GetBoolAttribute (input, "BlocksHpRegeneration");
             modifier.BlocksMpRegeneration = XmlHelper.GetBoolAttribute (input, "BlocksMpRegeneration");
             modifier.BlocksMovement = XmlHelper.GetBoolAttribute (input, "BlocksMovement");

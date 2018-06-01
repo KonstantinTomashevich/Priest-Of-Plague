@@ -34,16 +34,17 @@ namespace PriestOfPlague.Source.Unit
         {
             var lineage = new Lineage (XmlHelper.GetIntAttribute (input, "Id"));
             lineage.InfoAboutLineage = input.Attributes ["Info"].InnerText;
-            
+
             string stringData = input.Attributes ["Value"].InnerText;
-            string [] separated = stringData.Split (' ');
+            string [] separated = stringData.Split (' ').Select (tag => tag.Trim ())
+                .Where (tag => !string.IsNullOrEmpty (tag)).ToArray ();
 
             for (int index = 0; index < separated.Length; index++)
             {
                 lineage.CharcsChanges [index] =
                     int.Parse (separated [index], NumberFormatInfo.InvariantInfo);
             }
-            
+
             return lineage;
         }
     }
