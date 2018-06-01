@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Net;
 using System.Text;
 using System.Xml;
 using PriestOfPlague.Source.Core;
@@ -580,6 +582,12 @@ namespace PriestOfPlague.Source.Unit
 
             // }
             base.Start ();
+
+            var document = new XmlDocument();
+            var element = document.CreateElement ("unit");
+            SaveToXml (element);
+            document.AppendChild (element);
+            document.Save (File.CreateText ("Temp.xml"));
         }
 
         private void LearnCommonSpells ()

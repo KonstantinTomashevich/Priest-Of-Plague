@@ -100,7 +100,7 @@ namespace PriestOfPlague.Source.Unit
 
         public void SaveToXml (XmlElement output)
         {
-            output.SetAttribute ("Max Weight", _maxWeight.ToString (NumberFormatInfo.InvariantInfo));
+            output.SetAttribute ("MaxWeight", _maxWeight.ToString (NumberFormatInfo.InvariantInfo));
             foreach (var item in Items)
             {
                 var itemElement = output.OwnerDocument.CreateElement ("item");

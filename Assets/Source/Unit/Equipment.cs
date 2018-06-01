@@ -57,10 +57,14 @@ namespace PriestOfPlague.Source.Unit
             EquipmentSlot slot = 0;
             foreach (var item in _itemsOnSlots)
             {
-                var slotElement = output.OwnerDocument.CreateElement ("slot");
-                slotElement.SetAttribute ("Type", ((int) slot).ToString ());
-                slotElement.SetAttribute ("Id", item.Id.ToString ());
-                output.AppendChild (slotElement);
+                if (item != null)
+                {
+                    var slotElement = output.OwnerDocument.CreateElement ("slot");
+                    slotElement.SetAttribute ("Type", ((int) slot).ToString ());
+                    slotElement.SetAttribute ("Id", item.Id.ToString ());
+                    output.AppendChild (slotElement);
+                }
+
                 slot++;
             }
         }
