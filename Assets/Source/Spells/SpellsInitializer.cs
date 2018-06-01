@@ -41,7 +41,8 @@ namespace PriestOfPlague.Source.Spells
                 }));
 
             // TODO: Add icon.
-            container.AddSpell (new DrinkPotion (DrinkPotionSpellId, /*Basic Cast Time*/ 1.0f, /*Icon*/ null));
+            container.AddSpell (new DrinkPotion (DrinkPotionSpellId, /*Basic Cast Time*/ 1.0f, 
+                /*Icon*/ Resources.Load <Sprite> ("Icons/Items/HealingPotion")));
 
             // TODO: Add icon.
             container.AddSpell (new TargetedSpell (ImmediateHealSpellId,
@@ -109,7 +110,7 @@ namespace PriestOfPlague.Source.Spells
             // TODO: Add Icon.
             container.AddSpell (new SingleUnitSpell (LightingSpellId,
                 /*Cast time*/ 3.0f, /*Per level*/ 1.0f,
-                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/Lighting"),
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/Lightning"),
                 /*Info*/ "Lighting", /*IST*/ ItemSuperType.LightingWand,
                 /*Charge*/ 3.0f, /*Per level*/ 1.0f,
                 /*Required base movement points*/ 4.0f, /*Per level*/ 1.0f,
