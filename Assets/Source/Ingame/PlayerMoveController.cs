@@ -46,16 +46,27 @@ namespace PriestOfPlague.Source.Ingame
             _unit.StartCastingSpell (null);
         }
 
-        private void Start ()
+        private IEnumerator Start ()
         {
             _navMeshAgent = GetComponent <NavMeshAgent> ();
             _animator = GetComponent <Animator> ();
             _playerCamera = GetComponentInChildren <Camera> ();
-            _unit = GetComponent <Unit.Unit> ();
+            _unit = null;
+            
+            do
+            {
+                yield return null;
+                _unit = GetComponent <Unit.Unit> ();
+            } while (_unit == null);
         }
 
         private void Update ()
         {
+            if (_unit == null)
+            {
+                return;
+            }
+            
             StopUnitIfMovementIsBlocked ();
             UpdateAnimatorVariables ();
         }

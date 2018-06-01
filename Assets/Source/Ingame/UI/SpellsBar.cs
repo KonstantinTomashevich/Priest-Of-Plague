@@ -14,20 +14,29 @@ namespace PriestOfPlague.Source.Ingame.UI
 {
 	public class SpellsBar : MonoBehaviour
 	{
-		public Unit.Unit SourceUnit;
+		public GameObject UnitObject;
 		public GameObject SpellUIItemPrefab;
 		public Text SpellMaxLevelIndicatorTextObject;
 		public InventoryBar InventoryBarRef;
 
 		public const int MaxCastLevel = 10;
+		private Unit.Unit _unit;
 		private Dictionary <int, GameObject> _icons;
 
-		private void Start ()
+		private IEnumerator Start ()
 		{
 			_icons = new Dictionary <int, GameObject> ();
-			if (SourceUnit.AvailableSpells != null)
+			_unit = null;
+            
+			do
 			{
-				foreach (var spellId in SourceUnit.AvailableSpells)
+				yield return null;
+				_unit = UnitObject.GetComponent <Unit.Unit> ();
+			} while (_unit == null);
+			
+			if (_unit.AvailableSpells != null)
+			{
+				foreach (var spellId in _unit.AvailableSpells)
 				{
 					AddSpellUIItem (spellId);
 				}
@@ -45,8 +54,13 @@ namespace PriestOfPlague.Source.Ingame.UI
 
 		private void Update ()
 		{
+			if (_unit == null)
+			{
+				return;
+			}
+			
 			int maxCastLevelWithSelectedItem;
-			Item selectedItem = SourceUnit.MyStorage [InventoryBarRef.SelectedItemId];
+			Item selectedItem = _unit.MyStorage [InventoryBarRef.SelectedItemId];
 
 			UpdateMaxLevelIndicatorText (out maxCastLevelWithSelectedItem, selectedItem);
 			ProcessInput (maxCastLevelWithSelectedItem, selectedItem);
@@ -54,13 +68,13 @@ namespace PriestOfPlague.Source.Ingame.UI
 
 		private void UpdateMaxLevelIndicatorText (out int maxCastLevelWithSelectedItem, Item selectedItem)
 		{
-			if (SourceUnit.CurrentlyCasting == null)
+			if (_unit.CurrentlyCasting == null)
 			{
 				SpellMaxLevelIndicatorTextObject.text = "~";
 			}
 
 			maxCastLevelWithSelectedItem = 0;
-			selectedItem = SourceUnit.MyStorage [InventoryBarRef.SelectedItemId];
+			selectedItem = _unit.MyStorage [InventoryBarRef.SelectedItemId];
 
 			if (selectedItem == null)
 			{
@@ -70,7 +84,7 @@ namespace PriestOfPlague.Source.Ingame.UI
 
 			for (int index = 1; index <= Math.Min (MaxCastLevel, selectedItem.Level); index++)
 			{
-				if (SourceUnit.CanCast (index, selectedItem))
+				if (_unit.CanCast (index, selectedItem))
 				{
 					maxCastLevelWithSelectedItem = index;
 				}
@@ -95,7 +109,7 @@ namespace PriestOfPlague.Source.Ingame.UI
 					var keyCode = KeyCode.Alpha0 + (code % 10);
 					if (Input.GetKeyDown (keyCode))
 					{
-						SourceUnit.CastSpell (code, selectedItem);
+						_unit.CastSpell (code, selectedItem);
 						break;
 					}
 				}
@@ -109,7 +123,7 @@ namespace PriestOfPlague.Source.Ingame.UI
 				return;
 			}
 
-			var spell = SourceUnit.SpellsContainerRef.Spells [spellId];
+			var spell = _unit.SpellsContainerRef.Spells [spellId];
 			var spellUIItem = Instantiate (SpellUIItemPrefab);
 			_icons.Add (spellId, spellUIItem);
 
@@ -137,7 +151,7 @@ namespace PriestOfPlague.Source.Ingame.UI
 		private void SpellLearned (object parameter)
 		{
 			var argument = parameter as Unit.Unit.SpellLearnedOrForgottenEventData;
-			if (argument.EventUnit == SourceUnit)
+			if (argument.EventUnit == _unit)
 			{
 				AddSpellUIItem (argument.SpellId);
 			}
@@ -146,7 +160,7 @@ namespace PriestOfPlague.Source.Ingame.UI
 		private void SpellForgotten (object parameter)
 		{
 			var argument = parameter as Unit.Unit.SpellLearnedOrForgottenEventData;
-			if (argument.EventUnit == SourceUnit)
+			if (argument.EventUnit == _unit)
 			{
 				RemoveSpellUIItem (argument.SpellId);
 			}
@@ -154,7 +168,7 @@ namespace PriestOfPlague.Source.Ingame.UI
 
 		private void SpellUIItemClicked (object parameter)
 		{
-			SourceUnit.StartCastingSpell (SourceUnit.SpellsContainerRef.Spells [(int) parameter]);
+			_unit.StartCastingSpell (_unit.SpellsContainerRef.Spells [(int) parameter]);
 		}
 	}
 }

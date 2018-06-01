@@ -13,13 +13,14 @@ namespace PriestOfPlague.Source.Ingame.UI
 {
     public class InventoryBar : MonoBehaviour
     {
-        public Unit.Unit SourceUnit;
+        public GameObject UnitObject;
         public GameObject ItemUIItemPrefab;
         public GameObject ItemsListContentObject;
         public GameObject SelectedItemInfoObject;
         public GameObject DestroySelectedObjectButtonObject;
 
         public int SelectedItemId { get; private set; }
+        private Unit.Unit _unit;
         private Dictionary <int, GameObject> _icons;
 
         public void Toggle ()
@@ -29,22 +30,29 @@ namespace PriestOfPlague.Source.Ingame.UI
 
         public void DestroySelectedItem ()
         {
-            if (SelectedItemId != -1 && SourceUnit.MyStorage [SelectedItemId] != null)
+            if (SelectedItemId != -1 && _unit.MyStorage [SelectedItemId] != null)
             {
-                SourceUnit.MyStorage.RemoveItem (SourceUnit.MyStorage [SelectedItemId]);
+                _unit.MyStorage.RemoveItem (_unit.MyStorage [SelectedItemId]);
             }
         }
 
-        private void Start ()
+        private IEnumerator Start ()
         {
             SelectedItemId = -1;
             _icons = new Dictionary <int, GameObject> ();
             SelectedItemInfoObject.SetActive (false);
             DestroySelectedObjectButtonObject.SetActive (false);
-
-            if (SourceUnit.MyStorage != null)
+            _unit = null;
+            
+            do
             {
-                foreach (var item in SourceUnit.MyStorage.Items)
+                yield return null;
+                _unit = UnitObject.GetComponent <Unit.Unit> ();
+            } while (_unit == null);
+
+            if (_unit.MyStorage != null)
+            {
+                foreach (var item in _unit.MyStorage.Items)
                 {
                     AddItemUIItem (item);
                 }
@@ -62,10 +70,15 @@ namespace PriestOfPlague.Source.Ingame.UI
 
         private void Update ()
         {
+            if (_unit == null)
+            {
+                return;
+            }
+            
             if (SelectedItemId != -1)
             {
-                var item = SourceUnit.MyStorage [SelectedItemId];
-                var itemType = SourceUnit.ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
+                var item = _unit.MyStorage [SelectedItemId];
+                var itemType = _unit.ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
                 var infoBuilder = new StringBuilder ();
 
                 infoBuilder.Append (itemType.ShortInfo).AppendLine ().Append ("Level: ").Append (item.Level)
@@ -92,7 +105,7 @@ namespace PriestOfPlague.Source.Ingame.UI
             itemUIItem.transform.SetParent (ItemsListContentObject.transform);
             itemUIItem.transform.localScale = Vector3.one;
 
-            var itemType = SourceUnit.ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
+            var itemType = _unit.ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
             var image = itemUIItem.GetComponent <Image> ();
             image.sprite = itemType.Icon;
 
@@ -117,7 +130,7 @@ namespace PriestOfPlague.Source.Ingame.UI
         private void ItemAdded (object parameter)
         {
             var argument = parameter as Storage.ItemAddedOrRemovedEventData;
-            if (argument.EventStorage == SourceUnit.MyStorage)
+            if (argument.EventStorage == _unit.MyStorage)
             {
                 AddItemUIItem (argument.EventStorage [argument.ItemId]);
             }
@@ -126,7 +139,7 @@ namespace PriestOfPlague.Source.Ingame.UI
         private void ItemRemoved (object parameter)
         {
             var argument = parameter as Storage.ItemAddedOrRemovedEventData;
-            if (argument.EventStorage == SourceUnit.MyStorage)
+            if (argument.EventStorage == _unit.MyStorage)
             {
                 RemoveItemUIItem (argument.ItemId);
 
@@ -142,7 +155,7 @@ namespace PriestOfPlague.Source.Ingame.UI
         private void ItemUIItemClicked (object parameter)
         {
             int itemId = (int) parameter;
-            if (SourceUnit.MyStorage [itemId] != null)
+            if (_unit.MyStorage [itemId] != null)
             {
                 SelectedItemId = itemId;
                 SelectedItemInfoObject.SetActive (true);

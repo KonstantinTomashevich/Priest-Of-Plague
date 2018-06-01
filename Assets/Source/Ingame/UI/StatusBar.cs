@@ -10,21 +10,34 @@ namespace PriestOfPlague.Source.Ingame.UI
 {
     public class StatusBar : MonoBehaviour
     {
-        public Unit.Unit SourceUnit;
+        public GameObject UnitObject;
         public GameObject ModifierUIItemPrefab;
         public GameObject ModifiersListContent;
         public Text HealthText;
         public Text MovementsPointsText;
 
+        private Unit.Unit _unit;
         private List <GameObject> _modifiersUiItems;
 
-        private void Start ()
+        private IEnumerator Start ()
         {
             _modifiersUiItems = new List <GameObject> ();
+            _unit = null;
+            
+            do
+            {
+                yield return null;
+                _unit = UnitObject.GetComponent <Unit.Unit> ();
+            } while (_unit == null);
         }
 
         private void Update ()
         {
+            if (_unit == null)
+            {
+                return;
+            }
+            
             UpdateHealthAndMovementPointsTexts ();
             UpdateUiItemsCount ();
             UpdateModifiersUiItems ();
@@ -33,17 +46,17 @@ namespace PriestOfPlague.Source.Ingame.UI
         private void UpdateHealthAndMovementPointsTexts ()
         {
             var builder = new StringBuilder ();
-            HealthText.text = builder.Append (Math.Round (SourceUnit.CurrentHp)).Append ("/")
-                .Append (Math.Round (SourceUnit.MaxHp)).ToString ();
+            HealthText.text = builder.Append (Math.Round (_unit.CurrentHp)).Append ("/")
+                .Append (Math.Round (_unit.MaxHp)).ToString ();
 
             builder.Clear ();
-            MovementsPointsText.text = builder.Append (Math.Round (SourceUnit.CurrentMp)).Append ("/")
-                .Append (Math.Round (SourceUnit.MaxMp)).ToString ();
+            MovementsPointsText.text = builder.Append (Math.Round (_unit.CurrentMp)).Append ("/")
+                .Append (Math.Round (_unit.MaxMp)).ToString ();
         }
 
         private void UpdateUiItemsCount ()
         {
-            int modifiersCount = SourceUnit.ModifiersOnUnit.Count;
+            int modifiersCount = _unit.ModifiersOnUnit.Count;
             while (_modifiersUiItems.Count > modifiersCount)
             {
                 Destroy (_modifiersUiItems.Last ());
@@ -65,7 +78,7 @@ namespace PriestOfPlague.Source.Ingame.UI
         private void UpdateModifiersUiItems ()
         {
             int uiItemIndex = 0;
-            foreach (var modifierData in SourceUnit.ModifiersOnUnit)
+            foreach (var modifierData in _unit.ModifiersOnUnit)
             {
                 var uiItem = _modifiersUiItems [uiItemIndex];
                 var text = uiItem.GetComponentInChildren <Text> ();
@@ -75,7 +88,7 @@ namespace PriestOfPlague.Source.Ingame.UI
                     .Append ("s");
                 text.text = builder.ToString ();
 
-                var modifierType = SourceUnit.CharacterModifiersContainerRef.Modifiers [modifierData.Id];
+                var modifierType = _unit.CharacterModifiersContainerRef.Modifiers [modifierData.Id];
                 var image = uiItem.GetComponentInChildren <Image> ();
                 image.sprite = modifierType.Icon;
                 uiItemIndex++;

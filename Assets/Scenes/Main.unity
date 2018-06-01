@@ -845,7 +845,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be92a9c92ce55a54f90cb752e20cd7a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SourceUnit: {fileID: 1958052925}
+  UnitObject: {fileID: 1958052921}
   ModifierUIItemPrefab: {fileID: 1282399815412034, guid: 32dcceb59247aea4cb5d00fa93b2ab9e,
     type: 2}
   ModifiersListContent: {fileID: 656717066}
@@ -1271,7 +1271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d99e5e3aaf30a0046b28cd995f0a0cc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SourceUnit: {fileID: 1958052925}
+  UnitObject: {fileID: 1958052921}
   ItemUIItemPrefab: {fileID: 1230584840036556, guid: c63b3e39b692e5f4ea6cc8431c32c903,
     type: 2}
   ItemsListContentObject: {fileID: 1991080585}
@@ -2829,7 +2829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NavigationAccuracy: 5
---- !u!114 &1958052925
+--- !u!114 &1958052924
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -2837,15 +2837,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1958052921}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 369ae5db6a2cd814c8eece3d486f1aef, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c1cd4d61a2961c43b445b86f02cf3e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CharacterModifiersContainerRef: {fileID: 0}
-  LineagesContainerRef: {fileID: 0}
-  ItemTypesContainerRef: {fileID: 0}
-  ItemsRegistratorRef: {fileID: 0}
-  SpellsContainerRef: {fileID: 0}
-  UnitsHubRef: {fileID: 0}
+  XmlDocumentText: {fileID: 4900000, guid: 1fbf03cba6f7cd54d8a97e6d254ac731, type: 3}
 --- !u!4 &1958052926 stripped
 Transform:
   m_PrefabParentObject: {fileID: 408730, guid: 7737647c22c1fc64a88d5cd030c352ce, type: 2}
@@ -3079,7 +3074,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da62873b56001414ebd0435353757aa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SourceUnit: {fileID: 1958052925}
+  UnitObject: {fileID: 1958052921}
   SpellUIItemPrefab: {fileID: 1230584840036556, guid: adc2f32ce64e046429e6b3c1849a7e84,
     type: 2}
   SpellMaxLevelIndicatorTextObject: {fileID: 100289847}
