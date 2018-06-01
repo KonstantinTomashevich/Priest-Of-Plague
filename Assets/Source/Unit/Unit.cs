@@ -572,6 +572,7 @@ namespace PriestOfPlague.Source.Unit
 
             LearnCommonSpells ();
             RecalculateChildCharacteristics ();
+            base.Start ();
         }
 
         private void LearnCommonSpells ()

@@ -27,6 +27,7 @@ namespace PriestOfPlague.Source.Hubs
             return result;
         }
         
+        // TODO: MUST Save units by ids, recalculate id if it is used!
         private HashSet <Unit.Unit> _units;
         
         private void Start ()

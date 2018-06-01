@@ -11,6 +11,7 @@ namespace PriestOfPlague.Source.Ingame
 
 		IEnumerator Start ()
 		{
+			yield return null;
 			var document = new XmlDocument ();
 			document.LoadXml (XmlDocumentText.text);
 
