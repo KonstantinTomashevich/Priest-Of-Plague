@@ -35,6 +35,7 @@ namespace PriestOfPlague.Source.Ingame
                         _navMeshAgent.areaMask))
                     {
                         _navMeshAgent.SetDestination (navMeshHit.position);
+                        _unit.StartCastingSpell (null);
                     }
                 }
             }
@@ -49,7 +50,7 @@ namespace PriestOfPlague.Source.Ingame
         private IEnumerator Start ()
         {
             _navMeshAgent = GetComponent <NavMeshAgent> ();
-            _animator = GetComponent <Animator> ();
+            _animator = GetComponentInChildren <Animator> ();
             _playerCamera = GetComponentInChildren <Camera> ();
             _unit = null;
             
@@ -73,23 +74,18 @@ namespace PriestOfPlague.Source.Ingame
 
         private void StopUnitIfMovementIsBlocked ()
         {
-            if (_unit.MovementBlocked)
+            // NOTE: Block agent movement if unit casts spell.
+            if (_unit.MovementBlocked || _unit.CurrentlyCasting != null)
             {
-                _animator.SetFloat ("Forward", 0.0f);
+                _animator.SetBool ("Moving", false);
                 _navMeshAgent.ResetPath ();
             }
         }
 
         private void UpdateAnimatorVariables ()
         {
-            if (_navMeshAgent.velocity.magnitude > 0.1f)
-            {
-                _animator.SetFloat ("Forward", _navMeshAgent.velocity.magnitude);
-            }
-            else
-            {
-                _animator.SetFloat ("Forward", 0.0f);
-            }
+            _animator.SetBool ("Moving", _navMeshAgent.velocity.magnitude > 0.1f);
+            _animator.SetBool ("Casting", _unit.CurrentlyCasting != null);
         }
     }
 }
