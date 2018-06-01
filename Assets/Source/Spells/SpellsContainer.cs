@@ -8,7 +8,6 @@ namespace PriestOfPlague.Source.Spells
         public SpellsContainer ()
         {
             _spells = new Dictionary <int, ISpell> ();
-            SpellsInitializer.InitializeSpells (this);
         }
 
         public bool AddSpell (ISpell spell)
@@ -25,6 +24,11 @@ namespace PriestOfPlague.Source.Spells
         public bool RemoveSpell (ISpell spell)
         {
             return Spells.Remove (spell.Id);
+        }
+
+        private void Start ()
+        {
+            SpellsInitializer.InitializeSpells (this);
         }
 
         public Dictionary <int, ISpell> Spells => _spells;

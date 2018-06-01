@@ -23,7 +23,8 @@ namespace PriestOfPlague.Source.Spells
             // TODO: Add icon.
             container.AddSpell (new MagicWallSpell (FireWallSpellId,
                 /*Cast time*/ 3.0f, /*Per level*/ 0.5f,
-                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Fire Wall", /*IST*/ ItemSuperType.FireWand,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/FireWall"),
+                /*Info*/ "Fire Wall", /*IST*/ ItemSuperType.FireWand,
                 /*Charge*/ 1.0f, /*Per level*/ 0.1f,
                 /*Required base movement points*/ 1.0f, /*Per level*/ 0.5f,
                 /*Affect self*/ false,
@@ -44,8 +45,8 @@ namespace PriestOfPlague.Source.Spells
             // TODO: Add icon.
             container.AddSpell (new TargetedSpell (ImmediateHealSpellId,
                 /*Cast time*/ 1.0f, /*Per level*/ 0.5f,
-                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Immediate Heal",
-                /*IST*/ ItemSuperType.HealerSphere,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/ImmediateHeal"),
+                /*Info*/ "Immediate Heal", /*IST*/ ItemSuperType.HealerSphere,
                 /*Charge*/ 1.0f, /*Per level*/ 0.5f,
                 /*Required base movement points*/ 1.0f, /*Per level*/ 0.5f,
                 /*Callback*/ (caster, unit, parameter) =>
@@ -57,8 +58,8 @@ namespace PriestOfPlague.Source.Spells
             // TODO: Add icon.
             container.AddSpell (new TargetedSpell (ContiniousSpellId,
                 /*Cast time*/ 2.0f, /*Per level*/ 1.0f,
-                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Continious Heal",
-                /*IST*/ ItemSuperType.HealerSphere,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/ContiniousHeal"),
+                /*Info*/ "Continious Heal", /*IST*/ ItemSuperType.HealerSphere,
                 /*Charge*/ 2.0f, /*Per level*/ 1.0f,
                 /*Required base movement points*/ 1.0f, /*Per level*/ 0.5f,
                 /*Callback*/ (caster, unit, parameter) => { unit.ApplyModifier (0, parameter.Level); }));
@@ -66,8 +67,8 @@ namespace PriestOfPlague.Source.Spells
             // TODO: Add icon.
             container.AddSpell (new TargetedSpell (StealHealthSpellId,
                 /*Cast time*/ 4.0f, /*Per level*/ 0.5f,
-                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Steal Health",
-                /*IST*/ ItemSuperType.NecromancySphere,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/StealHealth"), 
+                /*Info*/ "Steal Health", /*IST*/ ItemSuperType.NecromancySphere,
                 /*Charge*/ 5.0f, /*Per level*/ 1.0f,
                 /*Required base movement points*/ 5.0f, /*Per level*/ 2.0f,
                 /*Callback*/ (caster, unit, parameter) =>
@@ -84,7 +85,8 @@ namespace PriestOfPlague.Source.Spells
             // TODO: Add Icon.
             container.AddSpell (new SingleUnitSpell (FireExplosionSpellId,
                 /*Cast time*/ 3.0f, /*Per level*/ 0.5f,
-                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Fire Explosion", /*IST*/ ItemSuperType.FireWand,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/FireExplosion"), 
+                /*Info*/ "Fire Explosion", /*IST*/ ItemSuperType.FireWand,
                 /*Charge*/ 2.0f, /*Per level*/ 0.5f,
                 /*Required base movement points*/ 2.0f, /*Per level*/ 0.5f,
                 /*Affect self*/ false,
@@ -102,7 +104,8 @@ namespace PriestOfPlague.Source.Spells
             // TODO: Add Icon.
             container.AddSpell (new SingleUnitSpell (LightingSpellId,
                 /*Cast time*/ 3.0f, /*Per level*/ 1.0f,
-                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Lighting", /*IST*/ ItemSuperType.LightingWand,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/Lighting"), 
+                /*Info*/ "Lighting", /*IST*/ ItemSuperType.LightingWand,
                 /*Charge*/ 3.0f, /*Per level*/ 1.0f,
                 /*Required base movement points*/ 4.0f, /*Per level*/ 1.0f,
                 /*Affect self*/ false,
@@ -120,8 +123,8 @@ namespace PriestOfPlague.Source.Spells
             // TODO: Add Icon.
             container.AddSpell (new SingleUnitSpell (LightSwordAttackSpellId,
                 /*Cast time*/ 1.0f, /*Per level*/ -0.1f,
-                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Light Sword Attack", 
-                /*IST*/ ItemSuperType.OneHandedWeapon,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/LightSwordAttack"), 
+                /*Info*/ "Light Sword Attack", /*IST*/ ItemSuperType.OneHandedWeapon,
                 /*Charge*/ 0.0f, /*Per level*/ 0.0f,
                 /*Required base movement points*/ 0.0f, /*Per level*/ 1.0f,
                 /*Affect self*/ false,
@@ -138,8 +141,8 @@ namespace PriestOfPlague.Source.Spells
             // TODO: Add Icon.
             container.AddSpell (new SingleUnitSpell (HeavySwordAttackSpellId,
                 /*Cast time*/ 0.9f, /*Per level*/ 0.2f,
-                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Heavy Sword Attack", 
-                /*IST*/ ItemSuperType.OneHandedWeapon,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/HeavySwordAttack"), 
+                /*Info*/ "Heavy Sword Attack", /*IST*/ ItemSuperType.OneHandedWeapon,
                 /*Charge*/ 0.0f, /*Per level*/ 0.0f,
                 /*Required base movement points*/ 0.0f, /*Per level*/ 2.5f,
                 /*Affect self*/ false,
@@ -156,8 +159,8 @@ namespace PriestOfPlague.Source.Spells
             // TODO: Add icon.
             container.AddSpell (new TargetedSpell (ElectricDefenseSpellId,
                 /*Cast time*/ 0.1f, /*Per level*/ 0.1f,
-                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Electric Defense",
-                /*IST*/ ItemSuperType.LightingWand,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/ElectricDefense"), 
+                /*Info*/ "Electric Defense", /*IST*/ ItemSuperType.LightingWand,
                 /*Charge*/ 5.0f, /*Per level*/ 5.0f,
                 /*Required base movement points*/ 3.0f, /*Per level*/ 3.0f,
                 /*Callback*/ (caster, unit, parameter) =>
@@ -168,8 +171,8 @@ namespace PriestOfPlague.Source.Spells
             // TODO: Add icon.
             container.AddSpell (new TargetedSpell (RaiseDeadSpellId,
                 /*Cast time*/ 4.0f, /*Per level*/ 1.0f,
-                /*Movement required*/ true, /*Icon*/ null, /*Info*/ "Raise Dead",
-                /*IST*/ ItemSuperType.NecromancySphere,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/RaiseDead"),
+                /*Info*/ "Raise Dead", /*IST*/ ItemSuperType.NecromancySphere,
                 /*Charge*/ 5.0f, /*Per level*/ 2.0f,
                 /*Required base movement points*/ 4.0f, /*Per level*/ 2.0f,
                 /*Callback*/ (caster, unit, parameter) =>
