@@ -47,8 +47,15 @@ namespace PriestOfPlague.Source.Ingame.UI
                     var rect = new Rect (screenPoint.x - 150, Screen.height - screenPoint.y, 300, 100);
                     
                     var builder = new StringBuilder ();
-                    builder.Append ("HP: ").Append (Math.Round (unit.CurrentHp * 10.0f) / 10.0f).Append ("/")
-                        .Append (Math.Round (unit.MaxHp * 10.0f) / 10.0f).Append (".");
+                    if (unit.Alive)
+                    {
+                        builder.Append ("HP: ").Append (Math.Round (unit.CurrentHp * 10.0f) / 10.0f).Append ("/")
+                            .Append (Math.Round (unit.MaxHp * 10.0f) / 10.0f).Append (".");
+                    }
+                    else
+                    {
+                        builder.Append ("Dead.");
+                    }
 
                     GUI.skin.label.normal.textColor = unit.Alignment == _unit.Alignment ? AllyColor : EnemyColor;
                     GUI.Label (rect, builder.ToString ());
