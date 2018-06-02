@@ -13,7 +13,7 @@ namespace PriestOfPlague.Source.Ingame
         Count
     }
 
-    public class PlayerMoveController : UnitAnimator
+    public class PlayerController : UnitAnimator
     {
         public PlayerCurrentActionType PlayerCurrentAction { get; private set; } = PlayerCurrentActionType.Walk;
         public float NavigationAccuracy = 1.0f;
