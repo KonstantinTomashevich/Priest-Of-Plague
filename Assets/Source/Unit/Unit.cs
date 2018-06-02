@@ -402,6 +402,7 @@ namespace PriestOfPlague.Source.Unit
             MyStorage.MaxWeight = MaxStorageWeight;
         }
 
+        // TODO: What about saving|loading hp and mp?
         public void LoadFromXML (XmlNode input)
         {
             Id = UnitsHubRef.RequestId (XmlHelper.GetIntAttribute (input, "Id"));

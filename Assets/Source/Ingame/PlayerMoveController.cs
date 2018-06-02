@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -12,15 +13,11 @@ namespace PriestOfPlague.Source.Ingame
         Count
     }
 
-    public class PlayerMoveController : MonoBehaviour
+    public class PlayerMoveController : UnitAnimator
     {
-        private NavMeshAgent _navMeshAgent;
-        private Animator _animator;
-        private Camera _playerCamera;
-        private Unit.Unit _unit;
-
         public PlayerCurrentActionType PlayerCurrentAction { get; private set; } = PlayerCurrentActionType.Walk;
         public float NavigationAccuracy = 1.0f;
+        private Camera _playerCamera;
 
         public void MouseClick ()
         {
@@ -47,45 +44,15 @@ namespace PriestOfPlague.Source.Ingame
             _unit.StartCastingSpell (null);
         }
 
-        private IEnumerator Start ()
+        private new  IEnumerator Start ()
         {
-            _navMeshAgent = GetComponent <NavMeshAgent> ();
-            _animator = GetComponentInChildren <Animator> ();
+            yield return base.Start ();
             _playerCamera = GetComponentInChildren <Camera> ();
-            _unit = null;
-            
-            do
-            {
-                yield return null;
-                _unit = GetComponent <Unit.Unit> ();
-            } while (_unit == null);
         }
 
-        private void Update ()
+        private new void Update ()
         {
-            if (_unit == null)
-            {
-                return;
-            }
-            
-            StopUnitIfMovementIsBlocked ();
-            UpdateAnimatorVariables ();
-        }
-
-        private void StopUnitIfMovementIsBlocked ()
-        {
-            // NOTE: Block agent movement if unit casts spell.
-            if (_unit.MovementBlocked || _unit.CurrentlyCasting != null)
-            {
-                _animator.SetBool ("Moving", false);
-                _navMeshAgent.ResetPath ();
-            }
-        }
-
-        private void UpdateAnimatorVariables ()
-        {
-            _animator.SetBool ("Moving", _navMeshAgent.velocity.magnitude > 0.1f);
-            _animator.SetBool ("Casting", _unit.CurrentlyCasting != null);
+            base.Update ();
         }
     }
 }
