@@ -106,6 +106,7 @@ namespace PriestOfPlague.Source.Unit
 
         public Unit ()
         {
+            Id = -1;
             Alive = true;
             LineageId = -1;
             CurrentHp = 0.00001f;
@@ -403,7 +404,7 @@ namespace PriestOfPlague.Source.Unit
 
         public void LoadFromXML (XmlNode input)
         {
-            Id = XmlHelper.GetIntAttribute (input, "Id");
+            Id = UnitsHubRef.RequestId (XmlHelper.GetIntAttribute (input, "Id"));
             Alignment = XmlHelper.GetIntAttribute (input, "Alignment");
             Name = input.Attributes ["Name"].InnerText;
             IsMan = XmlHelper.GetBoolAttribute (input, "IsMan");
@@ -567,6 +568,7 @@ namespace PriestOfPlague.Source.Unit
                 out UnitsHubRef, out ItemsRegistratorRef, out ItemTypesContainerRef,
                 out SpellsContainerRef, out CharacterModifiersContainerRef, out LineagesContainerRef);
 
+            Id = UnitsHubRef.RequestId (Id);
             MyStorage = new Storage (ItemTypesContainerRef);
             MyEquipment = new Equipment (ItemTypesContainerRef);
 

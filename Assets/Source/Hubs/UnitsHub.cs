@@ -9,30 +9,50 @@ namespace PriestOfPlague.Source.Hubs
 {
     public class UnitsHub : MonoBehaviour
     {
-        public IReadOnlyCollection <Unit.Unit> Units => _units;
+        public IReadOnlyCollection <Unit.Unit> Units => _units.Values;
 
         public delegate bool UnitsSearchCriteria (Unit.Unit toCheck);
 
+        public UnitsHub ()
+        {
+            _units = new Dictionary <int, Unit.Unit> ();
+            _freeId = 0;
+        }
+        
         public List <Unit.Unit> GetUnitsByCriteria (UnitsSearchCriteria criteria)
         {
             var result = new List <Unit.Unit> ();
             foreach (var unit in _units)
             {
-                if (criteria (unit))
+                if (criteria (unit.Value))
                 {
-                    result.Add (unit);
+                    result.Add (unit.Value);
                 }
             }
 
             return result;
         }
+
+        public int RequestId (int id)
+        {
+            if (id < _freeId)
+            {
+                ++_freeId;
+                return _freeId - 1;
+            }
+
+            _freeId = id + 1;
+            return _freeId;
+        }
         
-        // TODO: MUST Save units by ids, recalculate id if it is used!
-        private HashSet <Unit.Unit> _units;
+        public Unit.Unit this [int id] => (_units.ContainsKey (id) ? _units [id] : null);
+        
+        private Dictionary <int, Unit.Unit> _units;
+        private int _freeId;
         
         private void Start ()
         {
-            _units = new HashSet <Unit.Unit> ();
+            
             EventsHub.Instance.Subscribe (this, CreationInformer.EventObjectCreated);
             EventsHub.Instance.Subscribe (this, CreationInformer.EventObjectDestroyed);
         }
@@ -66,7 +86,11 @@ namespace PriestOfPlague.Source.Hubs
         {
             if (parameter is Unit.Unit)
             {
-                _units.Add (parameter as Unit.Unit);
+                var unit = parameter as Unit.Unit;
+                if (!_units.ContainsKey (unit.Id))
+                {
+                    _units.Add (unit.Id, unit);
+                }
             }
         }
         
@@ -74,7 +98,8 @@ namespace PriestOfPlague.Source.Hubs
         {
             if (parameter is Unit.Unit)
             {
-                _units.Remove (parameter as Unit.Unit);
+                var unit = parameter as Unit.Unit;
+                _units.Remove (unit.Id);
             }
         }
     }
