@@ -124,7 +124,7 @@
     <modifier
             Id="7"
             Info="Burning"
-            TimeOfBuff="5"
+            TimeOfBuff="2"
             CharacteristicsChanges="0 0 -1 0 0"
             ResistsChanges="0 0 0 0 0 0 0 0"
             
@@ -132,7 +132,7 @@
             BlocksMpRegeneration="false"
             BlocksMovement="false"
 
-            UnblockableHpRegeneration="-3"
+            UnblockableHpRegeneration="-2"
             UnblockableMpRegeneration="0"
             Icon="Icons/Modifiers/Burning"
     >
