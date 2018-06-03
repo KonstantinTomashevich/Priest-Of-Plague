@@ -461,10 +461,9 @@ namespace PriestOfPlague.Source.Unit
             }
 
             ApplyLineage (XmlHelper.GetIntAttribute (input, "LineageId"));
-            RecalculateChildCharacteristics ();
-
             MyStorage.LoadFromXML (ItemsRegistratorRef, XmlHelper.FirstChild (input, "storage"));
             MyEquipment.LoadFromXML (MyStorage, XmlHelper.FirstChild (input, "equipment"));
+            RecalculateChildCharacteristics ();
         }
 
         public void SaveToXml (XmlElement output)

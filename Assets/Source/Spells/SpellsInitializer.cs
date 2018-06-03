@@ -172,7 +172,7 @@ namespace PriestOfPlague.Source.Spells
                 /*Cast time*/ 0.1f, /*Per level*/ 0.1f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/ElectricDefense"),
                 /*Info*/ "Electric Defense", /*IST*/ ItemSuperType.LightingWand,
-                /*Charge*/ 5.0f, /*Per level*/ 5.0f,
+                /*Charge*/ 4.0f, /*Per level*/ 4.0f,
                 /*Required base movement points*/ 3.0f, /*Per level*/ 3.0f,
                 /*Callback*/ (caster, unit, parameter) => { unit.ApplyModifier (8, parameter.Level); },
                 /*Target Checker*/ (caster, target) => caster.Alignment == target.Alignment));
