@@ -104,6 +104,7 @@ namespace PriestOfPlague.Source.Unit
         public ISpell CurrentlyCasting { get; private set; }
         public Unit SpellTarget { get; set; }
         public float TimeFromCastingStart { get; private set; }
+        public Unit LastDamager { get; private set; } = null;
 
         public Unit ()
         {
@@ -118,11 +119,17 @@ namespace PriestOfPlague.Source.Unit
             AvailableSpells = new HashSet <int> ();
         }
 
-        public void ApplyDamage (float damage, DamageTypesEnum type)
+        public void AddExperience (int experience)
+        {
+            Debug.Assert (experience >= 0);
+            Experience += experience;
+        }
+
+        public void ApplyDamage (float damage, Unit damager, DamageTypesEnum type)
         {
             Debug.Assert (damage >= 0.0f);
             CurrentHp = Math.Max (CurrentHp - damage * (1 - Math.Min (Resists [(int) type], 1.0f)), 0.0f);
-            // TODO: Remember last attacker.
+            LastDamager = damager;
         }
 
         public void UseMovementPoints (float points)
@@ -338,6 +345,7 @@ namespace PriestOfPlague.Source.Unit
                 }
 
                 ModifiersOnUnit.RemoveAll (item => true);
+                LastDamager = null;
             }
         }
 
@@ -664,6 +672,7 @@ namespace PriestOfPlague.Source.Unit
             }
 
             MyStorage.Clear ();
+            LastDamager.AddExperience (100);
         }
     }
 }

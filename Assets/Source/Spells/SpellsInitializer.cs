@@ -9,7 +9,7 @@ namespace PriestOfPlague.Source.Spells
         public const int FireWallSpellId = 0;
         public const int DrinkPotionSpellId = 1;
         public const int ImmediateHealSpellId = 2;
-        public const int ContiniousSpellId = 3;
+        public const int ContiniousHealSpellId = 3;
         public const int StealHealthSpellId = 4;
         public const int FireExplosionSpellId = 5;
         public const int LightingSpellId = 6;
@@ -35,8 +35,7 @@ namespace PriestOfPlague.Source.Spells
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) *
-                        (1.0f + caster.MagicDamageBust),
-                        DamageTypesEnum.Flamy);
+                        (1.0f + caster.MagicDamageBust), caster, DamageTypesEnum.Flamy);
                     unit.ApplyModifier (7, parameter.Level);
                 }));
 
@@ -60,7 +59,7 @@ namespace PriestOfPlague.Source.Spells
                 /*Target Checker*/ (caster, target) => caster.Alignment == target.Alignment));
 
             // TODO: Add icon.
-            container.AddSpell (new TargetedSpell (ContiniousSpellId,
+            container.AddSpell (new TargetedSpell (ContiniousHealSpellId,
                 /*Cast time*/ 2.0f, /*Per level*/ 1.0f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/ContiniousHeal"),
                 /*Info*/ "Continious Heal", /*IST*/ ItemSuperType.HealerSphere,
@@ -82,8 +81,7 @@ namespace PriestOfPlague.Source.Spells
                     float unitHealthBefore = unit.CurrentHp;
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 10.0f *
-                        (1.0f + caster.MagicDamageBust),
-                        DamageTypesEnum.Lighting);
+                        (1.0f + caster.MagicDamageBust), caster, DamageTypesEnum.Lighting);
 
                     float damage = unitHealthBefore - unit.CurrentHp;
                     caster.Heal (damage);
@@ -105,8 +103,7 @@ namespace PriestOfPlague.Source.Spells
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 2.0f *
-                        (1.0f + caster.MagicDamageBust),
-                        DamageTypesEnum.Flamy);
+                        (1.0f + caster.MagicDamageBust), caster, DamageTypesEnum.Flamy);
                     unit.ApplyModifier (7, parameter.Level);
                 }));
 
@@ -125,8 +122,7 @@ namespace PriestOfPlague.Source.Spells
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) *
-                        (1.0f + caster.MagicDamageBust),
-                        DamageTypesEnum.Lighting);
+                        (1.0f + caster.MagicDamageBust), caster, DamageTypesEnum.Lighting);
                     unit.ApplyModifier (6, parameter.Level);
                 }));
 
@@ -144,8 +140,7 @@ namespace PriestOfPlague.Source.Spells
                 {
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
-                        itemType.BasicForce * (1.0f + caster.NearDamageBust),
-                        DamageTypesEnum.Cutting);
+                        itemType.BasicForce * (1.0f + caster.NearDamageBust), caster, DamageTypesEnum.Cutting);
                 }));
 
             // TODO: Add Icon.
@@ -163,8 +158,7 @@ namespace PriestOfPlague.Source.Spells
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 4.0f *
-                        (1.0f + caster.NearDamageBust),
-                        DamageTypesEnum.Bumping);
+                        (1.0f + caster.NearDamageBust), caster, DamageTypesEnum.Bumping);
                 }));
 
             // TODO: Add icon.
