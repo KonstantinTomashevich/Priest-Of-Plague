@@ -15,7 +15,8 @@ namespace PriestOfPlague.Source.Spells
             
             base (id, basicCastTime, castTimeAdditionPerLevel,
             movementRequired, false, icon, info, requiredItemSupertype, requiredBaseCharge,
-            requiredChargePerLevel, requiredBaseMovementPoints, requiredMovementPointsPerLevel, unitCallback)
+            requiredChargePerLevel, requiredBaseMovementPoints, requiredMovementPointsPerLevel, unitCallback,
+            (caster, target) => target == null)
         {
             AffectSelf = affectSelf;
             BaseAngle = baseAngle;

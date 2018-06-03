@@ -7,11 +7,12 @@ namespace PriestOfPlague.Source.Spells
     public abstract class SpellWithItemBase : ISpell
     {
         public delegate void UnitCallbackType (Unit.Unit caster, Unit.Unit unit, SpellCastParameter parameter);
+        public delegate bool TargetCheckerType (Unit.Unit caster, Unit.Unit target);
 
         protected SpellWithItemBase (int id, float basicCastTime, float castTimeAdditionPerLevel, bool movementRequired,
             bool targetRequired, Sprite icon, string info, ItemSuperType requiredItemSupertype,
             float requiredBaseCharge, float requiredChargePerLevel, float requiredBaseMovementPoints,
-            float requiredMovementPointsPerLevel, UnitCallbackType unitCallback)
+            float requiredMovementPointsPerLevel, UnitCallbackType unitCallback, TargetCheckerType targetChecker)
         {
             Id = id;
             BasicCastTime = basicCastTime;
@@ -26,10 +27,16 @@ namespace PriestOfPlague.Source.Spells
             RequiredBaseMovementPoints = requiredBaseMovementPoints;
             RequiredMovementPointsPerLevel = requiredMovementPointsPerLevel;
             UnitCallback = unitCallback;
+            TargetChecker = targetChecker;
         }
 
-        public virtual bool CanCast (Unit.Unit unit, int level = 0, Item item = null)
+        public bool CanCast (Unit.Unit unit, int level = 0, Item item = null, Unit.Unit target = null)
         {
+            if (!TargetChecker (unit, target))
+            {
+                return false;
+            }
+            
             if (MovementRequired && unit.MovementBlocked)
             {
                 return false;
@@ -80,5 +87,6 @@ namespace PriestOfPlague.Source.Spells
         public float RequiredBaseMovementPoints { get; private set; }
         public float RequiredMovementPointsPerLevel { get; private set; }
         public UnitCallbackType UnitCallback { get; private set; }
+        public TargetCheckerType TargetChecker { get; private set; }
     }
 }

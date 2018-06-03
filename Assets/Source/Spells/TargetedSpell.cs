@@ -9,12 +9,12 @@ namespace PriestOfPlague.Source.Spells
         public TargetedSpell (int id, float basicCastTime, float castTimeAdditionPerLevel, bool movementRequired,
             Sprite icon, string info, ItemSuperType requiredItemSupertype,
             float requiredBaseCharge, float requiredChargePerLevel, float requiredBaseMovementPoints,
-            float requiredMovementPointsPerLevel, UnitCallbackType unitCallback) : 
+            float requiredMovementPointsPerLevel, UnitCallbackType unitCallback, TargetCheckerType targetChecker) : 
             
             base (id, basicCastTime,
             castTimeAdditionPerLevel, movementRequired, true, icon, info, requiredItemSupertype,
             requiredBaseCharge, requiredChargePerLevel, requiredBaseMovementPoints, requiredMovementPointsPerLevel,
-            unitCallback)
+            unitCallback, targetChecker)
         {
         }
 

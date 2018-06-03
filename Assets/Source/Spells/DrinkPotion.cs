@@ -9,7 +9,7 @@ namespace PriestOfPlague.Source.Spells
     {
         public DrinkPotion (int id, float basicCastTime, Sprite icon) :
             base (id, basicCastTime, 0.0f, true, false, icon, "Drink Potion", ItemSuperType.Potion,
-                1.0f, 0.0f, 0.0f, 0.0f, null)
+                1.0f, 0.0f, 0.0f, 0.0f, null, (caster, target) => target == null)
         {
         }
 
