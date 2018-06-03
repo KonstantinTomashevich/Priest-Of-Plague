@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -18,7 +19,7 @@ namespace PriestOfPlague.Source.Items
 
         public Item (ItemsRegistrator itemsRegistrator, int id, int itemTypeId, float charge, int level)
         {
-            _id = id;
+            _id = Math.Max (id, itemsRegistrator.FreeId);
             itemsRegistrator.Register (this);
 
             _itemTypeId = itemTypeId;

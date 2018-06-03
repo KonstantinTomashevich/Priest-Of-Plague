@@ -122,6 +122,7 @@ namespace PriestOfPlague.Source.Unit
         {
             Debug.Assert (damage >= 0.0f);
             CurrentHp = Math.Max (CurrentHp - damage * (1 - Math.Min (Resists [(int) type], 1.0f)), 0.0f);
+            // TODO: Remember last attacker.
         }
 
         public void UseMovementPoints (float points)
@@ -171,7 +172,7 @@ namespace PriestOfPlague.Source.Unit
 
             var parameter = new SpellCastParameter (item, level, SpellTarget);
             CurrentlyCasting.Cast (this, UnitsHubRef, parameter);
-            
+
             CurrentlyCasting = null;
             TimeFromCastingStart = 0.0f;
             SpellTarget = null;
@@ -600,9 +601,10 @@ namespace PriestOfPlague.Source.Unit
 
         private void Update ()
         {
-            if (CurrentHp <= 0.0f)
+            if (CurrentHp <= 0.0f && Alive)
             {
                 Alive = false;
+                OnDeath ();
             }
 
             if (!Alive)
@@ -648,6 +650,20 @@ namespace PriestOfPlague.Source.Unit
                     modifierIndex++;
                 }
             }
+        }
+
+        private void OnDeath ()
+        {
+            // TODO: Give experience to killer.
+            var random = new Random ();
+            foreach (var item in MyStorage.Items)
+            {
+                ItemsRegistratorRef.SpawnItemAsObject (ItemTypesContainerRef, item,
+                    transform.position + new Vector3 ((float) (random.NextDouble () * 2.0f), 0.0f,
+                        (float) random.NextDouble () * 2.0f));
+            }
+
+            MyStorage.Clear ();
         }
     }
 }

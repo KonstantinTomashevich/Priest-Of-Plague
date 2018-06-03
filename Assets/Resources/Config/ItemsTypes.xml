@@ -158,4 +158,19 @@
     >
         <supertype Id="17"/>
     </itemType>
+
+    <!-- Sword. -->
+    <itemType Id="10"
+              MaxCharge="0"
+              ChargeRegeneration="0"
+              BasicForce="20"
+              ForceAdditionPerLevel="5"
+              MaxChargeAdditionPerLevel="0"
+              ChargeRegenerationAdditionPerLevel="0"
+              Weight="5"
+              Icon="Icons/Items/Sword"
+              ShortInfo="Sword"
+    >
+        <supertype Id="2"/>
+    </itemType>
 </itemsTypes>

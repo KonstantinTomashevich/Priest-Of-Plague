@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<unit Id="1" Alignment="1" Name="" IsMan="False" Experience="0" Characteristics="10 3 5 10 3" Resists="0,03 0,03 0,03 0,03 0,03 0,03 0,03 0,03 " AvailableSpells="7 8" LineageId="1">
-  <storage MaxWeight="33">
-    <item Id="0" ItemTypeId="0" Charge="0" Level="4" />
-    <item Id="1" ItemTypeId="0" Charge="0" Level="9" />
-    <item Id="2" ItemTypeId="0" Charge="0" Level="1" />
-    <item Id="3" ItemTypeId="0" Charge="0" Level="1" />
-  </storage>
-  <equipment />
+<unit Id="1" Alignment="1" Name="" IsMan="False" Experience="0" Characteristics="10 3 5 10 3"
+      Resists="0,03 0,03 0,03 0,03 0,03 0,03 0,03 0,03 " AvailableSpells="7 8" LineageId="1">
+<storage MaxWeight="33">
+    <item Id="0" ItemTypeId="10" Charge="0" Level="5"/>
+    <item Id="0" ItemTypeId="2" Charge="1" Level="3"/>
+</storage>
+<equipment/>
 </unit>
