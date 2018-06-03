@@ -102,6 +102,7 @@ namespace PriestOfPlague.Source.Unit
         public float UnblockableMpRegeneration { get; private set; }
 
         public ISpell CurrentlyCasting { get; private set; }
+        public Unit SpellTarget { get; set; }
         public float TimeFromCastingStart { get; private set; }
 
         public Unit ()
@@ -143,7 +144,7 @@ namespace PriestOfPlague.Source.Unit
 
         public bool StartCastingSpell (ISpell spell)
         {
-            if (spell != null && (!AvailableSpells.Contains (spell.Id) || !spell.CanCast (this)))
+            if (spell != null && !AvailableSpells.Contains (spell.Id))
             {
                 return false;
             }
@@ -155,22 +156,25 @@ namespace PriestOfPlague.Source.Unit
 
         public bool CanCast (int level = 1, Item item = null)
         {
-            return CurrentlyCasting != null && CurrentlyCasting.CanCast (this, level, item) &&
+            return CurrentlyCasting != null && CurrentlyCasting.CanCast (this, level, item,
+                       CurrentlyCasting.TargetRequired ? SpellTarget : null) &&
                    TimeFromCastingStart >=
                    CurrentlyCasting.BasicCastTime + CurrentlyCasting.CastTimeAdditionPerLevel * level;
         }
 
-        public bool CastSpell (int level = 1, Item item = null, Unit target = null)
+        public bool CastSpell (int level = 1, Item item = null)
         {
             if (CurrentlyCasting == null || !CanCast (level, item))
             {
                 return false;
             }
 
-            var parameter = new SpellCastParameter (item, level, target);
+            var parameter = new SpellCastParameter (item, level, SpellTarget);
             CurrentlyCasting.Cast (this, UnitsHubRef, parameter);
+            
             CurrentlyCasting = null;
             TimeFromCastingStart = 0.0f;
+            SpellTarget = null;
             return true;
         }
 
@@ -326,6 +330,13 @@ namespace PriestOfPlague.Source.Unit
                 Alive = true;
                 Alignment = alignment;
                 CurrentHp = percentsOfMaxHp * MaxHp;
+
+                foreach (var modifier in ModifiersOnUnit)
+                {
+                    RemoveModifier (modifier);
+                }
+
+                ModifiersOnUnit.RemoveAll (item => true);
             }
         }
 
