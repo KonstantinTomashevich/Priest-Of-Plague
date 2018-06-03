@@ -42,7 +42,7 @@ namespace PriestOfPlague.Source.Spells
 
             // TODO: Add icon.
             container.AddSpell (new DrinkPotion (DrinkPotionSpellId, /*Basic Cast Time*/ 1.0f, 
-                /*Icon*/ Resources.Load <Sprite> ("Icons/Items/HealingPotion")));
+                /*Icon*/ Resources.Load <Sprite> ("Icons/Items/HealthPotion")));
 
             // TODO: Add icon.
             container.AddSpell (new TargetedSpell (ImmediateHealSpellId,
