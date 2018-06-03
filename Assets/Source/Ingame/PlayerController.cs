@@ -1,6 +1,7 @@
 ﻿using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
+using PriestOfPlague.Source.Items;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -36,7 +37,22 @@ namespace PriestOfPlague.Source.Ingame
                             return;
                         }
                     }
-                    
+
+                    if ((raycastHit.point - _unit.transform.position).magnitude <
+                        GetComponent <CapsuleCollider> ().radius * 2)
+                    {
+                        var container = raycastHit.collider.gameObject.GetComponent <SpawnedItemContainer> ();
+                        if (container != null)
+                        {
+                            if (_unit.MyStorage.AddItem (container.SpawnedItem))
+                            {
+                                Destroy (container.gameObject);
+                            }
+
+                            return;
+                        }
+                    }
+
                     NavMeshHit navMeshHit;
                     if (NavMesh.SamplePosition (raycastHit.point, out navMeshHit, NavigationAccuracy,
                         _navMeshAgent.areaMask))
@@ -54,7 +70,7 @@ namespace PriestOfPlague.Source.Ingame
             _unit.StartCastingSpell (null);
         }
 
-        private new  IEnumerator Start ()
+        private new IEnumerator Start ()
         {
             yield return base.Start ();
             _playerCamera = GetComponentInChildren <Camera> ();
