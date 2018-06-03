@@ -27,6 +27,16 @@ namespace PriestOfPlague.Source.Ingame
                 RaycastHit raycastHit;
                 if (Physics.Raycast (ray, out raycastHit))
                 {
+                    if (_unit.CurrentlyCasting != null && _unit.CurrentlyCasting.TargetRequired)
+                    {
+                        var selectedUnit = raycastHit.collider.gameObject.GetComponent <Unit.Unit> ();
+                        if (selectedUnit != null)
+                        {
+                            _unit.SpellTarget = selectedUnit;
+                            return;
+                        }
+                    }
+                    
                     NavMeshHit navMeshHit;
                     if (NavMesh.SamplePosition (raycastHit.point, out navMeshHit, NavigationAccuracy,
                         _navMeshAgent.areaMask))

@@ -32,7 +32,7 @@ namespace PriestOfPlague.Source.Spells
 
         public bool CanCast (Unit.Unit unit, int level = 0, Item item = null, Unit.Unit target = null)
         {
-            if (!TargetChecker (unit, target))
+            if ((TargetRequired && target == null) || !TargetChecker (unit, target))
             {
                 return false;
             }
