@@ -10,6 +10,7 @@ using PriestOfPlague.Source.Core;
 using PriestOfPlague.Source.Hubs;
 using PriestOfPlague.Source.Items;
 using PriestOfPlague.Source.Spells;
+using PriestOfPlague.Source.Unit.Ai;
 using UnityEngine;
 using Random = System.Random;
 
@@ -105,6 +106,7 @@ namespace PriestOfPlague.Source.Unit
         public Unit SpellTarget { get; set; }
         public float TimeFromCastingStart { get; private set; }
         public Unit LastDamager { get; private set; } = null;
+        public IGameAi Ai { get; private set; }
 
         public Unit ()
         {
@@ -130,6 +132,7 @@ namespace PriestOfPlague.Source.Unit
             Debug.Assert (damage >= 0.0f);
             CurrentHp = Math.Max (CurrentHp - damage * (1 - Math.Min (Resists [(int) type], 1.0f)), 0.0f);
             LastDamager = damager;
+            Ai.OnDamage (this, LastDamager);
         }
 
         public void UseMovementPoints (float points)
@@ -472,6 +475,7 @@ namespace PriestOfPlague.Source.Unit
             ApplyLineage (XmlHelper.GetIntAttribute (input, "LineageId"));
             MyStorage.LoadFromXML (ItemsRegistratorRef, XmlHelper.FirstChild (input, "storage"));
             MyEquipment.LoadFromXML (MyStorage, XmlHelper.FirstChild (input, "equipment"));
+            Ai = GameAiList.Ais [input.Attributes ["Ai"].InnerText] ();
             RecalculateChildCharacteristics ();
         }
 
@@ -542,6 +546,8 @@ namespace PriestOfPlague.Source.Unit
             var equipmentElement = output.OwnerDocument.CreateElement ("equipment");
             MyEquipment.SaveToXml (equipmentElement);
             output.AppendChild (equipmentElement);
+            
+            // TODO: Save ai type.
         }
 
         private void RemoveModifier (AppliedModifier modifier)
@@ -613,6 +619,8 @@ namespace PriestOfPlague.Source.Unit
             {
                 Alive = false;
                 OnDeath ();
+
+                Ai?.OnDie (this);
             }
 
             if (!Alive)
@@ -620,8 +628,10 @@ namespace PriestOfPlague.Source.Unit
                 return;
             }
 
+            Ai?.Process (this);
+
             MyStorage.UpdateItems (Time.deltaTime);
-            if (CurrentlyCasting != null)
+            if (CurrentlyCasting != null && (!CurrentlyCasting.MovementRequired || !MovementBlocked))
             {
                 TimeFromCastingStart += Time.deltaTime;
             }

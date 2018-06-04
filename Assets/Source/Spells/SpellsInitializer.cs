@@ -134,8 +134,8 @@ namespace PriestOfPlague.Source.Spells
                 /*Charge*/ 0.0f, /*Per level*/ 0.0f,
                 /*Required base movement points*/ 0.0f, /*Per level*/ 1.0f,
                 /*Affect self*/ false,
-                /*Angle*/ 10.0f, /*Per level*/ 0.0f,
-                /*Distance*/ 1.5f, /*Per level*/ 0.0f,
+                /*Angle*/ 45.0f, /*Per level*/ 0.0f,
+                /*Distance*/ 2.5f, /*Per level*/ 0.0f,
                 /*Callback*/ (caster, unit, parameter) =>
                 {
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
@@ -151,8 +151,8 @@ namespace PriestOfPlague.Source.Spells
                 /*Charge*/ 0.0f, /*Per level*/ 0.0f,
                 /*Required base movement points*/ 0.0f, /*Per level*/ 2.5f,
                 /*Affect self*/ false,
-                /*Angle*/ 10.0f, /*Per level*/ 0.0f,
-                /*Distance*/ 1.5f, /*Per level*/ 0.0f,
+                /*Angle*/ 45.0f, /*Per level*/ 0.0f,
+                /*Distance*/ 2.5f, /*Per level*/ 0.0f,
                 /*Callback*/ (caster, unit, parameter) =>
                 {
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];

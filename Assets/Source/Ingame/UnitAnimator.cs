@@ -71,7 +71,7 @@ namespace PriestOfPlague.Source.Ingame
 		private void UpdateAnimatorVariables ()
 		{
 			_animator.SetBool ("Moving", _navMeshAgent.velocity.magnitude > 0.1f);
-			_animator.SetBool ("Casting", _unit.CurrentlyCasting != null);
+			_animator.SetBool ("Casting", !_unit.MovementBlocked && _unit.CurrentlyCasting != null);
 			_animator.SetBool ("Alive", _unit.Alive);
 
 			if (!_animator.GetBool ("HasDeathAnimation"))
