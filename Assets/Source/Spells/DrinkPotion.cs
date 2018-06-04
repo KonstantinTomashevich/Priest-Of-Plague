@@ -15,8 +15,8 @@ namespace PriestOfPlague.Source.Spells
 
         public override void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
         {
+            base.Cast (caster, unitsHub, parameter);
             var item = parameter.UsedItem;
-            item.Charge -= 1.0f;
             var itemType = caster.ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
 
             if (itemType.Supertypes.Contains (ItemSuperType.Meal))

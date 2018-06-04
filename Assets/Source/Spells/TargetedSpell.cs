@@ -20,6 +20,7 @@ namespace PriestOfPlague.Source.Spells
 
         public override void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
         {
+            base.Cast (caster, unitsHub, parameter);
             if (parameter.Target != null)
             {
                 UnitCallback (caster, parameter.Target, parameter);

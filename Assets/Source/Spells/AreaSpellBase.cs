@@ -25,12 +25,6 @@ namespace PriestOfPlague.Source.Spells
             DistancePerLevel = distancePerLevel;
         }
 
-        public override void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
-        {
-            parameter.UsedItem.Charge -= (RequiredBaseCharge + RequiredChargePerLevel * parameter.Level);
-            caster.UseMovementPoints (RequiredBaseMovementPoints + RequiredMovementPointsPerLevel * parameter.Level);
-        }
-
         public bool AffectSelf { get; private set; }
         public float BaseAngle { get; private set; }
         public float AnglePerLevel { get; private set; }

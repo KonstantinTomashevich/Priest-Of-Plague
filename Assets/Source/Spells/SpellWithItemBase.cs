@@ -7,6 +7,7 @@ namespace PriestOfPlague.Source.Spells
     public abstract class SpellWithItemBase : ISpell
     {
         public delegate void UnitCallbackType (Unit.Unit caster, Unit.Unit unit, SpellCastParameter parameter);
+
         public delegate bool TargetCheckerType (Unit.Unit caster, Unit.Unit target);
 
         protected SpellWithItemBase (int id, float basicCastTime, float castTimeAdditionPerLevel, bool movementRequired,
@@ -36,7 +37,7 @@ namespace PriestOfPlague.Source.Spells
             {
                 return false;
             }
-            
+
             if (MovementRequired && unit.MovementBlocked)
             {
                 return false;
@@ -71,9 +72,19 @@ namespace PriestOfPlague.Source.Spells
             return false;
         }
 
-        public abstract void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter);
+        public virtual void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
+        {
+            parameter.UsedItem.Charge -= (RequiredBaseCharge + RequiredChargePerLevel * parameter.Level);
+            caster.UseMovementPoints (RequiredBaseMovementPoints + RequiredMovementPointsPerLevel * parameter.Level);
 
-        public int Id { get; private set; }
+            if (parameter.UsedItem.Charge <= 0.00001f &&
+                caster.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId].Consumeable)
+            {
+                caster.MyStorage.RemoveItem (parameter.UsedItem);
+            }
+        }
+
+    public int Id { get; private set; }
         public float BasicCastTime { get; private set; }
         public float CastTimeAdditionPerLevel { get; private set; }
         public bool MovementRequired { get; private set; }
