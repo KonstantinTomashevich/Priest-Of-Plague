@@ -1,6 +1,7 @@
 ﻿using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters;
 using PriestOfPlague.Source.Items;
 using UnityEngine;
 using UnityEngine.AI;
@@ -52,14 +53,6 @@ namespace PriestOfPlague.Source.Ingame
                             return;
                         }
                     }
-
-                    NavMeshHit navMeshHit;
-                    if (NavMesh.SamplePosition (raycastHit.point, out navMeshHit, NavigationAccuracy,
-                        _navMeshAgent.areaMask))
-                    {
-                        _navMeshAgent.SetDestination (navMeshHit.position);
-                        _unit.StartCastingSpell (null);
-                    }
                 }
             }
         }
@@ -78,6 +71,22 @@ namespace PriestOfPlague.Source.Ingame
 
         private new void Update ()
         {
+            if (_unit != null && !_unit.MovementBlocked)
+            {
+                if (Input.GetKey (KeyCode.W))
+                {
+                    _navMeshAgent.velocity = transform.forward * _navMeshAgent.speed;
+                }
+
+                float rotation = 0.0f;
+                if (Input.GetKey (KeyCode.A)) rotation -= _navMeshAgent.angularSpeed * Time.deltaTime;
+                if (Input.GetKey (KeyCode.D)) rotation += _navMeshAgent.angularSpeed * Time.deltaTime;
+
+                var rotationVector = transform.eulerAngles;
+                rotationVector.y += rotation;
+                transform.eulerAngles = rotationVector;
+            }
+
             base.Update ();
         }
     }
