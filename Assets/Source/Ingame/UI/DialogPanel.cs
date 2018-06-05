@@ -3,42 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialogPanel : MonoBehaviour
+namespace PriestOfPlague.Source.Ingame.UI
 {
-    public delegate void OnReply ();
-    public Text DialogText;
-    public Text FirstReplyText;
-    public Text SecondReplyText;
-
-    private OnReply _onFirst;
-    private OnReply _onSecond;
-
-    public void ReplyPressed (int replyIndex)
+    public class DialogPanel : MonoBehaviour
     {
-        if (replyIndex == 0)
+        public delegate void OnReply ();
+
+        public Text DialogText;
+        public Text FirstReplyText;
+        public Text SecondReplyText;
+
+        private OnReply _onFirst;
+        private OnReply _onSecond;
+
+        public void ReplyPressed (int replyIndex)
         {
-            _onFirst ();
+            if (replyIndex == 0)
+            {
+                _onFirst ();
+            }
+            else
+            {
+                _onSecond ();
+            }
+
+            gameObject.SetActive (false);
+            Time.timeScale = 1.0f;
         }
-        else
+
+        public void Show (string text, string firstReply, string secondReply, OnReply onFirst, OnReply onSecond)
         {
-            _onSecond ();
+            DialogText.text = text;
+            FirstReplyText.text = firstReply;
+            SecondReplyText.text = secondReply;
+
+            _onFirst = onFirst;
+            _onSecond = onSecond;
+            gameObject.SetActive (true);
+            Time.timeScale = 0.0f;
         }
-        gameObject.SetActive (false);
-    }
 
-    public void Show (string text, string firstReply, string secondReply, OnReply onFirst, OnReply onSecond)
-    {
-        DialogText.text = text;
-        FirstReplyText.text = firstReply;
-        SecondReplyText.text = secondReply;
-
-        _onFirst = onFirst;
-        _onSecond = onSecond;
-        gameObject.SetActive (true);
-    }
-
-    private void Start ()
-    {
-        gameObject.SetActive (false);
+        private void Start ()
+        {
+            gameObject.SetActive (false);
+        }
     }
 }
