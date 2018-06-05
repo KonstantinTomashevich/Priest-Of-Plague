@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<unit Id="0" Ai="None" Alignment="0" Name="Анонимный Препод Проги" IsMan="True" Experience="0" Characteristics="8 14 8 8 8"
-      Resists="0,03 0,03 0,03 0,03 0,03 0,03 0,03 0,03 " AvailableSpells="0 1 2 3 4 5 6 9 10" LineageId="1">
+<unit Id="0" Ai="None" Alignment="0" Name="Анонимный препод проги" IsMan="True" Experience="0" Characteristics="8 14 8 8 8"
+      Resists="0,03 0,03 0,03 0,03 0,03 0,03 0,03 0,03 " AvailableSpells="0 1 2 3 4 5 6 9 10" LineageId="0">
     <storage MaxWeight="60">
         <item Id="1" ItemTypeId="0" Charge="0" Level="5"/>
         <item Id="2" ItemTypeId="1" Charge="1" Level="2"/>
