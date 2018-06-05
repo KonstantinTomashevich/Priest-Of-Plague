@@ -22,7 +22,7 @@ namespace PriestOfPlague.Source.Spells
     public interface ISpell
     {
         int Id { get; }
-        bool CanCast (Unit.Unit unit, int level = 0, Item item = null);
+        bool CanCast (Unit.Unit unit, int level = 0, Item item = null, Unit.Unit target = null);
         void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter);
         float BasicCastTime { get; }
         float CastTimeAdditionPerLevel { get; }

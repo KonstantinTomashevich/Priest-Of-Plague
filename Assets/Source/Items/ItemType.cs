@@ -33,6 +33,7 @@ namespace PriestOfPlague.Source.Items
                 itemType._opensSpells.Add (XmlHelper.GetIntAttribute (spellNode, "Id"));
             }
 
+            itemType._consumeable = XmlHelper.GetBoolAttribute (input, "Consumeable");
             itemType._maxCharge = XmlHelper.GetFloatAttribute (input, "MaxCharge");
             itemType._chargeRegeneration = XmlHelper.GetFloatAttribute (input, "ChargeRegeneration");
 
@@ -55,6 +56,12 @@ namespace PriestOfPlague.Source.Items
 
         public int Id => _id;
         public List <int> OpensSpells => _opensSpells;
+
+        public bool Consumeable
+        {
+            get { return _consumeable; }
+            set { _consumeable = value; }
+        }
 
         public float MaxCharge
         {
@@ -125,6 +132,7 @@ namespace PriestOfPlague.Source.Items
 
         private int _id;
         private List <int> _opensSpells;
+        private bool _consumeable;
         private float _maxCharge;
         private float _chargeRegeneration;
 

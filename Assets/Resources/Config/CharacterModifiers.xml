@@ -2,7 +2,7 @@
 <modifiers>
     <modifier
             Id="0"
-            Info="Healing"
+            Info="Лечение"
             TimeOfBuff="10"
             CharacteristicsChanges="0 0 0 0 0"
             ResistsChanges="0 0 0 0 0 0 0 0"
@@ -21,7 +21,7 @@
 
     <modifier
             Id="1"
-            Info="Eaten"
+            Info="Сытость"
             TimeOfBuff="100"
             CharacteristicsChanges="1 0 1 1 0"
             ResistsChanges="0 0 0 0 0 0 0 0"
@@ -38,7 +38,7 @@
 
     <modifier
             Id="2"
-            Info="MagicalSupport"
+            Info="Поддержка"
             TimeOfBuff="10"
             CharacteristicsChanges="1 1 1 1 1"
             ResistsChanges="0 0 0 0 0 0 0 0"
@@ -55,7 +55,7 @@
 
     <modifier
             Id="3"
-            Info="Weaking"
+            Info="Ослабление"
             TimeOfBuff="10"
             CharacteristicsChanges="-1 0 -1 -1 0"
             ResistsChanges="0 0 0 0 0 0 0 0"
@@ -72,7 +72,7 @@
 
     <modifier
             Id="4"
-            Info="Poison"
+            Info="Отравление"
             TimeOfBuff="30"
             CharacteristicsChanges="-1 0 -1 -1 0"
             ResistsChanges="0 0 0 0 0 0 0 0"
@@ -89,7 +89,7 @@
 
     <modifier
             Id="5"
-            Info="Ill"
+            Info="Болезнь"
             TimeOfBuff="100"
             CharacteristicsChanges="-1 -1 -1 -1 -1"
             ResistsChanges="0 0 0 0 0 0 0 0"
@@ -106,7 +106,7 @@
 
     <modifier
             Id="6"
-            Info="Paralyzed"
+            Info="Паралич"
             TimeOfBuff="5"
             CharacteristicsChanges="0 0 0 0 0"
             ResistsChanges="0 0 0 0 0 0 0 0"
@@ -123,8 +123,8 @@
 
     <modifier
             Id="7"
-            Info="Burning"
-            TimeOfBuff="5"
+            Info="Горение"
+            TimeOfBuff="2"
             CharacteristicsChanges="0 0 -1 0 0"
             ResistsChanges="0 0 0 0 0 0 0 0"
             
@@ -132,7 +132,7 @@
             BlocksMpRegeneration="false"
             BlocksMovement="false"
 
-            UnblockableHpRegeneration="-3"
+            UnblockableHpRegeneration="-2"
             UnblockableMpRegeneration="0"
             Icon="Icons/Modifiers/Burning"
     >
@@ -140,7 +140,7 @@
 
     <modifier
             Id="8"
-            Info="Invulnurable"
+            Info="Неуязвимость"
             TimeOfBuff="2"
             CharacteristicsChanges="0 0 0 0 0"
             ResistsChanges="1 1 1 1 1 1 1 1"

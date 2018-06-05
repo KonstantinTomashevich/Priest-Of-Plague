@@ -9,7 +9,7 @@ namespace PriestOfPlague.Source.Spells
         public const int FireWallSpellId = 0;
         public const int DrinkPotionSpellId = 1;
         public const int ImmediateHealSpellId = 2;
-        public const int ContiniousSpellId = 3;
+        public const int ContiniousHealSpellId = 3;
         public const int StealHealthSpellId = 4;
         public const int FireExplosionSpellId = 5;
         public const int LightingSpellId = 6;
@@ -35,13 +35,13 @@ namespace PriestOfPlague.Source.Spells
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) *
-                        (1.0f + caster.MagicDamageBust),
-                        DamageTypesEnum.Flamy);
+                        (1.0f + caster.MagicDamageBust), caster, DamageTypesEnum.Flamy);
                     unit.ApplyModifier (7, parameter.Level);
                 }));
 
             // TODO: Add icon.
-            container.AddSpell (new DrinkPotion (DrinkPotionSpellId, /*Basic Cast Time*/ 1.0f, /*Icon*/ null));
+            container.AddSpell (new DrinkPotion (DrinkPotionSpellId, /*Basic Cast Time*/ 1.0f, 
+                /*Icon*/ Resources.Load <Sprite> ("Icons/Items/HealthPotion")));
 
             // TODO: Add icon.
             container.AddSpell (new TargetedSpell (ImmediateHealSpellId,
@@ -55,16 +55,18 @@ namespace PriestOfPlague.Source.Spells
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.Heal ((itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 10.0f *
                                (1.0f + caster.MagicDamageBust));
-                }));
+                },
+                /*Target Checker*/ (caster, target) => caster.Alignment == target.Alignment));
 
             // TODO: Add icon.
-            container.AddSpell (new TargetedSpell (ContiniousSpellId,
+            container.AddSpell (new TargetedSpell (ContiniousHealSpellId,
                 /*Cast time*/ 2.0f, /*Per level*/ 1.0f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/ContiniousHeal"),
                 /*Info*/ "Continious Heal", /*IST*/ ItemSuperType.HealerSphere,
                 /*Charge*/ 2.0f, /*Per level*/ 1.0f,
                 /*Required base movement points*/ 1.0f, /*Per level*/ 0.5f,
-                /*Callback*/ (caster, unit, parameter) => { unit.ApplyModifier (0, parameter.Level); }));
+                /*Callback*/ (caster, unit, parameter) => { unit.ApplyModifier (0, parameter.Level); },
+                /*Target Checker*/ (caster, target) => caster.Alignment == target.Alignment));
 
             // TODO: Add icon.
             container.AddSpell (new TargetedSpell (StealHealthSpellId,
@@ -79,12 +81,12 @@ namespace PriestOfPlague.Source.Spells
                     float unitHealthBefore = unit.CurrentHp;
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 10.0f *
-                        (1.0f + caster.MagicDamageBust),
-                        DamageTypesEnum.Lighting);
+                        (1.0f + caster.MagicDamageBust), caster, DamageTypesEnum.Lighting);
 
                     float damage = unitHealthBefore - unit.CurrentHp;
                     caster.Heal (damage);
-                }));
+                },
+                /*Target Checker*/ (caster, target) => target.Alive));
 
             // TODO: Add Icon.
             container.AddSpell (new SingleUnitSpell (FireExplosionSpellId,
@@ -101,15 +103,14 @@ namespace PriestOfPlague.Source.Spells
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 2.0f *
-                        (1.0f + caster.MagicDamageBust),
-                        DamageTypesEnum.Flamy);
+                        (1.0f + caster.MagicDamageBust), caster, DamageTypesEnum.Flamy);
                     unit.ApplyModifier (7, parameter.Level);
                 }));
 
             // TODO: Add Icon.
             container.AddSpell (new SingleUnitSpell (LightingSpellId,
                 /*Cast time*/ 3.0f, /*Per level*/ 1.0f,
-                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/Lighting"),
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/Lightning"),
                 /*Info*/ "Lighting", /*IST*/ ItemSuperType.LightingWand,
                 /*Charge*/ 3.0f, /*Per level*/ 1.0f,
                 /*Required base movement points*/ 4.0f, /*Per level*/ 1.0f,
@@ -121,8 +122,7 @@ namespace PriestOfPlague.Source.Spells
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) *
-                        (1.0f + caster.MagicDamageBust),
-                        DamageTypesEnum.Lighting);
+                        (1.0f + caster.MagicDamageBust), caster, DamageTypesEnum.Lighting);
                     unit.ApplyModifier (6, parameter.Level);
                 }));
 
@@ -134,14 +134,13 @@ namespace PriestOfPlague.Source.Spells
                 /*Charge*/ 0.0f, /*Per level*/ 0.0f,
                 /*Required base movement points*/ 0.0f, /*Per level*/ 1.0f,
                 /*Affect self*/ false,
-                /*Angle*/ 10.0f, /*Per level*/ 0.0f,
-                /*Distance*/ 1.5f, /*Per level*/ 0.0f,
+                /*Angle*/ 45.0f, /*Per level*/ 0.0f,
+                /*Distance*/ 2.5f, /*Per level*/ 0.0f,
                 /*Callback*/ (caster, unit, parameter) =>
                 {
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
-                        itemType.BasicForce * (1.0f + caster.NearDamageBust),
-                        DamageTypesEnum.Cutting);
+                        itemType.BasicForce * (1.0f + caster.NearDamageBust), caster, DamageTypesEnum.Cutting);
                 }));
 
             // TODO: Add Icon.
@@ -152,15 +151,14 @@ namespace PriestOfPlague.Source.Spells
                 /*Charge*/ 0.0f, /*Per level*/ 0.0f,
                 /*Required base movement points*/ 0.0f, /*Per level*/ 2.5f,
                 /*Affect self*/ false,
-                /*Angle*/ 10.0f, /*Per level*/ 0.0f,
-                /*Distance*/ 1.5f, /*Per level*/ 0.0f,
+                /*Angle*/ 45.0f, /*Per level*/ 0.0f,
+                /*Distance*/ 2.5f, /*Per level*/ 0.0f,
                 /*Callback*/ (caster, unit, parameter) =>
                 {
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 4.0f *
-                        (1.0f + caster.NearDamageBust),
-                        DamageTypesEnum.Bumping);
+                        (1.0f + caster.NearDamageBust), caster, DamageTypesEnum.Bumping);
                 }));
 
             // TODO: Add icon.
@@ -168,9 +166,10 @@ namespace PriestOfPlague.Source.Spells
                 /*Cast time*/ 0.1f, /*Per level*/ 0.1f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/ElectricDefense"),
                 /*Info*/ "Electric Defense", /*IST*/ ItemSuperType.LightingWand,
-                /*Charge*/ 5.0f, /*Per level*/ 5.0f,
+                /*Charge*/ 4.0f, /*Per level*/ 4.0f,
                 /*Required base movement points*/ 3.0f, /*Per level*/ 3.0f,
-                /*Callback*/ (caster, unit, parameter) => { unit.ApplyModifier (8, parameter.Level); }));
+                /*Callback*/ (caster, unit, parameter) => { unit.ApplyModifier (8, parameter.Level); },
+                /*Target Checker*/ (caster, target) => caster.Alignment == target.Alignment));
 
             // TODO: Add icon.
             container.AddSpell (new TargetedSpell (RaiseDeadSpellId,
@@ -183,7 +182,8 @@ namespace PriestOfPlague.Source.Spells
                 {
                     Debug.Assert (!unit.Alive);
                     unit.Resurrect (caster.Alignment, 0.1f * parameter.Level);
-                }));
+                },
+                /*Target Checker*/ (caster, target) => !target.Alive));
         }
     }
 }

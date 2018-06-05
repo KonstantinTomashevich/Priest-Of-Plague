@@ -15,19 +15,14 @@ namespace PriestOfPlague.Source.Spells
             
             base (id, basicCastTime, castTimeAdditionPerLevel,
             movementRequired, false, icon, info, requiredItemSupertype, requiredBaseCharge,
-            requiredChargePerLevel, requiredBaseMovementPoints, requiredMovementPointsPerLevel, unitCallback)
+            requiredChargePerLevel, requiredBaseMovementPoints, requiredMovementPointsPerLevel, unitCallback,
+            (caster, target) => target == null)
         {
             AffectSelf = affectSelf;
             BaseAngle = baseAngle;
             AnglePerLevel = anglePerLevel;
             BaseDistance = baseDistance;
             DistancePerLevel = distancePerLevel;
-        }
-
-        public override void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
-        {
-            parameter.UsedItem.Charge -= (RequiredBaseCharge + RequiredChargePerLevel * parameter.Level);
-            caster.UseMovementPoints (RequiredBaseMovementPoints + RequiredMovementPointsPerLevel * parameter.Level);
         }
 
         public bool AffectSelf { get; private set; }

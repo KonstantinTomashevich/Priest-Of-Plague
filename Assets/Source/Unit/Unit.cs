@@ -10,6 +10,7 @@ using PriestOfPlague.Source.Core;
 using PriestOfPlague.Source.Hubs;
 using PriestOfPlague.Source.Items;
 using PriestOfPlague.Source.Spells;
+using PriestOfPlague.Source.Unit.Ai;
 using UnityEngine;
 using Random = System.Random;
 
@@ -102,10 +103,14 @@ namespace PriestOfPlague.Source.Unit
         public float UnblockableMpRegeneration { get; private set; }
 
         public ISpell CurrentlyCasting { get; private set; }
+        public Unit SpellTarget { get; set; }
         public float TimeFromCastingStart { get; private set; }
+        public Unit LastDamager { get; private set; } = null;
+        public IGameAi Ai { get; private set; }
 
         public Unit ()
         {
+            Id = -1;
             Alive = true;
             LineageId = -1;
             CurrentHp = 0.00001f;
@@ -116,10 +121,18 @@ namespace PriestOfPlague.Source.Unit
             AvailableSpells = new HashSet <int> ();
         }
 
-        public void ApplyDamage (float damage, DamageTypesEnum type)
+        public void AddExperience (int experience)
+        {
+            Debug.Assert (experience >= 0);
+            Experience += experience;
+        }
+
+        public void ApplyDamage (float damage, Unit damager, DamageTypesEnum type)
         {
             Debug.Assert (damage >= 0.0f);
             CurrentHp = Math.Max (CurrentHp - damage * (1 - Math.Min (Resists [(int) type], 1.0f)), 0.0f);
+            LastDamager = damager;
+            Ai.OnDamage (this, LastDamager);
         }
 
         public void UseMovementPoints (float points)
@@ -142,7 +155,7 @@ namespace PriestOfPlague.Source.Unit
 
         public bool StartCastingSpell (ISpell spell)
         {
-            if (spell != null && (!AvailableSpells.Contains (spell.Id) || !spell.CanCast (this)))
+            if (spell != null && !AvailableSpells.Contains (spell.Id))
             {
                 return false;
             }
@@ -154,22 +167,25 @@ namespace PriestOfPlague.Source.Unit
 
         public bool CanCast (int level = 1, Item item = null)
         {
-            return CurrentlyCasting != null && CurrentlyCasting.CanCast (this, level, item) &&
+            return CurrentlyCasting != null && CurrentlyCasting.CanCast (this, level, item,
+                       CurrentlyCasting.TargetRequired ? SpellTarget : null) &&
                    TimeFromCastingStart >=
                    CurrentlyCasting.BasicCastTime + CurrentlyCasting.CastTimeAdditionPerLevel * level;
         }
 
-        public bool CastSpell (int level = 1, Item item = null, Unit target = null)
+        public bool CastSpell (int level = 1, Item item = null)
         {
             if (CurrentlyCasting == null || !CanCast (level, item))
             {
                 return false;
             }
 
-            var parameter = new SpellCastParameter (item, level, target);
+            var parameter = new SpellCastParameter (item, level, SpellTarget);
             CurrentlyCasting.Cast (this, UnitsHubRef, parameter);
+
             CurrentlyCasting = null;
             TimeFromCastingStart = 0.0f;
+            SpellTarget = null;
             return true;
         }
 
@@ -325,6 +341,14 @@ namespace PriestOfPlague.Source.Unit
                 Alive = true;
                 Alignment = alignment;
                 CurrentHp = percentsOfMaxHp * MaxHp;
+
+                foreach (var modifier in ModifiersOnUnit)
+                {
+                    RemoveModifier (modifier);
+                }
+
+                ModifiersOnUnit.RemoveAll (item => true);
+                LastDamager = null;
             }
         }
 
@@ -401,10 +425,11 @@ namespace PriestOfPlague.Source.Unit
             MyStorage.MaxWeight = MaxStorageWeight;
         }
 
-        public void LoadFromXML (XmlNode input)
+        // TODO: What about saving|loading hp and mp?
+        public void LoadFromXML (XmlNode input, int replacedAlignment = -1)
         {
-            Id = XmlHelper.GetIntAttribute (input, "Id");
-            Alignment = XmlHelper.GetIntAttribute (input, "Alignment");
+            Id = UnitsHubRef.RequestId (XmlHelper.GetIntAttribute (input, "Id"));
+            Alignment = replacedAlignment == -1 ? XmlHelper.GetIntAttribute (input, "Alignment") : replacedAlignment;
             Name = input.Attributes ["Name"].InnerText;
             IsMan = XmlHelper.GetBoolAttribute (input, "IsMan");
             Experience = XmlHelper.GetIntAttribute (input, "Experience");
@@ -448,10 +473,10 @@ namespace PriestOfPlague.Source.Unit
             }
 
             ApplyLineage (XmlHelper.GetIntAttribute (input, "LineageId"));
-            RecalculateChildCharacteristics ();
-
             MyStorage.LoadFromXML (ItemsRegistratorRef, XmlHelper.FirstChild (input, "storage"));
             MyEquipment.LoadFromXML (MyStorage, XmlHelper.FirstChild (input, "equipment"));
+            Ai = GameAiList.Ais [input.Attributes ["Ai"].InnerText] ();
+            RecalculateChildCharacteristics ();
         }
 
         public void SaveToXml (XmlElement output)
@@ -521,6 +546,8 @@ namespace PriestOfPlague.Source.Unit
             var equipmentElement = output.OwnerDocument.CreateElement ("equipment");
             MyEquipment.SaveToXml (equipmentElement);
             output.AppendChild (equipmentElement);
+            
+            // TODO: Save ai type.
         }
 
         private void RemoveModifier (AppliedModifier modifier)
@@ -567,11 +594,13 @@ namespace PriestOfPlague.Source.Unit
                 out UnitsHubRef, out ItemsRegistratorRef, out ItemTypesContainerRef,
                 out SpellsContainerRef, out CharacterModifiersContainerRef, out LineagesContainerRef);
 
+            Id = UnitsHubRef.RequestId (Id);
             MyStorage = new Storage (ItemTypesContainerRef);
             MyEquipment = new Equipment (ItemTypesContainerRef);
 
             LearnCommonSpells ();
             RecalculateChildCharacteristics ();
+            base.Start ();
         }
 
         private void LearnCommonSpells ()
@@ -586,9 +615,12 @@ namespace PriestOfPlague.Source.Unit
 
         private void Update ()
         {
-            if (CurrentHp <= 0.0f)
+            if (CurrentHp <= 0.0f && Alive)
             {
                 Alive = false;
+                OnDeath ();
+
+                Ai?.OnDie (this);
             }
 
             if (!Alive)
@@ -596,8 +628,10 @@ namespace PriestOfPlague.Source.Unit
                 return;
             }
 
+            Ai?.Process (this);
+
             MyStorage.UpdateItems (Time.deltaTime);
-            if (CurrentlyCasting != null)
+            if (CurrentlyCasting != null && (!CurrentlyCasting.MovementRequired || !MovementBlocked))
             {
                 TimeFromCastingStart += Time.deltaTime;
             }
@@ -634,6 +668,21 @@ namespace PriestOfPlague.Source.Unit
                     modifierIndex++;
                 }
             }
+        }
+
+        private void OnDeath ()
+        {
+            // TODO: Give experience to killer.
+            var random = new Random ();
+            foreach (var item in MyStorage.Items)
+            {
+                ItemsRegistratorRef.SpawnItemAsObject (ItemTypesContainerRef, item,
+                    transform.position + new Vector3 ((float) (random.NextDouble () * 2.0f), 0.0f,
+                        (float) random.NextDouble () * 2.0f));
+            }
+
+            MyStorage.Clear ();
+            LastDamager.AddExperience (100);
         }
     }
 }

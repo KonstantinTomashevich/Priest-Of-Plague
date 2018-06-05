@@ -43,7 +43,7 @@ namespace PriestOfPlague.Source.Ingame.UI
             SelectedItemInfoObject.SetActive (false);
             DestroySelectedObjectButtonObject.SetActive (false);
             _unit = null;
-            
+
             do
             {
                 yield return null;
@@ -74,16 +74,16 @@ namespace PriestOfPlague.Source.Ingame.UI
             {
                 return;
             }
-            
+
             if (SelectedItemId != -1)
             {
                 var item = _unit.MyStorage [SelectedItemId];
                 var itemType = _unit.ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
                 var infoBuilder = new StringBuilder ();
 
-                infoBuilder.Append (itemType.ShortInfo).AppendLine ().Append ("Level: ").Append (item.Level)
+                infoBuilder.Append (itemType.ShortInfo).AppendLine ().Append ("Уровень: ").Append (item.Level)
                     .Append (".")
-                    .AppendLine ().Append ("Charge: ").Append (Math.Round (item.Charge * 10.0f) / 10.0f).Append ("/")
+                    .AppendLine ().Append ("Заряд: ").Append (Math.Round (item.Charge * 10.0f) / 10.0f).Append ("/")
                     .Append (
                         Math.Round ((itemType.MaxCharge + itemType.MaxChargeAdditionPerLevel * item.Level) * 10.0f) /
                         10.0f).Append (".").AppendLine ();
@@ -100,10 +100,9 @@ namespace PriestOfPlague.Source.Ingame.UI
             }
 
             var itemUIItem = Instantiate (ItemUIItemPrefab);
-            _icons.Add (item.Id, itemUIItem);
-
             itemUIItem.transform.SetParent (ItemsListContentObject.transform);
             itemUIItem.transform.localScale = Vector3.one;
+            _icons.Add (item.Id, itemUIItem);
 
             var itemType = _unit.ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
             var image = itemUIItem.GetComponent <Image> ();
@@ -113,9 +112,9 @@ namespace PriestOfPlague.Source.Ingame.UI
             var entry = new EventTrigger.Entry {eventID = EventTriggerType.PointerClick};
             entry.callback.AddListener (argument => { SendMessage ("ItemUIItemClicked", item.Id); });
             eventTrigger.triggers.Add (entry);
-            
-            ItemsListContentObject.GetComponent <RectTransform> ().SetSizeWithCurrentAnchors (RectTransform.Axis.Vertical,
-                ItemsListContentObject.GetComponent <VerticalLayoutGroup> ().preferredHeight);
+
+            ItemsListContentObject.GetComponent <RectTransform> ().SetSizeWithCurrentAnchors (
+                RectTransform.Axis.Vertical, _icons.Count * 170);
         }
 
         private void RemoveItemUIItem (int itemId)

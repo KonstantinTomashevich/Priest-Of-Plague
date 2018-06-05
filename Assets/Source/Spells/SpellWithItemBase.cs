@@ -8,10 +8,12 @@ namespace PriestOfPlague.Source.Spells
     {
         public delegate void UnitCallbackType (Unit.Unit caster, Unit.Unit unit, SpellCastParameter parameter);
 
+        public delegate bool TargetCheckerType (Unit.Unit caster, Unit.Unit target);
+
         protected SpellWithItemBase (int id, float basicCastTime, float castTimeAdditionPerLevel, bool movementRequired,
             bool targetRequired, Sprite icon, string info, ItemSuperType requiredItemSupertype,
             float requiredBaseCharge, float requiredChargePerLevel, float requiredBaseMovementPoints,
-            float requiredMovementPointsPerLevel, UnitCallbackType unitCallback)
+            float requiredMovementPointsPerLevel, UnitCallbackType unitCallback, TargetCheckerType targetChecker)
         {
             Id = id;
             BasicCastTime = basicCastTime;
@@ -26,10 +28,16 @@ namespace PriestOfPlague.Source.Spells
             RequiredBaseMovementPoints = requiredBaseMovementPoints;
             RequiredMovementPointsPerLevel = requiredMovementPointsPerLevel;
             UnitCallback = unitCallback;
+            TargetChecker = targetChecker;
         }
 
-        public virtual bool CanCast (Unit.Unit unit, int level = 0, Item item = null)
+        public bool CanCast (Unit.Unit unit, int level = 0, Item item = null, Unit.Unit target = null)
         {
+            if ((TargetRequired && target == null) || !TargetChecker (unit, target))
+            {
+                return false;
+            }
+
             if (MovementRequired && unit.MovementBlocked)
             {
                 return false;
@@ -64,9 +72,19 @@ namespace PriestOfPlague.Source.Spells
             return false;
         }
 
-        public abstract void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter);
+        public virtual void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
+        {
+            parameter.UsedItem.Charge -= (RequiredBaseCharge + RequiredChargePerLevel * parameter.Level);
+            caster.UseMovementPoints (RequiredBaseMovementPoints + RequiredMovementPointsPerLevel * parameter.Level);
 
-        public int Id { get; private set; }
+            if (parameter.UsedItem.Charge <= 0.00001f &&
+                caster.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId].Consumeable)
+            {
+                caster.MyStorage.RemoveItem (parameter.UsedItem);
+            }
+        }
+
+    public int Id { get; private set; }
         public float BasicCastTime { get; private set; }
         public float CastTimeAdditionPerLevel { get; private set; }
         public bool MovementRequired { get; private set; }
@@ -80,5 +98,6 @@ namespace PriestOfPlague.Source.Spells
         public float RequiredBaseMovementPoints { get; private set; }
         public float RequiredMovementPointsPerLevel { get; private set; }
         public UnitCallbackType UnitCallback { get; private set; }
+        public TargetCheckerType TargetChecker { get; private set; }
     }
 }

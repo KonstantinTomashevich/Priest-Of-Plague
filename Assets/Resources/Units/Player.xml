@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<unit Id="0" Alignment="0" Name="" IsMan="False" Experience="0" Characteristics="0 0 0 10 0 " Resists="0,03 0,03 0,03 0,03 0,03 0,03 0,03 0,03 " AvailableSpells="0 " LineageId="1">
-  <storage MaxWeight="33">
-    <item Id="0" ItemTypeId="0" Charge="0" Level="4" />
-    <item Id="1" ItemTypeId="0" Charge="0" Level="9" />
-    <item Id="2" ItemTypeId="0" Charge="0" Level="1" />
-    <item Id="3" ItemTypeId="0" Charge="0" Level="1" />
-  </storage>
-  <equipment />
+<unit Id="0" Ai="None" Alignment="0" Name="Анонимный препод проги" IsMan="True" Experience="0" Characteristics="8 14 8 8 8"
+      Resists="0,03 0,03 0,03 0,03 0,03 0,03 0,03 0,03 " AvailableSpells="0 1 2 3 4 5 6 9 10" LineageId="0">
+    <storage MaxWeight="60">
+        <item Id="1" ItemTypeId="0" Charge="0" Level="5"/>
+        <item Id="2" ItemTypeId="1" Charge="1" Level="2"/>
+        <item Id="3" ItemTypeId="1" Charge="1" Level="2"/>
+        <item Id="4" ItemTypeId="2" Charge="1" Level="5"/>
+        <item Id="5" ItemTypeId="3" Charge="1" Level="5"/>
+        <item Id="6" ItemTypeId="4" Charge="1" Level="5" />
+        <item Id="7" ItemTypeId="5" Charge="1" Level="5" />
+        <item Id="8" ItemTypeId="7" Charge="1" Level="5" />
+        <item Id="9" ItemTypeId="8" Charge="1" Level="4" />
+        <item Id="10" ItemTypeId="9" Charge="1" Level="4" />
+    </storage>
+    <equipment/>
 </unit>

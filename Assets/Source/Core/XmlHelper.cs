@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
-using UnityEditor.Animations;
 using UnityEngine;
 
 namespace PriestOfPlague.Source.Core

@@ -109,6 +109,16 @@ namespace PriestOfPlague.Source.Unit
             }
         }
 
+        public void Clear ()
+        {
+            _currentWeight = 0.0f;
+            foreach (var item in Items)
+            {
+                EventsHub.Instance.SendGlobalEvent (EventItemRemoved, new ItemAddedOrRemovedEventData (this, item.Id));
+            }
+            _items.Clear ();
+        }
+
         public ItemTypesContainer ItemTypesContainerRef;
 
         public float MaxWeight

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using PriestOfPlague.Source.Core;
-using UnityEditor;
+
 using UnityEngine;
 
 namespace PriestOfPlague.Source.Unit

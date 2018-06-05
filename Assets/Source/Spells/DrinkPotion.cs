@@ -9,14 +9,14 @@ namespace PriestOfPlague.Source.Spells
     {
         public DrinkPotion (int id, float basicCastTime, Sprite icon) :
             base (id, basicCastTime, 0.0f, true, false, icon, "Drink Potion", ItemSuperType.Potion,
-                1.0f, 0.0f, 0.0f, 0.0f, null)
+                1.0f, 0.0f, 0.0f, 0.0f, null, (caster, target) => target == null)
         {
         }
 
         public override void Cast (Unit.Unit caster, UnitsHub unitsHub, SpellCastParameter parameter)
         {
+            base.Cast (caster, unitsHub, parameter);
             var item = parameter.UsedItem;
-            item.Charge -= 1.0f;
             var itemType = caster.ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
 
             if (itemType.Supertypes.Contains (ItemSuperType.Meal))
