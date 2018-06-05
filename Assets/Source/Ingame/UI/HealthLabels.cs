@@ -37,19 +37,20 @@ namespace PriestOfPlague.Source.Ingame.UI
 
             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
             GUI.skin.label.fontSize = Screen.height / 30;
-            
+
             foreach (var unit in UnitsHubRef.GetUnitsByCriteria (unitToCheck =>
                 UnitsHubCriterias.MaxDistanceAndMaxAngle (_unit, unitToCheck, 30.0f)))
             {
                 if (unit.Id != _unit.Id)
                 {
                     var screenPoint = _camera.WorldToScreenPoint (unit.transform.position + Vector3.up * 5);
-                    var rect = new Rect (screenPoint.x - 150, Screen.height - screenPoint.y, 300, 100);
-                    
+                    var rect = new Rect (screenPoint.x - 200, Screen.height - screenPoint.y, 400, 100);
+
                     var builder = new StringBuilder ();
                     if (unit.Alive)
                     {
-                        builder.Append ("ОЗ: ").Append (Math.Round (unit.CurrentHp * 10.0f) / 10.0f).Append ("/")
+                        builder.Append (unit.Name).AppendLine ().Append ("ОЗ: ")
+                            .Append (Math.Round (unit.CurrentHp * 10.0f) / 10.0f).Append ("/")
                             .Append (Math.Round (unit.MaxHp * 10.0f) / 10.0f).Append (".");
                     }
                     else
