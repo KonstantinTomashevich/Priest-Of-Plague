@@ -6,7 +6,7 @@ namespace PriestOfPlague.Source.Unit.Ai
 {
     public class AiSwordsman : IGameAi
     {
-        public float SearchDistance = 20.0f;
+        public float SearchDistance = 40.0f;
         public Unit LastEnemy;
 
         public void Process (Unit unit)

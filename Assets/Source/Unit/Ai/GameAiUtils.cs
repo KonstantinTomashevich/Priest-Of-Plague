@@ -50,7 +50,7 @@ namespace PriestOfPlague.Source.Unit.Ai
             foreach (var unit in asker.UnitsHubRef.GetUnitsByCriteria (unitToCheck =>
                 UnitsHubCriterias.MaxDistanceAndMaxAngle (asker, unitToCheck, maxDistance)))
             {
-                if (unit.Alignment != asker.Alignment)
+                if (unit.Alive && unit.Alignment != asker.Alignment)
                 {
                     float distance = (unit.transform.position - asker.transform.position).magnitude;
                     if (distance < nearestDistance)

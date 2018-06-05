@@ -76,6 +76,7 @@ namespace PriestOfPlague.Source.Ingame
                 if (Input.GetKey (KeyCode.W))
                 {
                     _navMeshAgent.velocity = transform.forward * _navMeshAgent.speed;
+                    SelectWalkAction ();
                 }
 
                 float rotation = 0.0f;

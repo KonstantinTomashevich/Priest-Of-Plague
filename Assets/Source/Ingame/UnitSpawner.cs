@@ -8,6 +8,7 @@ namespace PriestOfPlague.Source.Ingame
 	public class UnitSpawner : MonoBehaviour
 	{
 		public TextAsset XmlDocumentText;
+		public int RequestedAlignment = -1;
 
 		IEnumerator Start ()
 		{
@@ -17,7 +18,7 @@ namespace PriestOfPlague.Source.Ingame
 
 			var unit = gameObject.AddComponent <Unit.Unit> ();
 			yield return null;
-			unit.LoadFromXML (document.GetElementsByTagName ("unit") [0]);
+			unit.LoadFromXML (document.GetElementsByTagName ("unit") [0], RequestedAlignment);
 		}
 	}
 }

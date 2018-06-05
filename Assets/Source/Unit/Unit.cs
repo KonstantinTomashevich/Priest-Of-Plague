@@ -426,10 +426,10 @@ namespace PriestOfPlague.Source.Unit
         }
 
         // TODO: What about saving|loading hp and mp?
-        public void LoadFromXML (XmlNode input)
+        public void LoadFromXML (XmlNode input, int replacedAlignment = -1)
         {
             Id = UnitsHubRef.RequestId (XmlHelper.GetIntAttribute (input, "Id"));
-            Alignment = XmlHelper.GetIntAttribute (input, "Alignment");
+            Alignment = replacedAlignment == -1 ? XmlHelper.GetIntAttribute (input, "Alignment") : replacedAlignment;
             Name = input.Attributes ["Name"].InnerText;
             IsMan = XmlHelper.GetBoolAttribute (input, "IsMan");
             Experience = XmlHelper.GetIntAttribute (input, "Experience");
