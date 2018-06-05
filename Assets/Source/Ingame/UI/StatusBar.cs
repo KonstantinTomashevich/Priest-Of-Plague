@@ -84,8 +84,8 @@ namespace PriestOfPlague.Source.Ingame.UI
                 var text = uiItem.GetComponentInChildren <Text> ();
 
                 var builder = new StringBuilder ();
-                builder.Append (modifierData.Level).Append ("L").AppendLine ().Append (Math.Round (modifierData.Time))
-                    .Append ("s");
+                builder.Append (modifierData.Level).Append ("У").AppendLine ().Append (Math.Round (modifierData.Time))
+                    .Append ("с");
                 text.text = builder.ToString ();
 
                 var modifierType = _unit.CharacterModifiersContainerRef.Modifiers [modifierData.Id];

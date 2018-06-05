@@ -797,7 +797,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Go To Main Menu
+  m_Text: "\u0412\u044B\u0439\u0442\u0438 \u0412 \u0413\u043B\u0430\u0432\u043D\u043E\u0435
+    \u041C\u0435\u043D\u044E"
 --- !u!114 &114054983540915288
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -898,7 +899,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Toggle Inventory
+  m_Text: "\u0418\u043D\u0432\u0435\u043D\u0442\u0430\u0440\u044C \u041F/\u0421"
 --- !u!114 &114134759312921738
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3011,7 +3012,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 20, y: 0}
-  m_SizeDelta: {x: 1350, y: 50}
+  m_SizeDelta: {x: 1250, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224348970875606160
 RectTransform:
@@ -3315,8 +3316,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -200.27962, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -300, y: 0}
+  m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224803802938239088
 RectTransform:

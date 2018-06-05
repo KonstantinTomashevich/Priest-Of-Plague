@@ -11,7 +11,7 @@
               ChargeRegenerationAdditionPerLevel="0.05"
               Weight="8"
               Icon="Icons/Items/FireWand"
-              ShortInfo="Fire Wand"
+              ShortInfo="Огненный посох"
     >
         <supertype Id="0"/>
         <supertype Id="1"/>
@@ -28,7 +28,7 @@
               ChargeRegenerationAdditionPerLevel="0"
               Weight="5"
               Icon="Icons/Items/Meal"
-              ShortInfo="Meal"
+              ShortInfo="Еда"
     >
         <supertype Id="9"/>
         <supertype Id="11"/>
@@ -46,7 +46,7 @@
               ChargeRegenerationAdditionPerLevel="0"
               Weight="1"
               Icon="Icons/Items/HealthPotion"
-              ShortInfo="Health Potion"
+              ShortInfo="Зелье Здоровья"
     >
         <supertype Id="11"/>
         <supertype Id="12"/>
@@ -63,7 +63,7 @@
               ChargeRegenerationAdditionPerLevel="0"
               Weight="1"
               Icon="Icons/Items/MpPotion"
-              ShortInfo="MP Potion"
+              ShortInfo="Зелье Выносливости"
     >
         <supertype Id="11"/>
         <supertype Id="13"/>
@@ -80,7 +80,7 @@
               ChargeRegenerationAdditionPerLevel="0"
               Weight="1"
               Icon="Icons/Items/Antidote"
-              ShortInfo="Antidote"
+              ShortInfo="Антидот"
     >
         <supertype Id="11"/>
         <supertype Id="14"/>
@@ -97,7 +97,7 @@
               ChargeRegenerationAdditionPerLevel="0.05"
               Weight="8"
               Icon="Icons/Items/LightingWand"
-              ShortInfo="Lighting Wand"
+              ShortInfo="Посох Молний"
     >
         <supertype Id="10"/>
         <supertype Id="1"/>
@@ -114,7 +114,7 @@
               ChargeRegenerationAdditionPerLevel="0"
               Weight="2"
               Icon="Icons/Items/BasiliskEye"
-              ShortInfo="Basilisk Eye"
+              ShortInfo="Око Василиска"
     >
         <!-- TODO: Basilisk eye spell. -->
         <opensSpell Id="-1"/>
@@ -131,8 +131,9 @@
               ChargeRegenerationAdditionPerLevel="0.05"
               Weight="8"
               Icon="Icons/Items/PoisonWand"
-              ShortInfo="Poison Wand"
+              ShortInfo="Отравляющий Посох"
     >
+        <!-- TODO: Spells. -->
         <supertype Id="15"/>
         <supertype Id="1"/>
     </itemType>
@@ -148,7 +149,7 @@
               ChargeRegenerationAdditionPerLevel="0.01"
               Weight="5"
               Icon="Icons/Items/NecromancySphere"
-              ShortInfo="Necromancy Sphere"
+              ShortInfo="Сфера Некромантии"
     >
         <supertype Id="16"/>
     </itemType>
@@ -164,7 +165,7 @@
               ChargeRegenerationAdditionPerLevel="0.01"
               Weight="5"
               Icon="Icons/Items/HealingSphere"
-              ShortInfo="Healing Sphere"
+              ShortInfo="Сфера Лечения"
     >
         <supertype Id="17"/>
     </itemType>
@@ -180,7 +181,7 @@
               ChargeRegenerationAdditionPerLevel="0"
               Weight="5"
               Icon="Icons/Items/Sword"
-              ShortInfo="Sword"
+              ShortInfo="Меч"
     >
         <supertype Id="2"/>
     </itemType>

@@ -49,12 +49,12 @@ namespace PriestOfPlague.Source.Ingame.UI
                     var builder = new StringBuilder ();
                     if (unit.Alive)
                     {
-                        builder.Append ("HP: ").Append (Math.Round (unit.CurrentHp * 10.0f) / 10.0f).Append ("/")
+                        builder.Append ("ОЗ: ").Append (Math.Round (unit.CurrentHp * 10.0f) / 10.0f).Append ("/")
                             .Append (Math.Round (unit.MaxHp * 10.0f) / 10.0f).Append (".");
                     }
                     else
                     {
-                        builder.Append ("Dead.");
+                        builder.Append ("Мёртв.");
                     }
 
                     GUI.skin.label.normal.textColor = unit.Alignment == _unit.Alignment ? AllyColor : EnemyColor;

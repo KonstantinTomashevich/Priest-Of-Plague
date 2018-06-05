@@ -81,9 +81,9 @@ namespace PriestOfPlague.Source.Ingame.UI
                 var itemType = _unit.ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
                 var infoBuilder = new StringBuilder ();
 
-                infoBuilder.Append (itemType.ShortInfo).AppendLine ().Append ("Level: ").Append (item.Level)
+                infoBuilder.Append (itemType.ShortInfo).AppendLine ().Append ("Уровень: ").Append (item.Level)
                     .Append (".")
-                    .AppendLine ().Append ("Charge: ").Append (Math.Round (item.Charge * 10.0f) / 10.0f).Append ("/")
+                    .AppendLine ().Append ("Заряд: ").Append (Math.Round (item.Charge * 10.0f) / 10.0f).Append ("/")
                     .Append (
                         Math.Round ((itemType.MaxCharge + itemType.MaxChargeAdditionPerLevel * item.Level) * 10.0f) /
                         10.0f).Append (".").AppendLine ();
