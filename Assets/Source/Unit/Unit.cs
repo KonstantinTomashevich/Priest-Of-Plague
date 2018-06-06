@@ -477,6 +477,9 @@ namespace PriestOfPlague.Source.Unit
             MyEquipment.LoadFromXML (MyStorage, XmlHelper.FirstChild (input, "equipment"));
             Ai = GameAiList.Ais [input.Attributes ["Ai"].InnerText] ();
             RecalculateChildCharacteristics ();
+
+            CurrentHp = MaxHp;
+            CurrentMp = MaxMp;
         }
 
         public void SaveToXml (XmlElement output)
