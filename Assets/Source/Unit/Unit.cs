@@ -388,16 +388,16 @@ namespace PriestOfPlague.Source.Unit
 
             //обработка силы            
             NearDamageBust += (float) (strength * 0.03);
-            MaxHp += 5 * strength;
-            MaxMp += 2 * strength;
-            RegenOfHp += strength;
-            MaxStorageWeight += 3 * strength;
+            MaxHp += 10 * strength;
+            MaxMp += 4 * strength;
+            RegenOfHp += 0.1f * strength;
+            MaxStorageWeight += 6 * strength;
 
             //ловкость
             OnDistanceDamageBust += (float) (0.03 * agility);
-            MaxHp += 2 * agility;
-            MaxMp += 5 * agility;
-            RegenOfMp += agility;
+            MaxHp += 4 * agility;
+            MaxMp += 10 * agility;
+            RegenOfMp += 0.1f * agility;
 
             //выносливость
             for (int index = 0; index < (int) DamageTypesEnum.Count; index++)
@@ -405,23 +405,23 @@ namespace PriestOfPlague.Source.Unit
                 Resists [index] += (float) (0.03 * vitality);
             }
 
-            MaxHp += 4 * vitality;
-            MaxMp += 4 * vitality;
-            RegenOfHp += vitality;
-            RegenOfMp += vitality;
-            MaxStorageWeight += 3 * vitality;
+            MaxHp += 8 * vitality;
+            MaxMp += 8 * vitality;
+            RegenOfHp += 0.1f * vitality;
+            RegenOfMp += 0.1f * vitality;
+            MaxStorageWeight += 6 * vitality;
 
             //разум
-            MagicDamageBust += (float) (0.2 * intelligence);
-            MaxMp += 3 * intelligence;
-            RegenOfHp += intelligence;
-            RegenOfMp += intelligence;
+            MagicDamageBust += (float) (0.1 * intelligence);
+            MaxMp += 6 * intelligence;
+            RegenOfHp += 0.1f * intelligence;
+            RegenOfMp += 0.1f * intelligence;
 
             //удачливость
             CriticalDamageChance += (float) (0.03 * luck);
             CriticalResistChance += (float) (0.03 * luck);
-            RegenOfHp += luck;
-            RegenOfMp += luck;
+            RegenOfHp += 0.05f * luck;
+            RegenOfMp += 0.05f * luck;
             MyStorage.MaxWeight = MaxStorageWeight;
         }
 
