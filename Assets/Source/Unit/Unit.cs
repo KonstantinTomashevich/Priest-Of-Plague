@@ -319,7 +319,7 @@ namespace PriestOfPlague.Source.Unit
                 EventsHub.Instance.SendGlobalEvent (EventSpellForgotten,
                     new SpellLearnedOrForgottenEventData (this, spellId));
 
-                if (CurrentlyCasting.Id == spellId)
+                if (CurrentlyCasting != null && CurrentlyCasting.Id == spellId)
                 {
                     StartCastingSpell (null);
                 }
