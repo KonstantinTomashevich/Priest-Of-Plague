@@ -20,7 +20,6 @@ namespace PriestOfPlague.Source.Spells
 
         public static void InitializeSpells (SpellsContainer container)
         {
-            // TODO: Add icon.
             container.AddSpell (new MagicWallSpell (FireWallSpellId,
                 /*Cast time*/ 3.0f, /*Per level*/ 0.5f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/FireWall"),
@@ -39,11 +38,9 @@ namespace PriestOfPlague.Source.Spells
                     unit.ApplyModifier (7, parameter.Level);
                 }));
 
-            // TODO: Add icon.
             container.AddSpell (new DrinkPotion (DrinkPotionSpellId, /*Basic Cast Time*/ 1.0f, 
                 /*Icon*/ Resources.Load <Sprite> ("Icons/Items/HealthPotion")));
 
-            // TODO: Add icon.
             container.AddSpell (new TargetedSpell (ImmediateHealSpellId,
                 /*Cast time*/ 1.0f, /*Per level*/ 0.5f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/ImmediateHeal"),
@@ -58,7 +55,6 @@ namespace PriestOfPlague.Source.Spells
                 },
                 /*Target Checker*/ (caster, target) => caster.Alignment == target.Alignment));
 
-            // TODO: Add icon.
             container.AddSpell (new TargetedSpell (ContiniousHealSpellId,
                 /*Cast time*/ 2.0f, /*Per level*/ 1.0f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/ContiniousHeal"),
@@ -68,7 +64,6 @@ namespace PriestOfPlague.Source.Spells
                 /*Callback*/ (caster, unit, parameter) => { unit.ApplyModifier (0, parameter.Level); },
                 /*Target Checker*/ (caster, target) => caster.Alignment == target.Alignment));
 
-            // TODO: Add icon.
             container.AddSpell (new TargetedSpell (StealHealthSpellId,
                 /*Cast time*/ 4.0f, /*Per level*/ 0.5f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/StealHealth"),
@@ -88,7 +83,6 @@ namespace PriestOfPlague.Source.Spells
                 },
                 /*Target Checker*/ (caster, target) => target.Alive));
 
-            // TODO: Add Icon.
             container.AddSpell (new SingleUnitSpell (FireExplosionSpellId,
                 /*Cast time*/ 3.0f, /*Per level*/ 0.5f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/FireExplosion"),
@@ -107,7 +101,6 @@ namespace PriestOfPlague.Source.Spells
                     unit.ApplyModifier (7, parameter.Level);
                 }));
 
-            // TODO: Add Icon.
             container.AddSpell (new SingleUnitSpell (LightingSpellId,
                 /*Cast time*/ 3.0f, /*Per level*/ 1.0f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/Lightning"),
@@ -126,7 +119,6 @@ namespace PriestOfPlague.Source.Spells
                     unit.ApplyModifier (6, parameter.Level);
                 }));
 
-            // TODO: Add Icon.
             container.AddSpell (new SingleUnitSpell (LightSwordAttackSpellId,
                 /*Cast time*/ 1.0f, /*Per level*/ -0.1f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/LightSwordAttack"),
@@ -143,7 +135,6 @@ namespace PriestOfPlague.Source.Spells
                         itemType.BasicForce * (1.0f + caster.NearDamageBust), caster, DamageTypesEnum.Cutting);
                 }));
 
-            // TODO: Add Icon.
             container.AddSpell (new SingleUnitSpell (HeavySwordAttackSpellId,
                 /*Cast time*/ 0.9f, /*Per level*/ 0.2f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/HeavySwordAttack"),
@@ -161,7 +152,6 @@ namespace PriestOfPlague.Source.Spells
                         (1.0f + caster.NearDamageBust), caster, DamageTypesEnum.Bumping);
                 }));
 
-            // TODO: Add icon.
             container.AddSpell (new TargetedSpell (ElectricDefenseSpellId,
                 /*Cast time*/ 0.1f, /*Per level*/ 0.1f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/ElectricDefense"),
@@ -171,7 +161,6 @@ namespace PriestOfPlague.Source.Spells
                 /*Callback*/ (caster, unit, parameter) => { unit.ApplyModifier (8, parameter.Level); },
                 /*Target Checker*/ (caster, target) => caster.Alignment == target.Alignment));
 
-            // TODO: Add icon.
             container.AddSpell (new TargetedSpell (RaiseDeadSpellId,
                 /*Cast time*/ 4.0f, /*Per level*/ 1.0f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/RaiseDead"),

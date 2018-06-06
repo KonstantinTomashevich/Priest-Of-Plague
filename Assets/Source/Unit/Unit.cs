@@ -675,7 +675,6 @@ namespace PriestOfPlague.Source.Unit
 
         private void OnDeath ()
         {
-            // TODO: Give experience to killer.
             var random = new Random ();
             foreach (var item in MyStorage.Items)
             {
