@@ -109,7 +109,7 @@ namespace PriestOfPlague.Source.Ingame.Storyline
                 "Тогда вам переделка со штрафом.", "Куда вы спешите как голый в баню!"));
             
             _storyline.Points.Add (StorylineUtils.DialogPoint (DialogPanelRef,
-                "ОНИ из деканата! (появляется 5 пересдающих)",
+                "ОНИ из деканата! (появляется 5 пересдающих, опробуйте на них стену огня и отравление)",
                 "Переделка с двумя штрафами!", "Пошли на <censored>!"));
             
             _storyline.Points.Add (new SpawnAndKillStorylinePoint (UndeadPrefab, _collider, 5, 2));
@@ -120,7 +120,7 @@ namespace PriestOfPlague.Source.Ingame.Storyline
             _storyline.Points.Add (new SpawnAndKillStorylinePoint (UndeadPrefab, _collider, 5, 2));
             
             _storyline.Points.Add (StorylineUtils.DialogPoint (DialogPanelRef,
-                "Мы думали, что он отчислился, но оказалось, что не полностью…",
+                "Мы думали, что он отчислился, но оказалось, что не полностью… (опробуйте око василиска)",
                 "И не таких <censored>!", "Сейчас всё исправим, болезненным путём."));
             
             _storyline.Points.Add (new SpawnAndKillStorylinePoint (GamisoniaPrefab, _collider, 1, 2));
