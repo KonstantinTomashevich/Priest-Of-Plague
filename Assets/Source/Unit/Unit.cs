@@ -26,7 +26,7 @@ namespace PriestOfPlague.Source.Unit
         Count
     }
 
-    public class Unit : CreationInformer
+    public class Unit : CreationInformer, IComparable
     {
         public const string EventSpellLearned = "SpellLearned";
         public const string EventSpellForgotten = "SpellForgotten";
@@ -549,7 +549,7 @@ namespace PriestOfPlague.Source.Unit
             var equipmentElement = output.OwnerDocument.CreateElement ("equipment");
             MyEquipment.SaveToXml (equipmentElement);
             output.AppendChild (equipmentElement);
-            
+
             // TODO: Save ai type.
         }
 
@@ -591,6 +591,135 @@ namespace PriestOfPlague.Source.Unit
             RecalculateChildCharacteristics ();
         }
 
+        protected bool Equals (Unit other)
+        {
+            return base.Equals (other) && Id == other.Id;
+        }
+
+        public override bool Equals (object obj)
+        {
+            if (ReferenceEquals (null, obj)) return false;
+            if (ReferenceEquals (this, obj)) return true;
+            if (obj.GetType () != this.GetType ()) return false;
+            return Equals ((Unit) obj);
+        }
+
+        public override int GetHashCode ()
+        {
+            unchecked
+            {
+                return (base.GetHashCode () * 397) ^ Id;
+            }
+        }
+
+        public int CompareTo (object obj)
+        {
+            if (obj == null)
+            {
+                return 1;
+            }
+
+            var anotherUnit = obj as Unit;
+            if (anotherUnit == null)
+            {
+                throw new ArgumentException ("Object is not a Unit!");
+            }
+
+            return Experience > anotherUnit.Experience ? 1 : (Experience == anotherUnit.Experience ? 0 : -1);
+        }
+
+        public static bool operator == (Unit left, Unit right)
+        {
+            return Equals (left, right);
+        }
+
+        public static bool operator != (Unit left, Unit right)
+        {
+            return !Equals (left, right);
+        }
+
+        public override string ToString ()
+        {
+            var builder = new StringBuilder ();
+            builder.Append ("Unit:").AppendLine ();
+            builder.Append ("    Id: ").Append (Id).AppendLine ();
+            builder.Append ("    Alignment: ").Append (Alignment).AppendLine ();
+            builder.Append ("    Alive: ").Append (Alive).AppendLine ();
+
+            builder.Append ("    Name: ").Append (Name).AppendLine ();
+            builder.Append ("    IsMan: ").Append (IsMan).AppendLine ();
+            builder.Append ("    Storage:").AppendLine ();
+            builder.Append ("        Weight: ").Append (MyStorage.CurrentWeight).AppendLine ();
+            builder.Append ("        MaxWeight: ").Append (MyStorage.MaxWeight).AppendLine ();
+
+            foreach (var item in MyStorage.Items)
+            {
+                builder.Append ("        Item: ").AppendLine ();
+                builder.Append ("            ItemTypeId: ").Append (item.ItemTypeId).AppendLine ();
+                builder.Append ("            Charge: ").Append (item.Charge).AppendLine ();
+                builder.Append ("            Level: ").Append (item.Level).AppendLine ();
+            }
+
+            builder.Append ("    NearDamageBust: ").Append (NearDamageBust).AppendLine ();
+            builder.Append ("    OnDistanceDamageBust: ").Append (OnDistanceDamageBust).AppendLine ();
+            builder.Append ("    MagicDamageBust: ").Append (MagicDamageBust).AppendLine ();
+            builder.Append ("    CriticalDamageChance: ").Append (CriticalDamageChance).AppendLine ();
+            builder.Append ("    CriticalResistChance: ").Append (CriticalResistChance).AppendLine ();
+
+            builder.Append ("    CurrentHp: ").Append (CurrentHp).AppendLine ();
+            builder.Append ("    MaxHp: ").Append (MaxHp).AppendLine ();
+            builder.Append ("    RegenOfHp: ").Append (RegenOfHp).AppendLine ();
+            builder.Append ("    CurrentMp: ").Append (CurrentMp).AppendLine ();
+            builder.Append ("    MaxMp: ").Append (MaxMp).AppendLine ();
+            builder.Append ("    RegenOfMp: ").Append (RegenOfMp).AppendLine ();
+
+            builder.Append ("    Experience: ").Append (Experience).AppendLine ();
+            builder.Append ("    OpenedSpellsIds: ");
+            foreach (var spell in AvailableSpells)
+            {
+                builder.Append (spell).Append (" ");
+            }
+
+            builder.AppendLine ();
+            builder.Append ("    Modifiers:").AppendLine ();
+            foreach (var modifier in ModifiersOnUnit)
+            {
+                builder.Append ("        Modifier:").AppendLine ();
+                builder.Append ("            Id: ").Append (modifier.Id).AppendLine ();
+                builder.Append ("            Level: ").Append (modifier.Level).AppendLine ();
+                builder.Append ("            Time: ").Append (modifier.Time).AppendLine ();
+            }
+
+            builder.Append ("    Characteristics: ");
+            foreach (var charac in Charactiristics)
+            {
+                builder.Append (charac).Append (" ");
+            }
+
+            builder.AppendLine ();
+            builder.Append ("    Resists: ");
+            foreach (var resist in Resists)
+            {
+                builder.Append (resist).Append (" ");
+            }
+
+            builder.AppendLine ();
+            builder.Append ("    LineageId: ").Append (LineageId).AppendLine ();
+
+            builder.Append ("    HpRegenerationBlocked: ").Append (HpRegenerationBlocked).AppendLine ();
+            builder.Append ("    MpRegenerationBlocked: ").Append (MpRegenerationBlocked).AppendLine ();
+            builder.Append ("    MovementBlocked: ").Append (MovementBlocked).AppendLine ();
+            builder.Append ("    UnblockableHpRegeneration: ").Append (UnblockableHpRegeneration).AppendLine ();
+            builder.Append ("    UnblockableMpRegeneration: ").Append (UnblockableMpRegeneration).AppendLine ();
+
+            builder.Append ("    CurrentlyCasting: ").Append (CurrentlyCasting == null ? -1 : CurrentlyCasting.Id)
+                .AppendLine ();
+            builder.Append ("    SpellTarget: ").Append (SpellTarget == null ? -1 : SpellTarget.Id).AppendLine ();
+            builder.Append ("    TimeFromCastingStart: ").Append (TimeFromCastingStart).AppendLine ();
+            builder.Append ("    LastDamager: ").Append (LastDamager == null ? -1 : LastDamager.Id).AppendLine ();
+            return builder.ToString ();
+        }
+
         private new void Start ()
         {
             GameEngineCoreUtils.GetCoreInstances (
@@ -600,7 +729,7 @@ namespace PriestOfPlague.Source.Unit
             Id = UnitsHubRef.RequestId (Id);
             MyStorage = new Storage (ItemTypesContainerRef);
             MyEquipment = new Equipment (ItemTypesContainerRef);
-            
+
             EventsHub.Instance.Subscribe (this, Storage.EventItemAdded);
             EventsHub.Instance.Subscribe (this, Storage.EventItemRemoved);
 
@@ -706,21 +835,21 @@ namespace PriestOfPlague.Source.Unit
             {
                 var type = ItemTypesContainerRef.ItemTypes [MyStorage [data.ItemId].ItemTypeId];
                 var found = new HashSet <int> ();
-                
+
                 foreach (var item in MyStorage.Items)
                 {
                     if (item.Id == data.ItemId)
                     {
                         continue;
                     }
-                    
+
                     var itemType = ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
                     foreach (var spellId in itemType.OpensSpells)
                     {
                         found.Add (spellId);
                     }
                 }
-                
+
                 foreach (var spellId in type.OpensSpells)
                 {
                     if (!found.Contains (spellId))
