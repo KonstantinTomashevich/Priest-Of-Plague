@@ -17,6 +17,7 @@ namespace PriestOfPlague.Source.Spells
         public const int HeavySwordAttackSpellId = 8;
         public const int ElectricDefenseSpellId = 9;
         public const int RaiseDeadSpellId = 10;
+        public const int PoisonSpellId = 11;
 
         public static void InitializeSpells (SpellsContainer container)
         {
@@ -173,6 +174,18 @@ namespace PriestOfPlague.Source.Spells
                     unit.Resurrect (caster.Alignment, 0.1f * parameter.Level);
                 },
                 /*Target Checker*/ (caster, target) => !target.Alive));
+            
+            container.AddSpell (new TargetedSpell (PoisonSpellId,
+                /*Cast time*/ 1.0f, /*Per level*/ 0.5f,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/Poison"),
+                /*Info*/ "Poison", /*IST*/ ItemSuperType.PoisonWand,
+                /*Charge*/ 3.0f, /*Per level*/ 1.0f,
+                /*Required base movement points*/ 5.0f, /*Per level*/ 5.0f,
+                /*Callback*/ (caster, unit, parameter) =>
+                {
+                    unit.ApplyModifier (4, parameter.Level);
+                },
+                /*Target Checker*/ (caster, target) => target.Alive));
         }
     }
 }

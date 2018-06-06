@@ -84,7 +84,13 @@ namespace PriestOfPlague.Source.Ingame.Storyline
                 " R=10+5У. A=10. Наносит урон и парализует врага на 5У секунд."));
 
             _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef, "Электрозащита. Посох молний." +
-                " Еденичное. R=10+5У. A=10. Наносит урон и парализует врага на 5У секунд."));
+                " Целевое. Делает цель неуязвимой для внешнего урона на 5У секунд."));
+            
+            _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef, "Воскресить. Сфера некромантии." +
+                 " Целевое. Воскрешает указанного юнита на вашей стороне, даёт ему 10*У% ОЗ."));
+            
+            _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef, "Отравить. Отравляющий посох." +
+                " Целевое. Вызывает у цели отравление на 30У секунд."));
 
             _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef,
                 "Для движения вперёд жмите W, для поворота A и D. Удачной игры!"));

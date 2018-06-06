@@ -46,7 +46,7 @@
               ChargeRegenerationAdditionPerLevel="0"
               Weight="1"
               Icon="Icons/Items/HealthPotion"
-              ShortInfo="Зелье Здоровья"
+              ShortInfo="Зелье здоровья"
     >
         <supertype Id="11"/>
         <supertype Id="12"/>
@@ -63,7 +63,7 @@
               ChargeRegenerationAdditionPerLevel="0"
               Weight="1"
               Icon="Icons/Items/MpPotion"
-              ShortInfo="Зелье Выносливости"
+              ShortInfo="Зелье выносливости"
     >
         <supertype Id="11"/>
         <supertype Id="13"/>
@@ -97,7 +97,7 @@
               ChargeRegenerationAdditionPerLevel="0.05"
               Weight="8"
               Icon="Icons/Items/LightingWand"
-              ShortInfo="Посох Молний"
+              ShortInfo="Посох молний"
     >
         <supertype Id="10"/>
         <supertype Id="1"/>
@@ -114,7 +114,7 @@
               ChargeRegenerationAdditionPerLevel="0"
               Weight="2"
               Icon="Icons/Items/BasiliskEye"
-              ShortInfo="Око Василиска"
+              ShortInfo="Око василиска"
     >
         <!-- TODO: Basilisk eye spell. -->
         <opensSpell Id="-1"/>
@@ -131,9 +131,8 @@
               ChargeRegenerationAdditionPerLevel="0.05"
               Weight="8"
               Icon="Icons/Items/PoisonWand"
-              ShortInfo="Отравляющий Посох"
+              ShortInfo="Отравляющий посох"
     >
-        <!-- TODO: Spells. -->
         <supertype Id="15"/>
         <supertype Id="1"/>
     </itemType>
@@ -149,7 +148,7 @@
               ChargeRegenerationAdditionPerLevel="0.01"
               Weight="5"
               Icon="Icons/Items/NecromancySphere"
-              ShortInfo="Сфера Некромантии"
+              ShortInfo="Сфера некромантии"
     >
         <supertype Id="16"/>
     </itemType>
@@ -165,7 +164,7 @@
               ChargeRegenerationAdditionPerLevel="0.01"
               Weight="5"
               Icon="Icons/Items/HealingSphere"
-              ShortInfo="Сфера Лечения"
+              ShortInfo="Сфера лечения"
     >
         <supertype Id="17"/>
     </itemType>
