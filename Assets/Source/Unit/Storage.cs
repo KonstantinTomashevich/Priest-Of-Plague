@@ -71,14 +71,15 @@ namespace PriestOfPlague.Source.Unit
 
         public bool RemoveItem (Item item)
         {
-            if (_items.Remove (item.Id))
+            if (_items.ContainsKey (item.Id))
             {
                 Debug.Assert (ItemTypesContainerRef.ItemTypes.ContainsKey (item.ItemTypeId));
+                EventsHub.Instance.SendGlobalEvent (EventItemRemoved, new ItemAddedOrRemovedEventData (this, item.Id));
+                _items.Remove (item.Id);
+                
                 ItemType itemType = ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
                 _currentWeight -= itemType.Weight;
-
                 Debug.Assert (_currentWeight >= 0.0f);
-                EventsHub.Instance.SendGlobalEvent (EventItemRemoved, new ItemAddedOrRemovedEventData (this, item.Id));
                 return true;
             }
 

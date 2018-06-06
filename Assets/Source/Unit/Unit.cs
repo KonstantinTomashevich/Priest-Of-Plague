@@ -600,20 +600,19 @@ namespace PriestOfPlague.Source.Unit
             Id = UnitsHubRef.RequestId (Id);
             MyStorage = new Storage (ItemTypesContainerRef);
             MyEquipment = new Equipment (ItemTypesContainerRef);
+            
+            EventsHub.Instance.Subscribe (this, Storage.EventItemAdded);
+            EventsHub.Instance.Subscribe (this, Storage.EventItemRemoved);
 
-            LearnCommonSpells ();
             RecalculateChildCharacteristics ();
             base.Start ();
-        }
-
-        private void LearnCommonSpells ()
-        {
-            LearnSpell (SpellsInitializer.FireWallSpellId);
         }
 
         private new void OnDestroy ()
         {
             base.OnDestroy ();
+            EventsHub.Instance.Unsubscribe (this, Storage.EventItemAdded);
+            EventsHub.Instance.Unsubscribe (this, Storage.EventItemRemoved);
         }
 
         private void Update ()
@@ -685,6 +684,51 @@ namespace PriestOfPlague.Source.Unit
 
             MyStorage.Clear ();
             LastDamager.AddExperience (100);
+        }
+
+        private void ItemAdded (object parameter)
+        {
+            var data = parameter as Storage.ItemAddedOrRemovedEventData;
+            if (data.EventStorage == MyStorage)
+            {
+                var type = ItemTypesContainerRef.ItemTypes [MyStorage [data.ItemId].ItemTypeId];
+                foreach (var spellId in type.OpensSpells)
+                {
+                    LearnSpell (spellId);
+                }
+            }
+        }
+
+        private void ItemRemoved (object parameter)
+        {
+            var data = parameter as Storage.ItemAddedOrRemovedEventData;
+            if (data.EventStorage == MyStorage)
+            {
+                var type = ItemTypesContainerRef.ItemTypes [MyStorage [data.ItemId].ItemTypeId];
+                var found = new HashSet <int> ();
+                
+                foreach (var item in MyStorage.Items)
+                {
+                    if (item.Id == data.ItemId)
+                    {
+                        continue;
+                    }
+                    
+                    var itemType = ItemTypesContainerRef.ItemTypes [item.ItemTypeId];
+                    foreach (var spellId in itemType.OpensSpells)
+                    {
+                        found.Add (spellId);
+                    }
+                }
+                
+                foreach (var spellId in type.OpensSpells)
+                {
+                    if (!found.Contains (spellId))
+                    {
+                        ForgetSpell (spellId);
+                    }
+                }
+            }
         }
     }
 }

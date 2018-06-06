@@ -24,7 +24,8 @@ namespace PriestOfPlague.Source.Items
         Antidote,
         PoisonWand,
         NecromancySphere,
-        HealerSphere
+        HealerSphere,
+        BasiliskEye
     }
     
     public class ItemTypesContainer : MonoBehaviour

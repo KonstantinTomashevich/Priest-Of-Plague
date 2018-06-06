@@ -105,7 +105,7 @@
 
     <!-- Basilisk eye. -->
     <itemType Id="6"
-              Consumeable="false"
+              Consumeable="true"
               MaxCharge="1"
               ChargeRegeneration="0"
               BasicForce="0"
@@ -116,8 +116,8 @@
               Icon="Icons/Items/BasiliskEye"
               ShortInfo="Око василиска"
     >
-        <!-- TODO: Basilisk eye spell. -->
-        <opensSpell Id="-1"/>
+        <supertype Id="18"/>
+        <opensSpell Id="12"/>
     </itemType>
 
     <!-- Poison wand. -->

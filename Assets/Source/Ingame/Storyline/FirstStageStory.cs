@@ -60,6 +60,10 @@ namespace PriestOfPlague.Source.Ingame.Storyline
 
             _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef,
                 "Целовое действие -- воздействует на выбранного юнита. Юнит выбирается кликом по нему."));
+            
+            _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef,
+                "Предметное действие -- использование способности предмета."));
+            
             _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef,
                 "Стена огня. Областное. Огненный посох. R=5+У. A=45+У. Наносит урон и поджигает врага."));
             _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef,
@@ -91,6 +95,9 @@ namespace PriestOfPlague.Source.Ingame.Storyline
             
             _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef, "Отравить. Отравляющий посох." +
                 " Целевое. Вызывает у цели отравление на 30У секунд."));
+            
+            _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef, "Око василиска. Предметное. " +
+                " Целевое. Вызывает у цели паралич на 25У секунд."));
 
             _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef,
                 "Для движения вперёд жмите W, для поворота A и D. Удачной игры!"));

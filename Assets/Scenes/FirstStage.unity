@@ -560,7 +560,7 @@ Prefab:
     - target: {fileID: 224085292758108192, guid: f37acfa63301f8d45891622c3694fb8a,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -130
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224085292758108192, guid: f37acfa63301f8d45891622c3694fb8a,
         type: 2}
@@ -580,7 +580,7 @@ Prefab:
     - target: {fileID: 224006393855156640, guid: f37acfa63301f8d45891622c3694fb8a,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -170
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224006393855156640, guid: f37acfa63301f8d45891622c3694fb8a,
         type: 2}
@@ -600,7 +600,7 @@ Prefab:
     - target: {fileID: 224564310364460550, guid: f37acfa63301f8d45891622c3694fb8a,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -300
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224564310364460550, guid: f37acfa63301f8d45891622c3694fb8a,
         type: 2}
@@ -620,7 +620,7 @@ Prefab:
     - target: {fileID: 224517001114434122, guid: f37acfa63301f8d45891622c3694fb8a,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -340
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224517001114434122, guid: f37acfa63301f8d45891622c3694fb8a,
         type: 2}
@@ -640,7 +640,7 @@ Prefab:
     - target: {fileID: 224670092588921000, guid: f37acfa63301f8d45891622c3694fb8a,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224670156515103186, guid: f37acfa63301f8d45891622c3694fb8a,
         type: 2}
@@ -660,7 +660,7 @@ Prefab:
     - target: {fileID: 224670156515103186, guid: f37acfa63301f8d45891622c3694fb8a,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f37acfa63301f8d45891622c3694fb8a, type: 2}

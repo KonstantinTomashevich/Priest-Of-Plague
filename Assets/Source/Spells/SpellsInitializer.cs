@@ -18,6 +18,7 @@ namespace PriestOfPlague.Source.Spells
         public const int ElectricDefenseSpellId = 9;
         public const int RaiseDeadSpellId = 10;
         public const int PoisonSpellId = 11;
+        public const int BasiliskEyeSpellId = 12;
 
         public static void InitializeSpells (SpellsContainer container)
         {
@@ -184,6 +185,18 @@ namespace PriestOfPlague.Source.Spells
                 /*Callback*/ (caster, unit, parameter) =>
                 {
                     unit.ApplyModifier (4, parameter.Level);
+                },
+                /*Target Checker*/ (caster, target) => target.Alive));
+            
+            container.AddSpell (new TargetedSpell (BasiliskEyeSpellId,
+                /*Cast time*/ 1.0f, /*Per level*/ 0.0f,
+                /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/BasiliskEye"),
+                /*Info*/ "Use basilisk eye", /*IST*/ ItemSuperType.BasiliskEye,
+                /*Charge*/ 1.0f, /*Per level*/ 0.0f,
+                /*Required base movement points*/ 20.0f, /*Per level*/ 0.0f,
+                /*Callback*/ (caster, unit, parameter) =>
+                {
+                    unit.ApplyModifier (6, parameter.UsedItem.Level * 5);
                 },
                 /*Target Checker*/ (caster, target) => target.Alive));
         }
