@@ -3,6 +3,7 @@
       Resists="0,03 0,03 0,03 0,03 0,03 0,03 0,03 0,03 " AvailableSpells="7 8" LineageId="2">
 <storage MaxWeight="33">
     <item Id="0" ItemTypeId="10" Charge="0" Level="5"/>
+    <item Id="2" ItemTypeId="1" Charge="1" Level="2"/>
 </storage>
 <equipment/>
 </unit>

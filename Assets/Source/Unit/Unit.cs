@@ -683,7 +683,7 @@ namespace PriestOfPlague.Source.Unit
             }
 
             MyStorage.Clear ();
-            LastDamager.AddExperience (100);
+            LastDamager?.AddExperience (100);
         }
 
         private void ItemAdded (object parameter)

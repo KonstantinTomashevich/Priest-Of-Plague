@@ -1,6 +1,10 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
+using PriestOfPlague.Source.Items;
 using PriestOfPlague.Source.Spells;
+using UnityEngine;
 using UnityEngine.AI;
+using Random = System.Random;
 
 namespace PriestOfPlague.Source.Unit.Ai
 {
@@ -11,7 +15,9 @@ namespace PriestOfPlague.Source.Unit.Ai
 
         public void Process (Unit unit)
         {
-            GameAiUtils.PickupItemsNear (unit);
+            Debug.Assert (unit.Alive);
+            
+            GameAiUtils.PickupItemsNear (unit, new List <ItemSuperType> { ItemSuperType.OneHandedWeapon });
             if (unit.MovementBlocked)
             {
                 unit.gameObject.GetComponent <NavMeshAgent> ().ResetPath ();
@@ -43,18 +49,16 @@ namespace PriestOfPlague.Source.Unit.Ai
             else
             {
                 unit.GetComponent <NavMeshAgent> ().ResetPath ();
-                var spell = unit.SpellsContainerRef.Spells [SpellsInitializer.HeavySwordAttackSpellId];
+                var spell = unit.SpellsContainerRef.Spells [SpellsInitializer.LightSwordAttackSpellId];
 
                 if (unit.CurrentlyCasting != spell)
                 {
                     unit.StartCastingSpell (spell);
                 }
 
-                var random = new Random ();
-                int level = random.Next (1, 10);
-                if (unit.CanCast (level))
+                if (unit.CanCast ())
                 {
-                    unit.CastSpell (level, GameAiUtils.FindSuitableItemForLevel (unit, level));
+                    unit.CastSpell (1, GameAiUtils.FindSuitableItemForLevel (unit, 1));
                 }
             }
         }

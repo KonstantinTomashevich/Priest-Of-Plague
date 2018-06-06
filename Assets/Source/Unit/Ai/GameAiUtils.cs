@@ -1,4 +1,6 @@
-﻿using PriestOfPlague.Source.Hubs;
+﻿using System.Collections.Generic;
+using System.Linq;
+using PriestOfPlague.Source.Hubs;
 using PriestOfPlague.Source.Items;
 using PriestOfPlague.Source.Spells;
 using UnityEngine;
@@ -26,7 +28,7 @@ namespace PriestOfPlague.Source.Unit.Ai
             {
                 return;
             }
-            
+
             NavMeshHit navMeshHit;
             var navMeshAgent = unit.gameObject.GetComponent <NavMeshAgent> ();
 
@@ -64,13 +66,21 @@ namespace PriestOfPlague.Source.Unit.Ai
             return nearestEnemy;
         }
 
-        public static void PickupItemsNear (Unit unit, float pickupRadius = 1.5f)
+        public static void PickupItemsNear (Unit unit, List <ItemSuperType> supertypes, float pickupRadius = 1.5f)
         {
             foreach (var itemContainer in GameObject.FindGameObjectsWithTag ("SpawnedItem"))
             {
                 var container = itemContainer.GetComponent <SpawnedItemContainer> ();
-                if (unit.MyStorage.AddItem (container.SpawnedItem))
+                if (container.SpawnedItem == null)
                 {
+                    continue;
+                }
+                
+                if (supertypes.Intersect (unit.ItemTypesContainerRef.ItemTypes [container.SpawnedItem.ItemTypeId]
+                        .Supertypes).Any () &&
+                    unit.MyStorage.AddItem (container.SpawnedItem))
+                {
+                    container.SpawnedItem = null;
                     Object.Destroy (itemContainer);
                 }
             }

@@ -122,14 +122,14 @@ namespace PriestOfPlague.Source.Spells
                 }));
 
             container.AddSpell (new SingleUnitSpell (LightSwordAttackSpellId,
-                /*Cast time*/ 1.0f, /*Per level*/ -0.1f,
+                /*Cast time*/ 0.5f, /*Per level*/ -0.05f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/LightSwordAttack"),
                 /*Info*/ "Light Sword Attack", /*IST*/ ItemSuperType.OneHandedWeapon,
                 /*Charge*/ 0.0f, /*Per level*/ 0.0f,
-                /*Required base movement points*/ 50.0f, /*Per level*/ 15.0f,
+                /*Required base movement points*/ 0.0f, /*Per level*/ 0.0f,
                 /*Affect self*/ false,
                 /*Angle*/ 45.0f, /*Per level*/ 0.0f,
-                /*Distance*/ 2.5f, /*Per level*/ 0.0f,
+                /*Distance*/ 3.5f, /*Per level*/ 0.0f,
                 /*Callback*/ (caster, unit, parameter) =>
                 {
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
@@ -138,19 +138,19 @@ namespace PriestOfPlague.Source.Spells
                 }));
 
             container.AddSpell (new SingleUnitSpell (HeavySwordAttackSpellId,
-                /*Cast time*/ 0.9f, /*Per level*/ 0.2f,
+                /*Cast time*/ 0.4f, /*Per level*/ 0.1f,
                 /*Movement required*/ true, /*Icon*/ Resources.Load <Sprite> ("Icons/Spells/HeavySwordAttack"),
                 /*Info*/ "Heavy Sword Attack", /*IST*/ ItemSuperType.OneHandedWeapon,
                 /*Charge*/ 0.0f, /*Per level*/ 0.0f,
-                /*Required base movement points*/ 60.0f, /*Per level*/ 20.0f,
+                /*Required base movement points*/ 0.0f, /*Per level*/ 0.0f,
                 /*Affect self*/ false,
                 /*Angle*/ 45.0f, /*Per level*/ 0.0f,
-                /*Distance*/ 2.5f, /*Per level*/ 0.0f,
+                /*Distance*/ 3.5f, /*Per level*/ 0.0f,
                 /*Callback*/ (caster, unit, parameter) =>
                 {
                     var itemType = unit.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
                     unit.ApplyDamage (
-                        (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 4.0f *
+                        (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) *
                         (1.0f + caster.NearDamageBust), caster, DamageTypesEnum.Bumping);
                 }));
 
