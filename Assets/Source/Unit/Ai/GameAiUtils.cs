@@ -71,11 +71,12 @@ namespace PriestOfPlague.Source.Unit.Ai
             foreach (var itemContainer in GameObject.FindGameObjectsWithTag ("SpawnedItem"))
             {
                 var container = itemContainer.GetComponent <SpawnedItemContainer> ();
-                if (container.SpawnedItem == null)
+                if (container.SpawnedItem == null ||
+                    (container.transform.position - unit.transform.position).magnitude > pickupRadius)
                 {
                     continue;
                 }
-                
+
                 if (supertypes.Intersect (unit.ItemTypesContainerRef.ItemTypes [container.SpawnedItem.ItemTypeId]
                         .Supertypes).Any () &&
                     unit.MyStorage.AddItem (container.SpawnedItem))

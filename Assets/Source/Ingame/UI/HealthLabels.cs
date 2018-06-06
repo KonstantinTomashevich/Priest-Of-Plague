@@ -44,7 +44,7 @@ namespace PriestOfPlague.Source.Ingame.UI
                 if (unit.Id != _unit.Id)
                 {
                     var screenPoint = _camera.WorldToScreenPoint (unit.transform.position + Vector3.up * 5);
-                    var rect = new Rect (screenPoint.x - 200, Screen.height - screenPoint.y, 400, 100);
+                    var rect = new Rect (screenPoint.x - 200, Screen.height - screenPoint.y, 400, 200);
 
                     var builder = new StringBuilder ();
                     if (unit.Alive)

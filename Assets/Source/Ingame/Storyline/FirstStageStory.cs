@@ -103,7 +103,8 @@ namespace PriestOfPlague.Source.Ingame.Storyline
                 " Целевое. Вызывает у цели паралич на 25У секунд."));
 
             _storyline.Points.Add (StorylineUtils.TutorialPoint (DialogPanelRef,
-                "Для движения вперёд жмите W, для поворота A и D. Удачной игры!"));
+                "Для движения вперёд жмите W, для поворота A и D. Для применения действия" +
+                " нажмите 1..9 (задаёт уровень). Удачной игры!"));
             
             _storyline.Points.Add (StorylineUtils.DialogPoint (DialogPanelRef, "Сергей Иванович, тут одно дело...",
                 "Пошли на <censored>, я иду есть!", "Потом, я занят!"));
@@ -124,7 +125,7 @@ namespace PriestOfPlague.Source.Ingame.Storyline
             
             _storyline.Points.Add (StorylineUtils.DialogPoint (DialogPanelRef,
                 "Мы думали, что он отчислился, но оказалось, что не полностью… (опробуйте око василиска)",
-                "И не таких <censored>!", "Сейчас всё исправим, болезненным путём."));
+                "И не таких <censored>!", "Сейчас всё исправим, болезненно!"));
             
             _storyline.Points.Add (new SpawnAndKillStorylinePoint (GamisoniaPrefab, _collider, 1, 2));
             _storyline.Points.Add (new SimpleStorylinePoint (
