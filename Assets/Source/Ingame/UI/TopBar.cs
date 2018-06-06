@@ -40,7 +40,8 @@ namespace PriestOfPlague.Source.Ingame.UI
             var builder = new StringBuilder ();
             builder.Append (_unit.Name).Append (" | ").Append (_unit.IsMan ? "Мужчина" : "Женщина").Append (" | ")
                 .Append (_unit.LineagesContainerRef.LineagesList [_unit.LineageId].InfoAboutLineage).Append (" | ")
-                .Append (_unit.Experience).Append (" опыта");
+                .Append (_unit.Experience).Append (" опыта | Вес инвентаря ").Append (_unit.MyStorage.CurrentWeight)
+                .Append ("/").Append (_unit.MyStorage.MaxWeight);
             InfoText.text = builder.ToString ();
         }
     }
