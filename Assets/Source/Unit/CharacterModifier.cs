@@ -22,6 +22,7 @@ namespace PriestOfPlague.Source.Unit
         public bool BlocksHpRegeneration { get; set; }
         public bool BlocksMpRegeneration { get; set; }
         public bool BlocksMovement { get; set; }
+        public bool BlocksSpeach { get; set; }
         public float UnblockableHpRegeneration { get; set; }
         public float UnblockableMpRegeneration { get; set; }
         public Sprite Icon { get; set; }
@@ -96,6 +97,7 @@ namespace PriestOfPlague.Source.Unit
             modifier.BlocksHpRegeneration = XmlHelper.GetBoolAttribute (input, "BlocksHpRegeneration");
             modifier.BlocksMpRegeneration = XmlHelper.GetBoolAttribute (input, "BlocksMpRegeneration");
             modifier.BlocksMovement = XmlHelper.GetBoolAttribute (input, "BlocksMovement");
+            modifier.BlocksSpeach = XmlHelper.GetBoolAttribute (input, "BlocksSpeach");
 
             modifier.UnblockableHpRegeneration = XmlHelper.GetFloatAttribute (input, "UnblockableHpRegeneration");
             modifier.UnblockableMpRegeneration = XmlHelper.GetFloatAttribute (input, "UnblockableMpRegeneration");

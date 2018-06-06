@@ -14,7 +14,7 @@ namespace PriestOfPlague.Source.Spells
             float baseDistance, float distancePerLevel, UnitCallbackType unitCallback) : 
             
             base (id, basicCastTime, castTimeAdditionPerLevel,
-            movementRequired, false, icon, info, requiredItemSupertype, requiredBaseCharge,
+            movementRequired, false, false, icon, info, requiredItemSupertype, requiredBaseCharge,
             requiredChargePerLevel, requiredBaseMovementPoints, requiredMovementPointsPerLevel, unitCallback,
             (caster, target) => target == null)
         {

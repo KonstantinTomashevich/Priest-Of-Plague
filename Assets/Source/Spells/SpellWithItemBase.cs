@@ -11,7 +11,7 @@ namespace PriestOfPlague.Source.Spells
         public delegate bool TargetCheckerType (Unit.Unit caster, Unit.Unit target);
 
         protected SpellWithItemBase (int id, float basicCastTime, float castTimeAdditionPerLevel, bool movementRequired,
-            bool targetRequired, Sprite icon, string info, ItemSuperType requiredItemSupertype,
+            bool speachRequired, bool targetRequired, Sprite icon, string info, ItemSuperType requiredItemSupertype,
             float requiredBaseCharge, float requiredChargePerLevel, float requiredBaseMovementPoints,
             float requiredMovementPointsPerLevel, UnitCallbackType unitCallback, TargetCheckerType targetChecker)
         {
@@ -19,6 +19,7 @@ namespace PriestOfPlague.Source.Spells
             BasicCastTime = basicCastTime;
             CastTimeAdditionPerLevel = castTimeAdditionPerLevel;
             MovementRequired = movementRequired;
+            SpeachRequired = speachRequired;
             TargetRequired = targetRequired;
             Icon = icon;
             Info = info;
@@ -39,6 +40,11 @@ namespace PriestOfPlague.Source.Spells
             }
 
             if (MovementRequired && unit.MovementBlocked)
+            {
+                return false;
+            }
+            
+            if (SpeachRequired && unit.SpeachBlocked)
             {
                 return false;
             }
@@ -84,10 +90,11 @@ namespace PriestOfPlague.Source.Spells
             }
         }
 
-    public int Id { get; private set; }
+        public int Id { get; private set; }
         public float BasicCastTime { get; private set; }
         public float CastTimeAdditionPerLevel { get; private set; }
         public bool MovementRequired { get; private set; }
+        public bool SpeachRequired { get; private set; }
         public bool TargetRequired { get; private set; }
         public Sprite Icon { get; private set; }
         public string Info { get; private set; }

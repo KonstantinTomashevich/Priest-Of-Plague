@@ -99,6 +99,7 @@ namespace PriestOfPlague.Source.Unit
         public bool HpRegenerationBlocked { get; private set; }
         public bool MpRegenerationBlocked { get; private set; }
         public bool MovementBlocked { get; private set; }
+        public bool SpeachBlocked { get; private set; }
         public float UnblockableHpRegeneration { get; private set; }
         public float UnblockableMpRegeneration { get; private set; }
 
@@ -233,6 +234,7 @@ namespace PriestOfPlague.Source.Unit
             HpRegenerationBlocked |= modifierType.BlocksHpRegeneration;
             MpRegenerationBlocked |= modifierType.BlocksMpRegeneration;
             MovementBlocked |= modifierType.BlocksMovement;
+            SpeachBlocked |= modifierType.BlocksSpeach;
 
             int modifierIndex = 0;
             while (!blockCancel && modifierIndex < ModifiersOnUnit.Count)
@@ -573,6 +575,7 @@ namespace PriestOfPlague.Source.Unit
             HpRegenerationBlocked = false;
             MpRegenerationBlocked = false;
             MovementBlocked = false;
+            SpeachBlocked = false;
 
             foreach (var anotherModifier in ModifiersOnUnit)
             {
@@ -585,6 +588,7 @@ namespace PriestOfPlague.Source.Unit
                         CharacterModifiersContainerRef.Modifiers [anotherModifier.Id].BlocksMpRegeneration;
 
                     MovementBlocked |= CharacterModifiersContainerRef.Modifiers [anotherModifier.Id].BlocksMovement;
+                    SpeachBlocked |= CharacterModifiersContainerRef.Modifiers [anotherModifier.Id].BlocksSpeach;
                 }
             }
 
@@ -709,14 +713,14 @@ namespace PriestOfPlague.Source.Unit
             builder.Append ("    HpRegenerationBlocked: ").Append (HpRegenerationBlocked).AppendLine ();
             builder.Append ("    MpRegenerationBlocked: ").Append (MpRegenerationBlocked).AppendLine ();
             builder.Append ("    MovementBlocked: ").Append (MovementBlocked).AppendLine ();
+            builder.Append ("    SpeachBlocked: ").Append (SpeachBlocked).AppendLine ();
             builder.Append ("    UnblockableHpRegeneration: ").Append (UnblockableHpRegeneration).AppendLine ();
             builder.Append ("    UnblockableMpRegeneration: ").Append (UnblockableMpRegeneration).AppendLine ();
 
-            builder.Append ("    CurrentlyCasting: ").Append (CurrentlyCasting == null ? -1 : CurrentlyCasting.Id)
-                .AppendLine ();
-            builder.Append ("    SpellTarget: ").Append (SpellTarget == null ? -1 : SpellTarget.Id).AppendLine ();
+            builder.Append ("    CurrentlyCasting: ").Append (CurrentlyCasting?.Id ?? -1).AppendLine ();
+            builder.Append ("    SpellTarget: ").Append (SpellTarget?.Id ?? -1).AppendLine ();
             builder.Append ("    TimeFromCastingStart: ").Append (TimeFromCastingStart).AppendLine ();
-            builder.Append ("    LastDamager: ").Append (LastDamager == null ? -1 : LastDamager.Id).AppendLine ();
+            builder.Append ("    LastDamager: ").Append (LastDamager?.Id ?? -1).AppendLine ();
             return builder.ToString ();
         }
 

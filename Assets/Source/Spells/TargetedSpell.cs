@@ -12,7 +12,7 @@ namespace PriestOfPlague.Source.Spells
             float requiredMovementPointsPerLevel, UnitCallbackType unitCallback, TargetCheckerType targetChecker) : 
             
             base (id, basicCastTime,
-            castTimeAdditionPerLevel, movementRequired, true, icon, info, requiredItemSupertype,
+            castTimeAdditionPerLevel, movementRequired, false, true, icon, info, requiredItemSupertype,
             requiredBaseCharge, requiredChargePerLevel, requiredBaseMovementPoints, requiredMovementPointsPerLevel,
             unitCallback, targetChecker)
         {
