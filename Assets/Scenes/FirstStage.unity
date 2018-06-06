@@ -693,6 +693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f451ec7947916254397d0a2e9b00d687, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UnitObject: {fileID: 637065502}
   DialogPanelRef: {fileID: 996949233}
   UndeadPrefab: {fileID: 1786053916721732, guid: 88b46ff6ec865ac44859fa9c3eaf7e67,
     type: 2}

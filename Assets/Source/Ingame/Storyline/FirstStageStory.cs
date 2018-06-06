@@ -8,16 +8,19 @@ namespace PriestOfPlague.Source.Ingame.Storyline
 {
     public class FirstStageStory : MonoBehaviour
     {
+        public GameObject UnitObject;
         public DialogPanel DialogPanelRef;
         public GameObject UndeadPrefab;
         public GameObject GamisoniaPrefab;
 
         private Storyline _storyline;
         private SphereCollider _collider;
+        private bool _failed;
 
         private void Start ()
         {
             _storyline = new Storyline ();
+            _failed = false;
             _collider = GetComponent <SphereCollider> ();
 
             _storyline.Points.Add (StorylineUtils.DialogPoint (DialogPanelRef,
@@ -154,7 +157,22 @@ namespace PriestOfPlague.Source.Ingame.Storyline
 
         private void Update ()
         {
-            _storyline.Update ();
+            
+
+            if (!_failed)
+            {
+                var unit = UnitObject.GetComponent <Unit.Unit> ();
+                if (unit != null && !unit.Alive)
+                {
+                    _failed = true;
+                    DialogPanelRef.Show (
+                        "Вы погибли! Переигровка со штрафом!", "В меню!", "Уйти отсюда поесть.",
+                        () => SceneManager.LoadScene (0),
+                        () => Application.Quit ());
+                }
+                
+                _storyline.Update ();
+            }
         }
     }
 }
