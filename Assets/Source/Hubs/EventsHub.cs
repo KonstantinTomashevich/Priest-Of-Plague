@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace PriestOfPlague.Source.Hubs
 {
@@ -25,7 +26,7 @@ namespace PriestOfPlague.Source.Hubs
             var list = GetSubscribers (eventName.GetHashCode ());
             if (list == null)
             {
-                list = new HashSet <MonoBehaviour> ();
+                list = new List <MonoBehaviour> ();
                 _subscribers.Add (eventName.GetHashCode (), list);
             }
 
@@ -35,13 +36,10 @@ namespace PriestOfPlague.Source.Hubs
         public void Unsubscribe (MonoBehaviour subscriber, string eventName)
         {
             var list = GetSubscribers (eventName.GetHashCode ());
-            if (list != null)
-            {
-                list.Remove (subscriber);
-            }
+            list?.Remove (subscriber);
         }
 
-        private HashSet <MonoBehaviour> GetSubscribers (int hashCode)
+        private List <MonoBehaviour> GetSubscribers (int hashCode)
         {
             try
             {
@@ -55,9 +53,9 @@ namespace PriestOfPlague.Source.Hubs
         
         private EventsHub ()
         {
-            _subscribers = new Dictionary <int, HashSet <MonoBehaviour>> ();
+            _subscribers = new Dictionary <int, List <MonoBehaviour>> ();
         }
 
-        private Dictionary <int, HashSet <MonoBehaviour>> _subscribers;
+        private Dictionary <int, List <MonoBehaviour>> _subscribers;
     }
 }

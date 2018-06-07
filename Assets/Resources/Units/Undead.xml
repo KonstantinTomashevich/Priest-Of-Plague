@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <unit Id="1" Ai="Swordsman" Alignment="2" Name="Пересдающий" IsMan="True" Experience="0" Characteristics="8 3 3 3 3"
-      Resists="0,03 0,03 0,03 0,03 0,03 0,03 0,03 0,03 " AvailableSpells="7 8" LineageId="2">
+      Resists="0 0 0 0 0 0 0 0 " AvailableSpells="7 8" LineageId="2">
 <storage MaxWeight="33">
     <item Id="0" ItemTypeId="10" Charge="0" Level="5"/>
     <item Id="2" ItemTypeId="1" Charge="1" Level="2"/>

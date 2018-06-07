@@ -64,8 +64,8 @@ namespace PriestOfPlague.Source.Ingame.UI
 
         private void OnDestroy ()
         {
-            EventsHub.Instance.Subscribe (this, Storage.EventItemAdded);
-            EventsHub.Instance.Subscribe (this, Storage.EventItemRemoved);
+            EventsHub.Instance.Unsubscribe (this, Storage.EventItemAdded);
+            EventsHub.Instance.Unsubscribe (this, Storage.EventItemRemoved);
         }
 
         private void Update ()

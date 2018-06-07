@@ -366,7 +366,7 @@ namespace PriestOfPlague.Source.Unit
             OnDistanceDamageBust = 0;
             for (int index = 0; index < (int) DamageTypesEnum.Count; index++)
             {
-                Resists [index] = 0;
+                //Resists [index] = 0;
             }
 
             MagicDamageBust = 0;
@@ -404,7 +404,7 @@ namespace PriestOfPlague.Source.Unit
             //выносливость
             for (int index = 0; index < (int) DamageTypesEnum.Count; index++)
             {
-                Resists [index] += (float) (0.03 * vitality);
+                //Resists [index] += (float) (0.03 * vitality);
             }
 
             MaxHp += 8 * vitality;
@@ -597,7 +597,7 @@ namespace PriestOfPlague.Source.Unit
 
         protected bool Equals (Unit other)
         {
-            return base.Equals (other) && Id == other.Id;
+            return Id == other.Id;
         }
 
         public override bool Equals (object obj)
@@ -610,10 +610,7 @@ namespace PriestOfPlague.Source.Unit
 
         public override int GetHashCode ()
         {
-            unchecked
-            {
-                return (base.GetHashCode () * 397) ^ Id;
-            }
+            return Id;
         }
 
         public int CompareTo (object obj)
