@@ -1,6 +1,7 @@
 ﻿using System;
 using PriestOfPlague.Source.Hubs;
 using PriestOfPlague.Source.Items;
+using PriestOfPlague.Source.Unit;
 using UnityEngine;
 
 namespace PriestOfPlague.Source.Spells
@@ -21,7 +22,7 @@ namespace PriestOfPlague.Source.Spells
 
             if (itemType.Supertypes.Contains (ItemSuperType.Meal))
             {
-                caster.ApplyModifier (1, item.Level);
+                caster.ApplyModifier (CharacterModifiersContainer.GetIdByInfo ("Сытость"), item.Level);
             }
 
             if (itemType.Supertypes.Contains (ItemSuperType.Antidote))

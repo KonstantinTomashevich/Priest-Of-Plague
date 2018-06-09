@@ -24,6 +24,24 @@ namespace PriestOfPlague.Source.Unit
                 _modifiers [modifier.Id] = modifier;
             }
         }
+
+        public static int GetIdByInfo (string info)
+        {
+            switch (info)
+            {
+                case "Лечение": return 0;
+                case "Сытость": return 1;
+                case "Поддержка": return 2;
+                case "Ослабление": return 3;
+                case "Отравление": return 4;
+                case "Болезнь": return 5;
+                case "Паралич": return 6;
+                case "Горение": return 7;
+                case "Неуязвимость": return 8;
+            }
+
+            return -1;
+        }
         
         private void Start ()
         {

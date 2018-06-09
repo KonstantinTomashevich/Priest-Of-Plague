@@ -37,7 +37,7 @@ namespace PriestOfPlague.Source.Spells
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) *
                         (1.0f + caster.MagicDamageBust), caster, DamageTypesEnum.Flamy);
-                    unit.ApplyModifier (7, parameter.Level);
+                    unit.ApplyModifier (CharacterModifiersContainer.GetIdByInfo ("Горение"), parameter.Level);
                 }));
 
             container.AddSpell (new DrinkPotion (DrinkPotionSpellId, /*Basic Cast Time*/ 1.0f, 
@@ -63,7 +63,10 @@ namespace PriestOfPlague.Source.Spells
                 /*Info*/ "Continious Heal", /*IST*/ ItemSuperType.HealerSphere,
                 /*Charge*/ 40.0f, /*Per level*/ 5.0f,
                 /*Required base movement points*/ 20.0f, /*Per level*/ 5.0f,
-                /*Callback*/ (caster, unit, parameter) => { unit.ApplyModifier (0, parameter.Level); },
+                /*Callback*/ (caster, unit, parameter) =>
+                {
+                    unit.ApplyModifier (CharacterModifiersContainer.GetIdByInfo ("Лечение"), parameter.Level);
+                },
                 /*Target Checker*/ (caster, target) => caster.Alignment == target.Alignment));
 
             container.AddSpell (new TargetedSpell (StealHealthSpellId,
@@ -100,7 +103,7 @@ namespace PriestOfPlague.Source.Spells
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) * 2.0f *
                         (1.0f + caster.MagicDamageBust), caster, DamageTypesEnum.Flamy);
-                    unit.ApplyModifier (7, parameter.Level);
+                    unit.ApplyModifier (CharacterModifiersContainer.GetIdByInfo ("Горение"), parameter.Level);
                 }));
 
             container.AddSpell (new SingleUnitSpell (LightingSpellId,
@@ -118,7 +121,7 @@ namespace PriestOfPlague.Source.Spells
                     unit.ApplyDamage (
                         (itemType.BasicForce + itemType.ForceAdditionPerLevel * parameter.Level) *
                         (1.0f + caster.MagicDamageBust), caster, DamageTypesEnum.Lighting);
-                    unit.ApplyModifier (6, parameter.Level);
+                    unit.ApplyModifier (CharacterModifiersContainer.GetIdByInfo ("Паралич"), parameter.Level);
                 }));
 
             container.AddSpell (new SingleUnitSpell (LightSwordAttackSpellId,
@@ -160,7 +163,10 @@ namespace PriestOfPlague.Source.Spells
                 /*Info*/ "Electric Defense", /*IST*/ ItemSuperType.LightingWand,
                 /*Charge*/ 100.0f, /*Per level*/ 10.0f,
                 /*Required base movement points*/ 70.0f, /*Per level*/ 20.0f,
-                /*Callback*/ (caster, unit, parameter) => { unit.ApplyModifier (8, parameter.Level); },
+                /*Callback*/ (caster, unit, parameter) =>
+                {
+                    unit.ApplyModifier (CharacterModifiersContainer.GetIdByInfo ("Неуязвимость"), parameter.Level);
+                },
                 /*Target Checker*/ (caster, target) => caster.Alignment == target.Alignment));
 
             container.AddSpell (new TargetedSpell (RaiseDeadSpellId,
@@ -184,7 +190,7 @@ namespace PriestOfPlague.Source.Spells
                 /*Required base movement points*/ 20.0f, /*Per level*/ 5.0f,
                 /*Callback*/ (caster, unit, parameter) =>
                 {
-                    unit.ApplyModifier (4, parameter.Level);
+                    unit.ApplyModifier (CharacterModifiersContainer.GetIdByInfo ("Отравление"), parameter.Level);
                 },
                 /*Target Checker*/ (caster, target) => target.Alive));
             
@@ -197,7 +203,8 @@ namespace PriestOfPlague.Source.Spells
                 /*Callback*/ (caster, unit, parameter) =>
                 {
                     var itemType = caster.ItemTypesContainerRef.ItemTypes [parameter.UsedItem.ItemTypeId];
-                    unit.ApplyModifier (6, (int) (parameter.UsedItem.Level * itemType.BasicForce));
+                    unit.ApplyModifier (CharacterModifiersContainer.GetIdByInfo ("Паралич"),
+                        (int) (parameter.UsedItem.Level * itemType.BasicForce));
                 },
                 /*Target Checker*/ (caster, target) => target.Alive));
         }
