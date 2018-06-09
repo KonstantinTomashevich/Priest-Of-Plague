@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<unit Id="1" Ai="Swordsman" Alignment="2" Name="Гамисония Недоотчисленный" IsMan="True" Experience="0" Characteristics="100 5 5 20 5"
+<unit Id="1" Age="19" Ai="Swordsman" Alignment="2" Name="Гамисония Недоотчисленный" IsMan="True" Experience="0" Characteristics="100 5 5 20 5"
       Resists="0 0 0 0 0 0 0 0 " AvailableSpells="7 8" LineageId="2">
 <storage MaxWeight="33">
     <item Id="0" ItemTypeId="10" Charge="0" Level="10"/>

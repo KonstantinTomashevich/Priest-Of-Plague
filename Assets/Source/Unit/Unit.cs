@@ -67,6 +67,7 @@ namespace PriestOfPlague.Source.Unit
         public int Id { get; private set; }
         public int Alignment { get; private set; }
         public bool Alive { get; private set; }
+        public int Age { get; private set; }
 
         public string Name { get; private set; }
         public bool IsMan { get; private set; }
@@ -364,11 +365,6 @@ namespace PriestOfPlague.Source.Unit
             MaxStorageWeight = 0;
 
             OnDistanceDamageBust = 0;
-            for (int index = 0; index < (int) DamageTypesEnum.Count; index++)
-            {
-                //Resists [index] = 0;
-            }
-
             MagicDamageBust = 0;
             CriticalDamageChance = 0;
             CriticalResistChance = 0;
@@ -389,23 +385,17 @@ namespace PriestOfPlague.Source.Unit
             if (luck < 1) luck = 1;
 
             //обработка силы            
-            NearDamageBust += (float) (strength * 0.03);
+            NearDamageBust += 0.01f * strength;
             MaxHp += 10 * strength;
             MaxMp += 4 * strength;
             RegenOfHp += 0.1f * strength;
             MaxStorageWeight += 6 * strength;
 
             //ловкость
-            OnDistanceDamageBust += (float) (0.03 * agility);
+            OnDistanceDamageBust += 0.01f * agility;
             MaxHp += 4 * agility;
             MaxMp += 10 * agility;
             RegenOfMp += 0.1f * agility;
-
-            //выносливость
-            for (int index = 0; index < (int) DamageTypesEnum.Count; index++)
-            {
-                //Resists [index] += (float) (0.03 * vitality);
-            }
 
             MaxHp += 8 * vitality;
             MaxMp += 8 * vitality;
@@ -414,14 +404,14 @@ namespace PriestOfPlague.Source.Unit
             MaxStorageWeight += 6 * vitality;
 
             //разум
-            MagicDamageBust += (float) (0.1 * intelligence);
+            MagicDamageBust += 0.1f * intelligence;
             MaxMp += 6 * intelligence;
             RegenOfHp += 0.1f * intelligence;
             RegenOfMp += 0.1f * intelligence;
 
             //удачливость
-            CriticalDamageChance += (float) (0.03 * luck);
-            CriticalResistChance += (float) (0.03 * luck);
+            CriticalDamageChance += 0.01f * luck;
+            CriticalResistChance += 0.01f * luck;
             RegenOfHp += 0.05f * luck;
             RegenOfMp += 0.05f * luck;
             MyStorage.MaxWeight = MaxStorageWeight;
@@ -433,6 +423,7 @@ namespace PriestOfPlague.Source.Unit
             Id = UnitsHubRef.RequestId (XmlHelper.GetIntAttribute (input, "Id"));
             Alignment = replacedAlignment == -1 ? XmlHelper.GetIntAttribute (input, "Alignment") : replacedAlignment;
             Name = input.Attributes ["Name"].InnerText;
+            Age = XmlHelper.GetIntAttribute (input, "Age");
             IsMan = XmlHelper.GetBoolAttribute (input, "IsMan");
             Experience = XmlHelper.GetIntAttribute (input, "Experience");
 
@@ -489,6 +480,7 @@ namespace PriestOfPlague.Source.Unit
             output.SetAttribute ("Id", Id.ToString (NumberFormatInfo.InvariantInfo));
             output.SetAttribute ("Alignment", Alignment.ToString (NumberFormatInfo.InvariantInfo));
             output.SetAttribute ("Name", Name);
+            output.SetAttribute ("Age", Age.ToString ());
             output.SetAttribute ("IsMan", IsMan.ToString ());
             output.SetAttribute ("Experience", Experience.ToString (NumberFormatInfo.InvariantInfo));
 
